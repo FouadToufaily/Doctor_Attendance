@@ -4,26 +4,26 @@
 /*==============================================================*/
 
 
-//Creating the database////////
+/* Creating the database */
 
 USE master
 
 GO
 
 CREATE DATABASE Doctor_Attendance
-ON 
+/*ON 
 ( NAME = univdbase_dat,
   FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\Doctor_Attendance.mdf')
 LOG ON
 ( NAME = 'Doctor_Attendance',
   FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\Doctor_Attendance.ldf')
-
+  */
 go
 
 
 
 
-//Creating tables and indices///////////
+/* Creating tables and indices */
 
 Use Doctor_Attendance
 go
