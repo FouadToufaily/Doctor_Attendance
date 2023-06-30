@@ -1,0 +1,95 @@
+﻿@page
+@model proj439.Pages.ViewByDate.AddAttendanceModel
+@{
+}
+
+<form method="post" enctype="multipart/form-data">
+    @{
+        var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
+
+    <input type="date" id="datepicker" asp-for="@Model.datev"  name="datepicker" value="@currentDate" />
+    <table id="attendenceTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>NbHours</th>
+                <th>Comments</th>
+                <th>Attend</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.AttendenceRecords.Count; i++)
+            {
+
+                        <tr>
+                    @{
+                        var doctor = Model.Doctor.FirstOrDefault(d => d.DoctorId == Model.AttendenceRecords[i].DoctorId);
+                        var firstname = doctor != null ? doctor.Firstname : "N/A";
+                        var lastname = doctor != null ? doctor.Lastname : "N/A";
+                        var name = firstname + " " + lastname;
+                        var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                            var categoryId = doctor?.Category?.CategoryId ?? 0;
+                            var isCategoryIdOne = categoryId == 1;
+                        }
+                            <td><label>@name </label></td>
+                            
+                            <td><input  class=form-control type="number" asp-for="@Model.AttendenceRecords[i].DoctorId" value="@id" readonly/></td>
+                            
+                            <td>
+                                
+                        @if (isCategoryIdOne)
+                        {
+                        <input type="number" class=form-control asp-for="@Model.AttendenceRecords[i].NbHours" />
+                        }
+                        else
+                        {
+                        <input type="number" class=form-control asp-for="@Model.AttendenceRecords[i].NbHours" disabled />
+                        }
+                            </td>
+                            <td>
+                        @if (isCategoryIdOne)
+                        {
+                        <input type="text" class=form-control asp-for="@Model.AttendenceRecords[i].Comments" />
+                        }
+                        else
+                        {
+                        <input type="text" class=form-control asp-for="@Model.AttendenceRecords[i].Comments" disabled />
+                        }
+                            </td>
+                            <td><input  type="checkbox" class="form-check-input" name="AttendenceRecords[@i].Attend" value="true" checked="@(Model.AttendenceRecords[i].Attend == true)" /></td>
+                            <td><input  type="text" asp-for="@Model.AttendenceRecords[i].Date" id="datePicker_@i" value="@currentDate" readonly hidden/></td>
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].AttId" hidden/>
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].DepId" value="1" hidden/>
+                                <input  type="hidden" asp-for="AttendenceRecords[@i].Attend" value="false" />
+                        </tr>
+            }
+
+
+
+        </tbody>
+    </table>
+    <div class="form-group">
+    <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+
+</form>
+@section Scripts {
+
+        <script>
+         
+
+                // Listen for changes in the datepicker input
+                $("#datepicker").on("change", function () {
+                    var selectedDate = $(this).val();
+                    $("#anotherField").val(selectedDate);
+
+                    // Set the value of the AttendenceRecords[i].Date property in the model
+                    $('[id^="datePicker_"]').val(selectedDate);
+                });
+            });
+
+        </script>
+}
+
