@@ -1,0 +1,49 @@
+﻿@page
+@model Doctor_Attendance.Pages.S.Attendances.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Attendence</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Attendence.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendence.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Attendence.NbHours)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendence.NbHours)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Attendence.Comments)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendence.Comments)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Attendence.Dep)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendence.Dep.DepId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Attendence.Doctor)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Attendence.Doctor.DoctorId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Attendence?.AttId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -29,6 +29,8 @@ namespace Doctor_Attendance.Pages.S.Doctors
             }
 
             var doctor = await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == id);
+            var category= await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == doctor.CategoryId);
+            doctor.Category = category;
             if (doctor == null)
             {
                 return NotFound();

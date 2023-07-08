@@ -36,7 +36,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
                 return NotFound();
             }
             Doctor = doctor;
-           ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
+           ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Type");
             return Page();
         }
 

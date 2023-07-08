@@ -23,6 +23,8 @@ namespace Doctor_Attendance.Models
         public string? Email { get; set; }
         public string? City { get; set; }
 
+        public string Fullname { get { return this.Firstname + " " + this.Lastname; } }
+
         public virtual Category? Category { get; set; }
         public virtual ICollection<Attendence> Attendences { get; set; }
         public virtual ICollection<Department> Departments { get; set; }

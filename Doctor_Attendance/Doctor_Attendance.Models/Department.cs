@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace Doctor_Attendance.Models
 {
@@ -19,6 +21,7 @@ namespace Doctor_Attendance.Models
         public int? Nbdoctors { get; set; }
         public string? DepName { get; set; }
 
+        [Display(Name = "Head of Dep")]
         public virtual Doctor? Doctor { get; set; }
         public virtual ICollection<Attendence> Attendences { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }

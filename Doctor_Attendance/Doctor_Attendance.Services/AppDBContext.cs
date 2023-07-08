@@ -36,13 +36,9 @@ namespace Doctor_Attendance.Services
         {
             modelBuilder.Entity<Attendence>(entity =>
             {
-                entity.HasKey(e => new { e.DepId, e.DoctorId });
+                entity.HasKey(e => e.AttId);
 
                 entity.ToTable("ATTENDENCE");
-
-                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
-
-                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.AttId).HasColumnName("ATT_ID");
 
@@ -54,6 +50,10 @@ namespace Doctor_Attendance.Services
                 entity.Property(e => e.Date)
                     .HasColumnType("datetime")
                     .HasColumnName("DATE");
+
+                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
+
+                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.NbHours).HasColumnName("NB_HOURS");
 
@@ -77,9 +77,7 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("CATEGORY");
 
-                entity.Property(e => e.CategoryId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("CATEGORY_ID");
+                entity.Property(e => e.CategoryId).HasColumnName("CATEGORY_ID");
 
                 entity.Property(e => e.Type)
                     .HasMaxLength(20)
@@ -96,9 +94,7 @@ namespace Doctor_Attendance.Services
 
                 entity.HasIndex(e => e.DoctorId, "COORDINATES_FK");
 
-                entity.Property(e => e.DepId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("DEP_ID");
+                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
 
                 entity.Property(e => e.DepName)
                     .HasMaxLength(20)
@@ -199,9 +195,7 @@ namespace Doctor_Attendance.Services
 
                 entity.HasIndex(e => e.DepId, "WORK_IN_FK");
 
-                entity.Property(e => e.EmpId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("EMP_ID");
+                entity.Property(e => e.EmpId).HasColumnName("EMP_ID");
 
                 entity.Property(e => e.Age).HasColumnName("AGE");
 
@@ -242,9 +236,7 @@ namespace Doctor_Attendance.Services
 
                 entity.HasIndex(e => e.DoctorId, "MANAGES_FK");
 
-                entity.Property(e => e.Facultyid)
-                    .ValueGeneratedNever()
-                    .HasColumnName("FACULTYID");
+                entity.Property(e => e.Facultyid).HasColumnName("FACULTYID");
 
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
@@ -303,9 +295,7 @@ namespace Doctor_Attendance.Services
 
                 entity.HasIndex(e => e.DoctorId, "DIRECTS_FK");
 
-                entity.Property(e => e.Sectionid)
-                    .ValueGeneratedNever()
-                    .HasColumnName("SECTIONID");
+                entity.Property(e => e.Sectionid).HasColumnName("SECTIONID");
 
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
@@ -329,7 +319,7 @@ namespace Doctor_Attendance.Services
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.EmpId2)
+                entity.HasKey(e => e.UserId)
                     .IsClustered(false);
 
                 entity.ToTable("USER");
@@ -340,9 +330,7 @@ namespace Doctor_Attendance.Services
 
                 entity.HasIndex(e => e.DoctorId, "USES_FK");
 
-                entity.Property(e => e.EmpId2)
-                    .ValueGeneratedNever()
-                    .HasColumnName("EMP_ID2");
+                entity.Property(e => e.UserId).HasColumnName("USER_ID");
 
                 entity.Property(e => e.Age).HasColumnName("AGE");
 

@@ -11,6 +11,8 @@ namespace Doctor_Attendance.Services
     {
 
         private List<Doctor> _doctorList;
+        private List<Department> _depList;
+
 
         public MockDoctorRepository()
         {
@@ -25,6 +27,21 @@ namespace Doctor_Attendance.Services
         public IEnumerable<Doctor> GetAllDoctors()
         {
             return _doctorList;
+        }
+
+        public IEnumerable<DeptHeadCount> GetDeptHeadCount()
+        {
+            return _doctorList.GroupBy(e => e.Departments)
+               .Select(g => new DeptHeadCount()
+               {
+                   Department = g.Key.FirstOrDefault(),
+                   Count = g.Count()
+               });
+        }
+
+        public Doctor getDoctor(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

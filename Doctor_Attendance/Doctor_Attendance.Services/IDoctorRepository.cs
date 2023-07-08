@@ -10,5 +10,9 @@ namespace Doctor_Attendance.Services
     public interface IDoctorRepository
     {
         IEnumerable<Doctor> GetAllDoctors();
+
+        Doctor getDoctor(int id);
+
+        IEnumerable<DeptHeadCount> GetDeptHeadCount();
     }
 }

@@ -5,7 +5,7 @@ namespace Doctor_Attendance.Models
 {
     public partial class User
     {
-        public int EmpId2 { get; set; }
+        public int UserId { get; set; }
         public int? DoctorId { get; set; }
         public int? EmpId { get; set; }
         public int? Permissionid { get; set; }
