@@ -41,7 +41,11 @@
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Doctor.Fullname)
+                @{ 
+                    if ((item.Doctor) is not null)
+                        Html.DisplayFor(modelItem => item.Doctor.Fullname);
+                }
+
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Sectionid">Edit</a> |
