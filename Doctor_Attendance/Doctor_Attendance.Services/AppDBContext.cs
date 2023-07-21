@@ -8,18 +8,20 @@ namespace Doctor_Attendance.Services
 {
     public partial class AppDBContext : DbContext
     {
+
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Attendence> Attendences { get; set; } = null!;
+        public virtual DbSet<Attendance> Attendances { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<Doctor> Doctors { get; set; } = null!;
         public virtual DbSet<Employee> Employees { get; set; } = null!;
         public virtual DbSet<Faculty> Faculties { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
+        public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Section> Sections { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
@@ -34,13 +36,15 @@ namespace Doctor_Attendance.Services
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Attendence>(entity =>
+            modelBuilder.Entity<Attendance>(entity =>
             {
                 entity.HasKey(e => e.AttId);
 
-                entity.ToTable("ATTENDENCE");
+                entity.ToTable("ATTENDANCE");
 
                 entity.Property(e => e.AttId).HasColumnName("ATT_ID");
+
+                entity.Property(e => e.Attended).HasColumnName("ATTENDED");
 
                 entity.Property(e => e.Comments)
                     .HasMaxLength(100)
@@ -57,17 +61,19 @@ namespace Doctor_Attendance.Services
 
                 entity.Property(e => e.NbHours).HasColumnName("NB_HOURS");
 
+                entity.Property(e => e.Published).HasColumnName("PUBLISHED");
+
                 entity.HasOne(d => d.Dep)
-                    .WithMany(p => p.Attendences)
+                    .WithMany(p => p.Attendances)
                     .HasForeignKey(d => d.DepId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ATTENDEN_ATTENDENC_DEPARTME");
+                    .HasConstraintName("FK_ATTENDAN_ATTENDANC_DEPARTME");
 
                 entity.HasOne(d => d.Doctor)
-                    .WithMany(p => p.Attendences)
+                    .WithMany(p => p.Attendances)
                     .HasForeignKey(d => d.DoctorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ATTENDEN_ATTENDENC_DOCTOR");
+                    .HasConstraintName("FK_ATTENDAN_ATTENDANC_DOCTOR");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -92,14 +98,12 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("DEPARTMENT");
 
-                entity.HasIndex(e => e.DoctorId, "COORDINATES_FK");
-
                 entity.Property(e => e.DepId).HasColumnName("DEP_ID");
 
                 entity.Property(e => e.DepName)
-                    .HasMaxLength(20)
-                    .HasColumnName("DEP_NAMe")
-                    .IsFixedLength();
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("DEP_NAME");
 
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
@@ -193,8 +197,6 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("EMPLOYEE");
 
-                entity.HasIndex(e => e.DepId, "WORK_IN_FK");
-
                 entity.Property(e => e.EmpId).HasColumnName("EMP_ID");
 
                 entity.Property(e => e.Age).HasColumnName("AGE");
@@ -233,8 +235,6 @@ namespace Doctor_Attendance.Services
                     .IsClustered(false);
 
                 entity.ToTable("FACULTY");
-
-                entity.HasIndex(e => e.DoctorId, "MANAGES_FK");
 
                 entity.Property(e => e.Facultyid).HasColumnName("FACULTYID");
 
@@ -286,14 +286,34 @@ namespace Doctor_Attendance.Services
                 entity.Property(e => e.UpdateAttendence).HasColumnName("UPDATE_ATTENDENCE");
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.RoleId)
+                    .IsClustered(false);
+
+                entity.ToTable("ROLE");
+
+                entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
+
+                entity.Property(e => e.Permissionid).HasColumnName("PERMISSIONID");
+
+                entity.Property(e => e.RoleName)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("ROLE_NAME");
+
+                entity.HasOne(d => d.Permission)
+                    .WithMany(p => p.Roles)
+                    .HasForeignKey(d => d.Permissionid)
+                    .HasConstraintName("FK_ROLE_HAS_PERMI_PERMISSI");
+            });
+
             modelBuilder.Entity<Section>(entity =>
             {
                 entity.HasKey(e => e.Sectionid)
                     .IsClustered(false);
 
                 entity.ToTable("SECTION");
-
-                entity.HasIndex(e => e.DoctorId, "DIRECTS_FK");
 
                 entity.Property(e => e.Sectionid).HasColumnName("SECTIONID");
 
@@ -320,53 +340,36 @@ namespace Doctor_Attendance.Services
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.UserId)
+                    .HasName("PK_USER")
                     .IsClustered(false);
 
-                entity.ToTable("USER");
-
-                entity.HasIndex(e => e.Permissionid, "HAS_PERMISISON_FK");
-
-                entity.HasIndex(e => e.EmpId, "RELATIONSHIP_9_FK");
-
-                entity.HasIndex(e => e.DoctorId, "USES_FK");
+                entity.ToTable("USERS");
 
                 entity.Property(e => e.UserId).HasColumnName("USER_ID");
 
-                entity.Property(e => e.Age).HasColumnName("AGE");
-
-                entity.Property(e => e.City)
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("CITY");
-
-                entity.Property(e => e.Datecreated)
+                entity.Property(e => e.DateCreated)
                     .HasColumnType("datetime")
-                    .HasColumnName("DATECREATED");
+                    .HasColumnName("DATE_CREATED");
 
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(30)
-                    .IsUnicode(false)
-                    .HasColumnName("EMAIL");
-
                 entity.Property(e => e.EmpId).HasColumnName("EMP_ID");
 
-                entity.Property(e => e.Firstname)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("FIRSTNAME");
-
-                entity.Property(e => e.Lastmodified)
+                entity.Property(e => e.LastModified)
                     .HasColumnType("datetime")
-                    .HasColumnName("LASTMODIFIED");
+                    .HasColumnName("LAST_MODIFIED");
 
-                entity.Property(e => e.Lastname)
-                    .HasMaxLength(20)
+                entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
+
+                entity.Property(e => e.UserPassword)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
-                    .HasColumnName("LASTNAME");
+                    .HasColumnName("USER_PASSWORD");
 
-                entity.Property(e => e.Permissionid).HasColumnName("PERMISSIONID");
+                entity.Property(e => e.UserUsername)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("USER_USERNAME");
 
                 entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.Users)
@@ -378,10 +381,10 @@ namespace Doctor_Attendance.Services
                     .HasForeignKey(d => d.EmpId)
                     .HasConstraintName("FK_USER_RELATIONS_EMPLOYEE");
 
-                entity.HasOne(d => d.Permission)
+                entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.Permissionid)
-                    .HasConstraintName("FK_USER_HAS_PERMI_PERMISSI");
+                    .HasForeignKey(d => d.RoleId)
+                    .HasConstraintName("FK_USER_HAS_ROLE_ROLE");
             });
 
             OnModelCreatingPartial(modelBuilder);

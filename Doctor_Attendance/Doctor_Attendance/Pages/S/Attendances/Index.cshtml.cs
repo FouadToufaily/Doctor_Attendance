@@ -19,13 +19,13 @@ namespace Doctor_Attendance.Pages.S.Attendances
             _context = context;
         }
 
-        public IList<Attendence> Attendence { get;set; } = default!;
+        public IList<Attendance> Attendance { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Attendences != null)
+            if (_context.Attendances != null)
             {
-                Attendence = await _context.Attendences
+                Attendance = await _context.Attendances
                 .Include(a => a.Dep)
                 .Include(a => a.Doctor).ToListAsync();
             }

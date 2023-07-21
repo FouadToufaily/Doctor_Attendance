@@ -13,6 +13,6 @@ namespace Doctor_Attendance.Services
 
         Doctor getDoctor(int id);
 
-        IEnumerable<DeptHeadCount> GetDeptHeadCount();
+        //IEnumerable<DeptHeadCount> GetDeptHeadCount();
     }
 }

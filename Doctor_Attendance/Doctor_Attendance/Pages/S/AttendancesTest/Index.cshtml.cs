@@ -22,7 +22,7 @@ namespace Doctor_Attendance.Pages.S.AttendancesTest
 
         public Doctor Doctor { get; set; } = default!;
 
-        public IList<Attendence> Attendence { get; set; }
+        public IList<Attendance> Attendance { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -39,9 +39,9 @@ namespace Doctor_Attendance.Pages.S.AttendancesTest
             Doctor = doctor;
             //ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Type");
 
-            if (_context.Attendences != null)
+            if (_context.Attendances != null)
             {
-                Attendence = await _context.Attendences.Where(a=>a.Doctor.DoctorId == id).ToListAsync();
+                Attendance = await _context.Attendances.Where(a=>a.Doctor.DoctorId == id).ToListAsync();
             }
 
             return Page();

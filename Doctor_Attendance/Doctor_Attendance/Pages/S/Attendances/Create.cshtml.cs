@@ -27,18 +27,18 @@ namespace Doctor_Attendance.Pages.S.Attendances
         }
 
         [BindProperty]
-        public Attendence Attendence { get; set; } = default!;
+        public Attendance Attendance { get; set; } = default!;
         
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Attendences == null || Attendence == null)
+          if (!ModelState.IsValid || _context.Attendances == null || Attendance == null)
             {
                 return Page();
             }
 
-            _context.Attendences.Add(Attendence);
+            _context.Attendances.Add(Attendance);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

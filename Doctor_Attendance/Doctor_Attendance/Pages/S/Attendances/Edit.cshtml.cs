@@ -21,21 +21,21 @@ namespace Doctor_Attendance.Pages.S.Attendances
         }
 
         [BindProperty]
-        public Attendence Attendence { get; set; } = default!;
+        public Attendance Attendance { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Attendences == null)
+            if (id == null || _context.Attendances == null)
             {
                 return NotFound();
             }
 
-            var attendence =  await _context.Attendences.FirstOrDefaultAsync(m => m.AttId == id);
+            var attendence =  await _context.Attendances.FirstOrDefaultAsync(m => m.AttId == id);
             if (attendence == null)
             {
                 return NotFound();
             }
-            Attendence = attendence;
+            Attendance = attendence;
            ViewData["DepId"] = new SelectList(_context.Departments, "DepId", "DepId");
            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
             return Page();
@@ -50,7 +50,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                 return Page();
             }
 
-            _context.Attach(Attendence).State = EntityState.Modified;
+            _context.Attach(Attendance).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AttendenceExists(Attendence.AttId))
+                if (!AttendenceExists(Attendance.AttId))
                 {
                     return NotFound();
                 }
@@ -73,7 +73,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
 
         private bool AttendenceExists(int id)
         {
-          return (_context.Attendences?.Any(e => e.AttId == id)).GetValueOrDefault();
+          return (_context.Attendances?.Any(e => e.AttId == id)).GetValueOrDefault();
         }
     }
 }

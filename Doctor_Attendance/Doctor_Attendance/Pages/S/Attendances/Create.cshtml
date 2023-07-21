@@ -7,34 +7,34 @@
 
 <h1>Create</h1>
 
-<h4>Attendence</h4>
+<h4>Attendance</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Attendence.DepId" class="control-label"></label>
-                <select asp-for="Attendence.DepId" class ="form-control" asp-items="ViewBag.DepId"></select>
+                <label asp-for="Attendance.DepId" class="control-label"></label>
+                <select asp-for="Attendance.DepId" class ="form-control" asp-items="ViewBag.DepId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Attendence.DoctorId" class="control-label"></label>
-                <select asp-for="Attendence.DoctorId" class ="form-control" asp-items="ViewBag.DoctorId"></select>
+                <label asp-for="Attendance.DoctorId" class="control-label"></label>
+                <select asp-for="Attendance.DoctorId" class ="form-control" asp-items="ViewBag.DoctorId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Attendence.Date" class="control-label"></label>
-                <input asp-for="Attendence.Date" class="form-control" />
-                <span asp-validation-for="Attendence.Date" class="text-danger"></span>
+                <label asp-for="Attendance.Date" class="control-label"></label>
+                <input asp-for="Attendance.Date" class="form-control" />
+                <span asp-validation-for="Attendance.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Attendence.NbHours" class="control-label"></label>
-                <input asp-for="Attendence.NbHours" class="form-control" />
-                <span asp-validation-for="Attendence.NbHours" class="text-danger"></span>
+                <label asp-for="Attendance.NbHours" class="control-label"></label>
+                <input asp-for="Attendance.NbHours" class="form-control" />
+                <span asp-validation-for="Attendance.NbHours" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Attendence.Comments" class="control-label"></label>
-                <input asp-for="Attendence.Comments" class="form-control" />
-                <span asp-validation-for="Attendence.Comments" class="text-danger"></span>
+                <label asp-for="Attendance.Comments" class="control-label"></label>
+                <input asp-for="Attendance.Comments" class="form-control" />
+                <span asp-validation-for="Attendance.Comments" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

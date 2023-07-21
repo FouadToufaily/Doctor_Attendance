@@ -11,7 +11,7 @@
 @{
     int totalDays = 0;
     int totalHours = 0;
-    foreach (var item in Model.Attendence)
+    foreach (var item in Model.Attendance)
     {
         totalDays += 1;
         if (item.NbHours != null)
@@ -38,22 +38,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Attendence[0].Date)
+                @Html.DisplayNameFor(model => model.Attendance[0].Date)
             </th>
             <th>
                 Time
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendence[0].NbHours)
+                @Html.DisplayNameFor(model => model.Attendance[0].NbHours)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendence[0].Comments)
+                @Html.DisplayNameFor(model => model.Attendance[0].Comments)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Attendence)
+        @foreach (var item in Model.Attendance)
         {
             <tr>
                 <td>

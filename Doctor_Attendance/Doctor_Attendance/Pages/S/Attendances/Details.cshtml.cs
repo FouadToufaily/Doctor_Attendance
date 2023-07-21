@@ -19,23 +19,23 @@ namespace Doctor_Attendance.Pages.S.Attendances
             _context = context;
         }
 
-      public Attendence Attendence { get; set; } = default!; 
+      public Attendance Attendance { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Attendences == null)
+            if (id == null || _context.Attendances == null)
             {
                 return NotFound();
             }
 
-            var attendence = await _context.Attendences.FirstOrDefaultAsync(m => m.AttId == id);
+            var attendence = await _context.Attendances.FirstOrDefaultAsync(m => m.AttId == id);
             if (attendence == null)
             {
                 return NotFound();
             }
             else 
             {
-                Attendence = attendence;
+                Attendance = attendence;
             }
             return Page();
         }

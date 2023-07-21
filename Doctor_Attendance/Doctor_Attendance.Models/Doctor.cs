@@ -7,7 +7,7 @@ namespace Doctor_Attendance.Models
     {
         public Doctor()
         {
-            Attendences = new HashSet<Attendence>();
+            Attendances = new HashSet<Attendance>();
             Departments = new HashSet<Department>();
             Faculties = new HashSet<Faculty>();
             Sections = new HashSet<Section>();
@@ -26,7 +26,7 @@ namespace Doctor_Attendance.Models
         public string Fullname { get { return this.Firstname + " " + this.Lastname; } }
 
         public virtual Category? Category { get; set; }
-        public virtual ICollection<Attendence> Attendences { get; set; }
+        public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<Department> Departments { get; set; }
         public virtual ICollection<Faculty> Faculties { get; set; }
         public virtual ICollection<Section> Sections { get; set; }

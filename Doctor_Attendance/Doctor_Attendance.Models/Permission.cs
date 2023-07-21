@@ -7,7 +7,7 @@ namespace Doctor_Attendance.Models
     {
         public Permission()
         {
-            Users = new HashSet<User>();
+            Roles = new HashSet<Role>();
         }
 
         public int Permissionid { get; set; }
@@ -15,6 +15,6 @@ namespace Doctor_Attendance.Models
         public int? UpdateAttendence { get; set; }
         public int? AddAttendence { get; set; }
 
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Role> Roles { get; set; }
     }
 }

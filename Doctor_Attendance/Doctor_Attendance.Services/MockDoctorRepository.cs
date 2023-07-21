@@ -29,15 +29,15 @@ namespace Doctor_Attendance.Services
             return _doctorList;
         }
 
-        public IEnumerable<DeptHeadCount> GetDeptHeadCount()
-        {
-            return _doctorList.GroupBy(e => e.Departments)
-               .Select(g => new DeptHeadCount()
-               {
-                   Department = g.Key.FirstOrDefault(),
-                   Count = g.Count()
-               });
-        }
+        //public IEnumerable<DeptHeadCount> GetDeptHeadCount()
+        //{
+        //    return _doctorList.GroupBy(e => e.Departments)
+        //       .Select(g => new DeptHeadCount()
+        //       {
+        //           Department = g.Key.FirstOrDefault(),
+        //           Count = g.Count()
+        //       });
+        //}
 
         public Doctor getDoctor(int id)
         {

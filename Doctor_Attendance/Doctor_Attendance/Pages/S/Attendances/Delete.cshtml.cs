@@ -20,16 +20,16 @@ namespace Doctor_Attendance.Pages.S.Attendances
         }
 
         [BindProperty]
-      public Attendence Attendence { get; set; } = default!;
+      public Attendance Attendance { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Attendences == null)
+            if (id == null || _context.Attendances == null)
             {
                 return NotFound();
             }
 
-            var attendence = await _context.Attendences.FirstOrDefaultAsync(m => m.AttId == id);
+            var attendence = await _context.Attendances.FirstOrDefaultAsync(m => m.AttId == id);
 
             if (attendence == null)
             {
@@ -37,23 +37,23 @@ namespace Doctor_Attendance.Pages.S.Attendances
             }
             else 
             {
-                Attendence = attendence;
+                Attendance = attendence;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Attendences == null)
+            if (id == null || _context.Attendances == null)
             {
                 return NotFound();
             }
-            var attendence = await _context.Attendences.FindAsync(id);
+            var attendence = await _context.Attendances.FindAsync(id);
 
             if (attendence != null)
             {
-                Attendence = attendence;
-                _context.Attendences.Remove(Attendence);
+                Attendance = attendence;
+                _context.Attendances.Remove(Attendance);
                 await _context.SaveChangesAsync();
             }
 
