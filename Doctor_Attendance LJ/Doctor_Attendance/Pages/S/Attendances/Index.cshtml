@@ -1,0 +1,60 @@
+﻿@page
+@model Doctor_Attendance.Pages.S.Attendances.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendance[0].Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendance[0].NbHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendance[0].Comments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendance[0].Dep)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Attendance[0].Doctor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Attendance) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NbHours)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dep.DepId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Doctor.DoctorId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.AttId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.AttId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.AttId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
