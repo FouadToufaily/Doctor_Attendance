@@ -14,6 +14,7 @@ namespace Doctor_Attendance.Pages.ViewByDate
     {
 
         private readonly AppDBContext dbContext;
+
         public AddAttendanceModel(AppDBContext dbContext)
         {
             this.dbContext = dbContext;
@@ -22,7 +23,6 @@ namespace Doctor_Attendance.Pages.ViewByDate
             department = new Department();
             employee = new Employee();
             empId = 1;
-
         }
 
         [BindProperty]
@@ -33,7 +33,6 @@ namespace Doctor_Attendance.Pages.ViewByDate
 
         [BindProperty]
         public IList<Doctor> Doctors { get; set; } = default!;
-        public IList<Department> Departements { get; set; } = default!;
 
         [DataType(DataType.Date)]
         [BindProperty(SupportsGet = true)] // Add this line
