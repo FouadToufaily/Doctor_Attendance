@@ -79,14 +79,15 @@
                         
             </td>
             
-               <td style="padding-left: 10px"><input class="form-check-input" type="checkbox"  name="AttendenceRecords[@i].Attended" value=1 checked="@(Model.AttendenceRecords[i].Attended == 1)" /></td>
+               <td style="padding-left: 10px"><input class="form-check-input" type="checkbox"  name="Records[@i]" value="true" checked="@(Model.Records[i] == true)" /></td>
             
                
                <td><input  type="text" asp-for="@Model.AttendenceRecords[i].Date" id="datePicker_@i" value="@currentDate" readonly hidden/></td>
                                  <input  type="number" asp-for="@Model.AttendenceRecords[i].DepId" value="1" hidden />
                                  <input  type="number" asp-for="@Model.AttendenceRecords[i].AttId" hidden/>
-                                <input  type="number" asp-for="@Model.AttendenceRecords[@i].Attended" value="0" hidden />
-                                <input  type="number" asp-for="@Model.AttendenceRecords[@i].Published" value="0" hidden />
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].Attended" value="0" hidden />
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].Published" value="0" hidden />
+                                <input  type="hidden" asp-for="@Model.Records[@i]" value="false" />
                
 
             <td>

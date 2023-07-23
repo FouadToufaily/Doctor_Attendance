@@ -18,6 +18,7 @@ namespace Doctor_Attendance.Pages.ViewByDate
         {
             this.dbContext = dbContext;
             AttendenceRecords = new List<Attendance>();
+            Records = new List<Boolean>();
             department = new Department();
             employee = new Employee();
             empId = 1;
@@ -30,6 +31,7 @@ namespace Doctor_Attendance.Pages.ViewByDate
         [BindProperty]
         public List<Boolean> Records { get; set; }
 
+        [BindProperty]
         public IList<Doctor> Doctor { get; set; } = default!;
         public IList<Department> Departements { get; set; } = default!;
 
@@ -64,9 +66,11 @@ namespace Doctor_Attendance.Pages.ViewByDate
                 Attendance attendence = new Attendance();
                 attendence.DoctorId = doctor.DoctorId; // Assign the correct DoctorId
                 AttendenceRecords.Add(attendence);
+
+                Boolean b = new Boolean();
+                Records.Add(b);
             }
             var emp = await dbContext.Employees.FirstOrDefaultAsync(e => e.EmpId == empId);
-        //    await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == id);
 
             if (emp == null)
             {
@@ -85,6 +89,13 @@ namespace Doctor_Attendance.Pages.ViewByDate
 
         public IActionResult OnPost()
         {
+
+            int i=0;
+            for (i = 0; i < Records.Count; i++)
+            {
+                if (Records[i] == true)
+                    AttendenceRecords[i].Attended = 1;
+            }
             
             var checkedRecords = AttendenceRecords.Where(r => r.Attended == 1).ToList();
             if(checkedRecords.Count == 0)
@@ -93,8 +104,9 @@ namespace Doctor_Attendance.Pages.ViewByDate
             
             // Get the last AttId from the table
             
-            int? lastAttId = dbContext.Attendances.Select(r => (int?)r.AttId).Max();
+           // int? lastAttId = dbContext.Attendances.Select(r => (int?)r.AttId).Max();
             // Assign incremented AttId values
+            /*
             int attId = lastAttId.HasValue ? lastAttId.Value + 1 : 1;
             foreach (var record in checkedRecords)
             {
@@ -102,6 +114,7 @@ namespace Doctor_Attendance.Pages.ViewByDate
                 
                 attId++; // Increment the AttId value
             }
+            */
             dbContext.Attendances.AddRange(checkedRecords);
             dbContext.SaveChanges();
 
