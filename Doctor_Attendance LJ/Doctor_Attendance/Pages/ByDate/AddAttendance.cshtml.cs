@@ -32,7 +32,7 @@ namespace Doctor_Attendance.Pages.ViewByDate
         public List<Boolean> Records { get; set; }
 
         [BindProperty]
-        public IList<Doctor> Doctor { get; set; } = default!;
+        public IList<Doctor> Doctors { get; set; } = default!;
         public IList<Department> Departements { get; set; } = default!;
 
         [DataType(DataType.Date)]
@@ -49,19 +49,14 @@ namespace Doctor_Attendance.Pages.ViewByDate
         [BindProperty]
         public string s { get; set; }
 
-        
-
         public async Task OnGetAsync()
         {
-            if (empId == null || dbContext.Employees == null)
-                return;
-
                 if (dbContext.Doctors != null)
             {
-                Doctor = await dbContext.Doctors
+                Doctors = await dbContext.Doctors
                 .Include(d => d.Category).ToListAsync();
             }
-            foreach (var doctor in Doctor)
+            foreach (var doctor in Doctors)
             {
                 Attendance attendence = new Attendance();
                 attendence.DoctorId = doctor.DoctorId; // Assign the correct DoctorId
@@ -70,51 +65,37 @@ namespace Doctor_Attendance.Pages.ViewByDate
                 Boolean b = new Boolean();
                 Records.Add(b);
             }
+            // Get the employee with determined empId
             var emp = await dbContext.Employees.FirstOrDefaultAsync(e => e.EmpId == empId);
-
             if (emp == null)
-            {
-                s = "emp is null";
                 return;
-
-            }
             employee = emp;
-
-                    var dep = await dbContext.Departments.FirstOrDefaultAsync(d => d.DepId == employee.DepId);
-                
-                if(dep == null)
-                    return;
-                department = dep;
+            // Get the department with determined depId
+            var dep = await dbContext.Departments.FirstOrDefaultAsync(d => d.DepId == employee.DepId);
+            if(dep == null)
+                return;
+            department = dep;
         }
 
         public IActionResult OnPost()
         {
-
+            /*
+            if (!ModelState.IsValid || dbContext.Attendances == null )
+            {
+                return Page();
+            }
+            */
+            // Assign atttended=1 to checked Records
             int i=0;
             for (i = 0; i < Records.Count; i++)
             {
                 if (Records[i] == true)
                     AttendenceRecords[i].Attended = 1;
-            }
-            
+            } 
             var checkedRecords = AttendenceRecords.Where(r => r.Attended == 1).ToList();
             if(checkedRecords.Count == 0)
                 return NotFound();
 
-            
-            // Get the last AttId from the table
-            
-           // int? lastAttId = dbContext.Attendances.Select(r => (int?)r.AttId).Max();
-            // Assign incremented AttId values
-            /*
-            int attId = lastAttId.HasValue ? lastAttId.Value + 1 : 1;
-            foreach (var record in checkedRecords)
-            {
-                record.AttId = attId;
-                
-                attId++; // Increment the AttId value
-            }
-            */
             dbContext.Attendances.AddRange(checkedRecords);
             dbContext.SaveChanges();
 

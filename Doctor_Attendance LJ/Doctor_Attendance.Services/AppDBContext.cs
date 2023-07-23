@@ -25,7 +25,7 @@ namespace Doctor_Attendance.Services
         public virtual DbSet<Section> Sections { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+     /*   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
@@ -33,6 +33,7 @@ namespace Doctor_Attendance.Services
                 optionsBuilder.UseSqlServer("Data Source=DESKTOP-MDTVBJQ\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
             }
         }
+     */
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -49,11 +49,13 @@
 
                 @for (int i = 0; i < Model.AttendenceRecords.Count; i++)
                 {
-                    var doctor = Model.Doctor.FirstOrDefault(d => d.DoctorId == Model.AttendenceRecords[i].DoctorId);
+                    var doctor = Model.Doctors.FirstOrDefault(d => d.DoctorId == Model.AttendenceRecords[i].DoctorId);
                     var firstname = doctor != null ? doctor.Firstname : "N/A";
                     var lastname = doctor != null ? doctor.Lastname : "N/A";
                     var name = firstname + " " + lastname;
-                    var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                    var idstr = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                    int id = doctor != null ? doctor.DoctorId : 0;
+
                     var categoryId = doctor?.Category?.CategoryId ?? 0;
                     var isCategoryIdOne = categoryId == 1;
                 
@@ -61,6 +63,9 @@
         <tr>
             <td>
                 <a asp-page="/S/Doctors/Details"  asp-route-id="@doctor.DoctorId" >@name</a> 
+                <input  type="number" asp-for="@Model.AttendenceRecords[i].DoctorId" value="@doctor.DoctorId" hidden />
+                
+            
             </td>
             
             <td>
@@ -84,7 +89,6 @@
                
                <td><input  type="text" asp-for="@Model.AttendenceRecords[i].Date" id="datePicker_@i" value="@currentDate" readonly hidden/></td>
                                  <input  type="number" asp-for="@Model.AttendenceRecords[i].DepId" value="1" hidden />
-                                 <input  type="number" asp-for="@Model.AttendenceRecords[i].AttId" hidden/>
                                 <input  type="number" asp-for="@Model.AttendenceRecords[i].Attended" value="0" hidden />
                                 <input  type="number" asp-for="@Model.AttendenceRecords[i].Published" value="0" hidden />
                                 <input  type="hidden" asp-for="@Model.Records[@i]" value="false" />
