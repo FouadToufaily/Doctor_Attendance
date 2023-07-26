@@ -29,6 +29,8 @@ namespace Doctor_Attendance.Pages.S.Attendances
         public string s { get; set; }
         [BindProperty]
         public string s1 { get; set; }
+
+        public int attendanceToPublishId { get; set; } 
         public async Task OnGetAsync()
         {   
             Attendances = await _context.Attendances.Include(a => a.Dep)
@@ -37,7 +39,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
             if (String.IsNullOrEmpty(SearchString))
                 return;
           
-            // (*)
+            
             var attendances = from a in _context.Attendances
                               select a;
 
@@ -63,8 +65,20 @@ namespace Doctor_Attendance.Pages.S.Attendances
 
             Attendances = await attendances1.AsQueryable().Include(a => a.Dep)
         .Include(a => a.Doctor).ToListAsync();
-  }
+        }
+             public async Task<IActionResult> OnPostPublish( int attendanceToPublishId)
+        {
+            //s1 = "in publish "+ attendanceToPublishId;
+            
+                var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);
+               
+                att.Published = 1;
+                _context.SaveChanges();
+                return RedirectToPage("./Index");
+           
 
-  }
-  }
+            }
+
+    }
+}
 
