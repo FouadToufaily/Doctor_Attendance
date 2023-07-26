@@ -38,6 +38,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
             else 
             {
                 Doctor = doctor;
+                
             }
             return Page();
         }

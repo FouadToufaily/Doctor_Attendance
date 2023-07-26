@@ -18,8 +18,12 @@ namespace Doctor_Attendance.Pages.S.Attendances
         {
             _context = context;
         }
+       
 
-      public Attendance Attendance { get; set; } = default!; 
+        public Attendance Attendance { get; set; } = default!;
+
+        [BindProperty]
+        public string s { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,12 +33,17 @@ namespace Doctor_Attendance.Pages.S.Attendances
             }
 
             var attendence = await _context.Attendances.FirstOrDefaultAsync(m => m.AttId == id);
+            var department = await _context.Departments.FirstOrDefaultAsync(m => m.DepId == attendence.DepId);
+            attendence.Dep = department;
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == attendence.DoctorId);
+            attendence.Doctor = doctor;
             if (attendence == null)
             {
                 return NotFound();
             }
             else 
             {
+                s += attendence.AttId.ToString() +" "+attendence.DepId+" "+attendence.Doctor.DoctorId;
                 Attendance = attendence;
             }
             return Page();
