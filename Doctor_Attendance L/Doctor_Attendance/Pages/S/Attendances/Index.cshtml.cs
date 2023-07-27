@@ -21,7 +21,6 @@ namespace Doctor_Attendance.Pages.S.Attendances
         }
 
         public IList<Attendance> Attendances { get; set; } = default!;
-        public List<int> drsId { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; } = default!;
@@ -30,7 +29,6 @@ namespace Doctor_Attendance.Pages.S.Attendances
         [BindProperty]
         public string s1 { get; set; }
 
-        public int attendanceToPublishId { get; set; } 
         public async Task OnGetAsync()
         {   
             Attendances = await _context.Attendances.Include(a => a.Dep)
@@ -40,8 +38,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                 return;
           
             
-            var attendances = from a in _context.Attendances
-                              select a;
+            
 
             //get doctors whose names contains searched string
             var doctors = _context.Doctors.AsEnumerable().Where(s => s.Fullname.Contains(SearchString));

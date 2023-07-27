@@ -2,11 +2,16 @@
 @model Doctor_Attendance.Pages.S.Doctors.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Doctors";
 }
 
-<h1>Index</h1>
-
+<h1>Doctors</h1>
+<form>
+    <p>
+        Doctor Name: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 <p>
     <a asp-page="Create">Create New</a>
 </p>

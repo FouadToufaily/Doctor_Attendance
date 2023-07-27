@@ -20,6 +20,8 @@ namespace Doctor_Attendance.Pages.S.Doctors
         }
 
         public IList<Doctor> Doctor { get;set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -28,6 +30,19 @@ namespace Doctor_Attendance.Pages.S.Doctors
                 Doctor = await _context.Doctors
                 .Include(d => d.Category).ToListAsync();
             }
+            if (String.IsNullOrEmpty(SearchString))
+                return;
+
+            //get doctors whose names contains searched string
+             var doctors = _context.Doctors.AsEnumerable().Where(s => s.Fullname.ToLower().Contains(SearchString.ToLower())).ToList();
+            /*
+            IQueryable<Doctor> doctors = (from d in _context.Doctors
+                                         where d.Fullname.Contains(SearchString)
+                                         select d);
+            */
+          //  Doctor = Doctor.AsQueryable().AsEnumerable();
+           Doctor =  await doctors.AsQueryable().Include(a => a.Category)
+       .Include(a => a.Attendances).ToListAsync();
         }
     }
 }
