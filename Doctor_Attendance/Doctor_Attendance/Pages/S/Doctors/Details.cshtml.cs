@@ -19,7 +19,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
             _context = context;
         }
 
-        public Doctor Doctor { get; set; } = default!;
+      public Doctor Doctor { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,18 +29,16 @@ namespace Doctor_Attendance.Pages.S.Doctors
             }
 
             var doctor = await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == id);
-            if (doctor is not null)
-            {
-                var category = await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == doctor.CategoryId);
-                doctor.Category = category;
-            }
+            var category= await _context.Categories.FirstOrDefaultAsync(m => m.CategoryId == doctor.CategoryId);
+            doctor.Category = category;
             if (doctor == null)
             {
                 return NotFound();
             }
-            else
+            else 
             {
                 Doctor = doctor;
+                
             }
             return Page();
         }

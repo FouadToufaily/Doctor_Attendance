@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Doctor_Attendance.Services\Doctor_Attendance.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\ByDate\" />
+  </ItemGroup>
+
 </Project>

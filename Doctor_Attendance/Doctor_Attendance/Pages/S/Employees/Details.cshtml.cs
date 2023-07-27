@@ -29,11 +29,8 @@ namespace Doctor_Attendance.Pages.S.Employees
             }
 
             var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmpId == id);
-            if(employee is not null)
-            {
             var dep = await _context.Departments.FirstOrDefaultAsync(m => m.DepId == employee.DepId);
             employee.Dep = dep;
-            }
 
             if (employee == null)
             {

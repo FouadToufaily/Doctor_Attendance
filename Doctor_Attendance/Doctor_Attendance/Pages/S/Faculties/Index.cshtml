@@ -29,10 +29,7 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @{
-                    if ((item.Doctor) is not null)
-                        @Html.DisplayFor(modelItem => item.Doctor.Fullname)
-                }
+                @Html.DisplayFor(modelItem => item.Doctor.Fullname)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Facultyid">Edit</a> |

@@ -21,7 +21,7 @@ namespace Doctor_Attendance.Pages.S.Departments
 
         public IActionResult OnGet()
         {
-        ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Fullname");
+        ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
             return Page();
         }
 

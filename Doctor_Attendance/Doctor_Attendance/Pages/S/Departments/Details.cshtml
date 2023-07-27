@@ -34,12 +34,9 @@
         </dt>
         <dd class="col-sm-10">
             @{
-                if (Model.Department.Doctor is not null)
-                {
-                    string parameterValue = @Model.Department.Doctor.Firstname + " " + @Model.Department.Doctor.Lastname;
-                    @Html.DisplayFor(modelItem => parameterValue);
-                }
+                string parameterValue = @Model.Department.Doctor.Firstname + " " + @Model.Department.Doctor.Lastname;
             }
+            @Html.DisplayFor(modelItem => parameterValue)
         </dd>
     </dl>
 </div>
