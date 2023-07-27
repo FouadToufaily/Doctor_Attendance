@@ -33,7 +33,7 @@ namespace Doctor_Attendance.Services
                 optionsBuilder.UseSqlServer("Data Source=DESKTOP-O8T7K8E\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
             }
         }
-     
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -392,5 +392,45 @@ namespace Doctor_Attendance.Services
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public IEnumerable<Doctor> SearchDoctor(string searchTerm)
+        {
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return Doctors;
+            }
+            return Doctors.Where(e => e.Firstname.Contains(searchTerm) ||
+                                            e.Lastname.Contains(searchTerm) ||
+                                            e.City.Contains(searchTerm) ||
+                                            e.Email.Contains(searchTerm) ||
+                                            e.Category.Type.Contains(searchTerm)
+                                            );
+        }
+        public IEnumerable<Attendance> SearchAttendance(string searchTerm)
+        {
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // Try to parse the searchTerm as a date.
+                if (DateTime.TryParse(searchTerm, out DateTime searchDate))
+                {
+                    // Search by date on the database server.
+                    return Attendances.Where(e => e.Date.Date == searchDate.Date).ToList();
+                }
+                else
+                {
+                    // Fetch the data from the database and perform the doctor's first name search in-memory using AsEnumerable().
+                    return Attendances.AsEnumerable()
+                        .Where(e => e.Doctor.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+            }
+            else
+            {
+                // If searchTerm is null or empty, return the original collection without filtering.
+                return Attendances.ToList();
+            }
+
+        }
+
     }
 }

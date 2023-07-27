@@ -19,7 +19,7 @@
 
 <form>
     <p>
-        Doctor Name: <input type="text" asp-for="SearchString" />
+        Search By Date or Doctor Name <input type="text" asp-for="SearchString" />
         <input type="submit" value="Filter" />
     </p>
 </form>
@@ -28,19 +28,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Attendances[0].Date)
+                Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendances[0].NbHours)
+                NbHours
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendances[0].Comments)
+                Comments
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendances[0].Dep)
+                Department
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Attendances[0].Doctor)
+                Doctor
             </th>
             <th></th>
         </tr>
@@ -58,7 +58,7 @@
                 @Html.DisplayFor(modelItem => item.Comments)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Dep.DepId)
+                @Html.DisplayFor(modelItem => item.Dep.DepName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Doctor.Fullname)
@@ -74,13 +74,8 @@
                     
                                 <button type="submit" class="btn btn-primary" name="attendanceToPublishId"  asp-route-id="@item.AttId" asp-page="./Details">View</button>
 
-                             if (@item.Published ==0)
+                             if (@item.Published == 0)
                                  <button type="submit" class="btn btn-primary" name="attendanceToPublishId"  asp-route-id="@item.AttId" asp-page-handler="Publish">Publish</button>
-                               
-                            
-                            <!--
-                    <button type="submit" onclick="location.href='@Url.Action("Publish",@item.AttId)'">Publish</button>>    
-            -->
             </div>
                 </form>
             </td>

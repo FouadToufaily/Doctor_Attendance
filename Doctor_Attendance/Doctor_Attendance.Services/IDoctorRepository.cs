@@ -11,8 +11,8 @@ namespace Doctor_Attendance.Services
     {
         IEnumerable<Doctor> GetAllDoctors();
 
-        Doctor getDoctor(int id);
+        Doctor GetDoctor(int id);
 
-        //IEnumerable<DeptHeadCount> GetDeptHeadCount();
+        IEnumerable<Doctor> Search(string searchTerm);
     }
 }

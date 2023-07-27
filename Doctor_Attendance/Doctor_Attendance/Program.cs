@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<IDoctorRepository, MockDoctorRepository>();
+//builder.Services.AddSingleton<IDoctorRepository, SQLDoctorRepository>();
 
 builder.Services.AddDbContextPool<AppDBContext>(options =>
 {

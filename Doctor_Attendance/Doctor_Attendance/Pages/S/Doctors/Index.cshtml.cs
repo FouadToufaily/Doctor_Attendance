@@ -31,7 +31,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
                 .Include(d => d.Category).ToListAsync();
             }
 
-            Doctor = Search(SearchString); // calling Search function by search criteria which is binded to the form control textbox
+            Doctor = _context.SearchDoctor(SearchString); // calling Search function by search criteria which is binded to the form control textbox
 
             //if (String.IsNullOrEmpty(SearchString))
             //    return;
@@ -49,18 +49,18 @@ namespace Doctor_Attendance.Pages.S.Doctors
             //}
         }
 
-        public IEnumerable<Doctor> Search(string searchTerm)
-        {
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                return _context.Doctors;
-            }
-            return _context.Doctors.Where(e => e.Firstname.Contains(searchTerm) ||
-                                            e.Lastname.Contains(searchTerm) ||
-                                            e.City.Contains(searchTerm) ||
-                                            e.Email.Contains(searchTerm) ||
-                                            e.Category.Type.Contains(searchTerm)
-                                            );
-        }
+        //public IEnumerable<Doctor> Search(string searchTerm)
+        //{
+        //    if (string.IsNullOrEmpty(searchTerm))
+        //    {
+        //        return _context.Doctors;
+        //    }
+        //    return _context.Doctors.Where(e => e.Firstname.Contains(searchTerm) ||
+        //                                    e.Lastname.Contains(searchTerm) ||
+        //                                    e.City.Contains(searchTerm) ||
+        //                                    e.Email.Contains(searchTerm) ||
+        //                                    e.Category.Type.Contains(searchTerm)
+        //                                    );
+        //}
     }
 }

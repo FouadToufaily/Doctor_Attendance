@@ -20,61 +20,30 @@ namespace Doctor_Attendance.Pages.S.Attendances
             _context = context;
         }
 
-        public IList<Attendance> Attendances { get; set; } = default!;
+        public IEnumerable<Attendance> Attendances { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; } = default!;
-        [BindProperty ]
+        [BindProperty]
         public string s { get; set; }
         [BindProperty]
         public string s1 { get; set; }
 
         public async Task OnGetAsync()
-        {   
+        {
             Attendances = await _context.Attendances.Include(a => a.Dep)
                      .Include(a => a.Doctor).ToListAsync();
-
-            if (String.IsNullOrEmpty(SearchString))
-                return;
-          
-            
-            
-
-            //get doctors whose names contains searched string
-            var doctors = _context.Doctors.AsEnumerable().Where(s => s.Fullname.Contains(SearchString));
-
-            IQueryable<Attendance> attendances1 = from a in _context.Attendances
-                                                  where a.DoctorId == doctors.ToList().ElementAt(0).DoctorId
-                                                  select a;
-          
-              foreach (var d in doctors)
-              {
-                  // Get attendances for each matched drId 
-
-                  IQueryable<Attendance> attendances2 = from a in _context.Attendances
-                                                        where a.DoctorId == d.DoctorId
-                                                        select a;
-                //Add attendances to our list
-                attendances1 = attendances1.Union(attendances2);
-
-              }
-
-
-            Attendances = await attendances1.AsQueryable().Include(a => a.Dep)
-        .Include(a => a.Doctor).ToListAsync();
+            Attendances = _context.SearchAttendance(SearchString);
         }
-             public async Task<IActionResult> OnPostPublish( int attendanceToPublishId)
+        public async Task<IActionResult> OnPostPublish(int attendanceToPublishId)
         {
             //s1 = "in publish "+ attendanceToPublishId;
-            
-                var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);
-               
-                att.Published = 1;
-                _context.SaveChanges();
-                return RedirectToPage("./Index");
-           
 
-            }
+            var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);
+            att.Published = 1;
+            _context.SaveChanges();
+            return RedirectToPage("./Index");
+        }
 
     }
 }
