@@ -35,11 +35,12 @@ namespace Doctor_Attendance.Pages.S.Attendances
                      .Include(a => a.Doctor).ToListAsync();
             Attendances = _context.SearchAttendance(SearchString);
         }
-        public async Task<IActionResult> OnPostPublish(int attendanceToPublishId)
+        public IActionResult OnPostPublish(int attendanceToPublishId)
         {
             //s1 = "in publish "+ attendanceToPublishId;
 
             var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);
+            if (att is not null)
             att.Published = 1;
             _context.SaveChanges();
             return RedirectToPage("./Index");

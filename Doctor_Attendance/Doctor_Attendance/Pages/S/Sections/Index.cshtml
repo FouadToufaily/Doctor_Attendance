@@ -25,7 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Section[0].Doctor)
             </th>
-            <th></th>
+            <th>
+                Faculties
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -42,6 +44,23 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Doctor.Fullname)
+            </td>
+            <td>
+                @if (item.Faculties.Any())
+                {
+                    <ul>
+                        @foreach (var faculty in item.Faculties)
+                        {
+                            <li>
+                                @Html.DisplayFor(modelItem => faculty.Name)
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>No Faculties Exist in this Section.</span>
+                }
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Sectionid">Edit</a> |

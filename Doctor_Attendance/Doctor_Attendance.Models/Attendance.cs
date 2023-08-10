@@ -13,7 +13,6 @@ namespace Doctor_Attendance.Models
         public int? Attended { get; set; }
         public int? Published { get; set; }
         public string? Comments { get; set; }
-        public string DateFormat { get { return this.Date.ToShortDateString(); } }
 
         public virtual Department Dep { get; set; } = null!;
         public virtual Doctor Doctor { get; set; } = null!;

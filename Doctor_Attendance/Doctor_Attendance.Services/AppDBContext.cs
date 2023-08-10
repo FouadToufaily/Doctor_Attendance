@@ -8,6 +8,9 @@ namespace Doctor_Attendance.Services
 {
     public partial class AppDBContext : DbContext
     {
+        //public AppDBContext()
+        //{
+        //}
 
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
@@ -29,21 +32,28 @@ namespace Doctor_Attendance.Services
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-O8T7K8E\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-MDTVBJQ\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
             }
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Attendance>(entity =>
             {
-                entity.HasKey(e => e.AttId);
+                entity.HasKey(e => new { e.DepId, e.DoctorId });
 
                 entity.ToTable("ATTENDANCE");
 
-                entity.Property(e => e.AttId).HasColumnName("ATT_ID");
+                entity.HasIndex(e => e.AttId, "ATT_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
+
+                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
+
+                entity.Property(e => e.AttId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ATT_ID");
 
                 entity.Property(e => e.Attended).HasColumnName("ATTENDED");
 
@@ -55,10 +65,6 @@ namespace Doctor_Attendance.Services
                 entity.Property(e => e.Date)
                     .HasColumnType("datetime")
                     .HasColumnName("DATE");
-
-                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
-
-                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.NbHours).HasColumnName("NB_HOURS");
 
@@ -84,6 +90,9 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("CATEGORY");
 
+                entity.HasIndex(e => e.CategoryId, "CATEGORY_PK")
+                    .IsUnique();
+
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORY_ID");
 
                 entity.Property(e => e.Type)
@@ -99,6 +108,9 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("DEPARTMENT");
 
+                entity.HasIndex(e => e.DepId, "DEPARTMENT_PK")
+                    .IsUnique();
+
                 entity.Property(e => e.DepId).HasColumnName("DEP_ID");
 
                 entity.Property(e => e.DepName)
@@ -109,8 +121,6 @@ namespace Doctor_Attendance.Services
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.Nbdoctors).HasColumnName("NBDOCTORS");
-
-                entity.Property(e => e.Number).HasColumnName("NUMBER");
 
                 entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.Departments)
@@ -142,6 +152,9 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("DOCTOR");
 
+                entity.HasIndex(e => e.DoctorId, "DOCTOR_PK")
+                    .IsUnique();
+
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.Age).HasColumnName("AGE");
@@ -153,10 +166,17 @@ namespace Doctor_Attendance.Services
                     .IsUnicode(false)
                     .HasColumnName("CITY");
 
+                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
+
                 entity.Property(e => e.Email)
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasColumnName("EMAIL");
+
+                entity.Property(e => e.FileNumber)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("FILE_NUMBER");
 
                 entity.Property(e => e.Firstname)
                     .HasMaxLength(20)
@@ -173,22 +193,10 @@ namespace Doctor_Attendance.Services
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_DOCTOR_IS_OF_TYP_CATEGORY");
 
-                entity.HasMany(d => d.Deps)
+                entity.HasOne(d => d.Dep)
                     .WithMany(p => p.Doctors)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Teach",
-                        l => l.HasOne<Department>().WithMany().HasForeignKey("DepId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_TEACHES_TEACHES2_DEPARTME"),
-                        r => r.HasOne<Doctor>().WithMany().HasForeignKey("DoctorId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_TEACHES_TEACHES_DOCTOR"),
-                        j =>
-                        {
-                            j.HasKey("DoctorId", "DepId");
-
-                            j.ToTable("TEACHES");
-
-                            j.IndexerProperty<int>("DoctorId").HasColumnName("DOCTOR_ID");
-
-                            j.IndexerProperty<int>("DepId").HasColumnName("DEP_ID");
-                        });
+                    .HasForeignKey(d => d.DepId)
+                    .HasConstraintName("FK_DOCTOR_TEACHES_DEPARTME");
             });
 
             modelBuilder.Entity<Employee>(entity =>
@@ -197,6 +205,9 @@ namespace Doctor_Attendance.Services
                     .IsClustered(false);
 
                 entity.ToTable("EMPLOYEE");
+
+                entity.HasIndex(e => e.EmpId, "EMPLOYEE_PK")
+                    .IsUnique();
 
                 entity.Property(e => e.EmpId).HasColumnName("EMP_ID");
 
@@ -237,6 +248,9 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("FACULTY");
 
+                entity.HasIndex(e => e.Facultyid, "FACULTY_PK")
+                    .IsUnique();
+
                 entity.Property(e => e.Facultyid).HasColumnName("FACULTYID");
 
                 entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
@@ -276,9 +290,10 @@ namespace Doctor_Attendance.Services
 
                 entity.ToTable("PERMISSIONS");
 
-                entity.Property(e => e.Permissionid)
-                    .ValueGeneratedNever()
-                    .HasColumnName("PERMISSIONID");
+                entity.HasIndex(e => e.Permissionid, "PERMISSIONS_PK")
+                    .IsUnique();
+
+                entity.Property(e => e.Permissionid).HasColumnName("PERMISSIONID");
 
                 entity.Property(e => e.AddAttendence).HasColumnName("ADD_ATTENDENCE");
 
@@ -293,6 +308,9 @@ namespace Doctor_Attendance.Services
                     .IsClustered(false);
 
                 entity.ToTable("ROLE");
+
+                entity.HasIndex(e => e.RoleId, "ROLE_PK")
+                    .IsUnique();
 
                 entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
 
@@ -315,6 +333,9 @@ namespace Doctor_Attendance.Services
                     .IsClustered(false);
 
                 entity.ToTable("SECTION");
+
+                entity.HasIndex(e => e.Sectionid, "SECTION_PK")
+                    .IsUnique();
 
                 entity.Property(e => e.Sectionid).HasColumnName("SECTIONID");
 
@@ -341,10 +362,12 @@ namespace Doctor_Attendance.Services
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.UserId)
-                    .HasName("PK_USER")
                     .IsClustered(false);
 
                 entity.ToTable("USERS");
+
+                entity.HasIndex(e => e.UserId, "USERS_PK")
+                    .IsUnique();
 
                 entity.Property(e => e.UserId).HasColumnName("USER_ID");
 
@@ -360,32 +383,32 @@ namespace Doctor_Attendance.Services
                     .HasColumnType("datetime")
                     .HasColumnName("LAST_MODIFIED");
 
+                entity.Property(e => e.Password)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("PASSWORD");
+
                 entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
 
-                entity.Property(e => e.UserPassword)
+                entity.Property(e => e.Username)
                     .HasMaxLength(50)
                     .IsUnicode(false)
-                    .HasColumnName("USER_PASSWORD");
-
-                entity.Property(e => e.UserUsername)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("USER_USERNAME");
+                    .HasColumnName("USERNAME");
 
                 entity.HasOne(d => d.Doctor)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.DoctorId)
-                    .HasConstraintName("FK_USER_USES_DOCTOR");
+                    .HasConstraintName("FK_USERS_USES_DOCTOR");
 
                 entity.HasOne(d => d.Emp)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.EmpId)
-                    .HasConstraintName("FK_USER_RELATIONS_EMPLOYEE");
+                    .HasConstraintName("FK_USERS_RELATIONS_EMPLOYEE");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_USER_HAS_ROLE_ROLE");
+                    .HasConstraintName("FK_USERS_HAS_ROLE_ROLE");
             });
 
             OnModelCreatingPartial(modelBuilder);
@@ -403,9 +426,11 @@ namespace Doctor_Attendance.Services
                                             e.Lastname.Contains(searchTerm) ||
                                             e.City.Contains(searchTerm) ||
                                             e.Email.Contains(searchTerm) ||
-                                            e.Category.Type.Contains(searchTerm)
+                                            e.Category.Type.Contains(searchTerm) ||
+                                            e.Dep.DepName.Contains(searchTerm)
                                             );
         }
+
         public IEnumerable<Attendance> SearchAttendance(string searchTerm)
         {
 

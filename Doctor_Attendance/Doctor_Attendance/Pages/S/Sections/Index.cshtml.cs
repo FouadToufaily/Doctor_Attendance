@@ -26,7 +26,7 @@ namespace Doctor_Attendance.Pages.S.Sections
             if (_context.Sections != null)
             {
                 Section = await _context.Sections
-                .Include(s => s.Doctor).ToListAsync();
+                .Include(s => s.Doctor).Include(f => f.Faculties).ToListAsync();
             }
         }
     }

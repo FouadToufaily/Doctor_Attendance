@@ -28,7 +28,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
             if (_context.Doctors != null)
             {
                 Doctor = await _context.Doctors
-                .Include(d => d.Category).ToListAsync();
+                .Include(d => d.Category).Include(d => d.Dep).ToListAsync();
             }
 
             Doctor = _context.SearchDoctor(SearchString); // calling Search function by search criteria which is binded to the form control textbox

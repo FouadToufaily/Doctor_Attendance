@@ -15,6 +15,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Doctor.DoctorId" />
             <div class="form-group">
+                <label asp-for="Doctor.FileNumber" class="control-label"></label>
+                <input asp-for="Doctor.FileNumber" class="form-control" />
+                <span asp-validation-for="Doctor.Firstname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Doctor.Category" class="control-label"></label>
                 <select asp-for="Doctor.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
                 <span asp-validation-for="Doctor.CategoryId" class="text-danger"></span>
@@ -22,7 +27,7 @@
             <div class="form-group">
                 <label asp-for="Doctor.Firstname" class="control-label"></label>
                 <input asp-for="Doctor.Firstname" class="form-control" />
-                <span asp-validation-for="Doctor.Firstname" class="text-danger"></span>
+                <span asp-validation-for="Doctor.FileNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Doctor.Lastname" class="control-label"></label>
@@ -43,6 +48,11 @@
                 <label asp-for="Doctor.City" class="control-label"></label>
                 <input asp-for="Doctor.City" class="form-control" />
                 <span asp-validation-for="Doctor.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Doctor.Dep" class="control-label"></label>
+                <select asp-for="Doctor.DepId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
+                <span asp-validation-for="Doctor.DepId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -18,7 +18,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
         {
             _context = context;
         }
-       
+
 
         public Attendance Attendance { get; set; } = default!;
 
@@ -33,17 +33,25 @@ namespace Doctor_Attendance.Pages.S.Attendances
             }
 
             var attendence = await _context.Attendances.FirstOrDefaultAsync(m => m.AttId == id);
-            var department = await _context.Departments.FirstOrDefaultAsync(m => m.DepId == attendence.DepId);
-            attendence.Dep = department;
+            if (attendence is not null)
+            {
+                var department = await _context.Departments.FirstOrDefaultAsync(m => m.DepId == attendence.DepId);
+                if (department is not null)
+                {
+                    attendence.Dep = department;
+                }
+
+            }
+
             var doctor = await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == attendence.DoctorId);
             attendence.Doctor = doctor;
             if (attendence == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
-                s += attendence.AttId.ToString() +" "+attendence.DepId+" "+attendence.Doctor.DoctorId;
+                s += attendence.AttId.ToString() + " " + attendence.DepId + " " + attendence.Doctor.DoctorId;
                 Attendance = attendence;
             }
             return Page();

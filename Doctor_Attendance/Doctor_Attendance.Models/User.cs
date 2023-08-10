@@ -9,8 +9,8 @@ namespace Doctor_Attendance.Models
         public int? DoctorId { get; set; }
         public int? EmpId { get; set; }
         public int? RoleId { get; set; }
-        public string? UserUsername { get; set; }
-        public string? UserPassword { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? LastModified { get; set; }
 

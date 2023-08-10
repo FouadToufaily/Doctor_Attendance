@@ -14,8 +14,13 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Doctor.FileNumber" class="control-label"></label>
+                <input asp-for="Doctor.FileNumber" class="form-control" />
+                <span asp-validation-for="Doctor.FileNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Doctor.CategoryId" class="control-label"></label>
-                <select asp-for="Doctor.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <select asp-for="Doctor.CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Doctor.Firstname" class="control-label"></label>
@@ -41,6 +46,10 @@
                 <label asp-for="Doctor.City" class="control-label"></label>
                 <input asp-for="Doctor.City" class="form-control" />
                 <span asp-validation-for="Doctor.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Doctor.Dep" class="control-label"></label>
+                <select asp-for="Doctor.Dep" class="form-control" asp-items="ViewBag.DepartmentId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

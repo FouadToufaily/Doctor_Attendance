@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2021                    */
-/* Created on:     19/6/2023  5:28:17 PM                        */
+/* Created on:     20/7/2023  5:28:17 PM                        */
 /*==============================================================*/
 
 
@@ -11,13 +11,7 @@ USE master
 GO
 
 CREATE DATABASE Doctor_Attendance
-/*ON 
-( NAME = univdbase_dat,
-  FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\Doctor_Attendance.mdf')
-LOG ON
-( NAME = 'Doctor_Attendance',
-  FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\Doctor_Attendance.ldf')
-  */
+
 go
 
 
@@ -29,10 +23,16 @@ Use Doctor_Attendance
 go
 
 /*==============================================================*/
+/* DBMS name:      Microsoft SQL Server 2005                    */
+/* Created on:     7/21/2023 1:50:24 AM                         */
+/*==============================================================*/
+
+
+/*==============================================================*/
 /* Table: CATEGORY                                              */
 /*==============================================================*/
 create table CATEGORY (
-   CATEGORY_ID          int                  not null,
+   CATEGORY_ID          int       IDENTITY(1,1)           not null,
    TYPE                 varchar(20)          null,
    constraint PK_CATEGORY primary key nonclustered (CATEGORY_ID)
 )
@@ -42,7 +42,7 @@ go
 /* Table: DOCTOR                                                */
 /*==============================================================*/
 create table DOCTOR (
-   DOCTOR_ID            int                  not null,
+   DOCTOR_ID            int       IDENTITY(1,1)           not null,
    CATEGORY_ID          int                  null,
    FIRSTNAME            varchar(20)          null,
    LASTNAME             varchar(20)          null,
@@ -59,8 +59,9 @@ go
 /* Table: DEPARTMENT                                            */
 /*==============================================================*/
 create table DEPARTMENT (
-   DEP_ID               int                  not null,
+   DEP_ID               int         IDENTITY(1,1)         not null,
    DOCTOR_ID            int                  null,
+   DEP_NAME             varchar(30)          null,
    NUMBER               int                  null,
    NBDOCTORS            int                  null,
    constraint PK_DEPARTMENT primary key nonclustered (DEP_ID),
@@ -70,19 +71,21 @@ create table DEPARTMENT (
 go
 
 /*==============================================================*/
-/* Table: ATTENDENCE                                            */
+/* Table: ATTENDANCE                                            */
 /*==============================================================*/
-create table ATTENDENCE (
+create table ATTENDANCE (
+   ATT_ID               int       IDENTITY(1,1)        not null,
    DEP_ID               int                  not null,
    DOCTOR_ID            int                  not null,
-   ATT_ID               int                  null,
    DATE                 datetime             null,
    NB_HOURS             int                  null,
+   ATTENDED             int                  null,
+   PUBLISHED            int                  null,
    COMMENTS             varchar(100)         null,
-   constraint PK_ATTENDENCE primary key (DEP_ID, DOCTOR_ID),
-   constraint FK_ATTENDEN_ATTENDENC_DEPARTME foreign key (DEP_ID)
+   constraint PK_ATTENDANCE primary key (ATT_ID),
+   constraint FK_ATTENDAN_ATTENDANC_DEPARTME foreign key (DEP_ID)
       references DEPARTMENT (DEP_ID),
-   constraint FK_ATTENDEN_ATTENDENC_DOCTOR foreign key (DOCTOR_ID)
+   constraint FK_ATTENDAN_ATTENDANC_DOCTOR foreign key (DOCTOR_ID)
       references DOCTOR (DOCTOR_ID)
 )
 go
@@ -91,7 +94,7 @@ go
 /* Table: SECTION                                               */
 /*==============================================================*/
 create table SECTION (
-   SECTIONID            int                  not null,
+   SECTIONID            int       IDENTITY(1,1)           not null,
    DOCTOR_ID            int                  null,
    NUMBER               int                  null,
    PHONE_NUMBER         varchar(30)          null,
@@ -117,18 +120,10 @@ create table BELONG_TO (
 go
 
 /*==============================================================*/
-/* Index: COORDINATES_FK                                        */
-/*==============================================================*/
-create index COORDINATES_FK on DEPARTMENT (
-DOCTOR_ID ASC
-)
-go
-
-/*==============================================================*/
 /* Table: EMPLOYEE                                              */
 /*==============================================================*/
 create table EMPLOYEE (
-   EMP_ID               int                  not null,
+   EMP_ID               int       IDENTITY(1,1)           not null,
    DEP_ID               int                  null,
    FIRSTNAME            varchar(20)          null,
    LASTNAME             varchar(20)          null,
@@ -142,31 +137,15 @@ create table EMPLOYEE (
 go
 
 /*==============================================================*/
-/* Index: WORK_IN_FK                                            */
-/*==============================================================*/
-create index WORK_IN_FK on EMPLOYEE (
-DEP_ID ASC
-)
-go
-
-/*==============================================================*/
 /* Table: FACULTY                                               */
 /*==============================================================*/
 create table FACULTY (
-   FACULTYID            int                  not null,
+   FACULTYID            int        IDENTITY(1,1)          not null,
    DOCTOR_ID            int                  null,
    NAME                 varchar(50)          null,
    constraint PK_FACULTY primary key nonclustered (FACULTYID),
    constraint FK_FACULTY_MANAGES_DOCTOR foreign key (DOCTOR_ID)
       references DOCTOR (DOCTOR_ID)
-)
-go
-
-/*==============================================================*/
-/* Index: MANAGES_FK                                            */
-/*==============================================================*/
-create index MANAGES_FK on FACULTY (
-DOCTOR_ID ASC
 )
 go
 
@@ -197,10 +176,15 @@ create table PERMISSIONS (
 go
 
 /*==============================================================*/
-/* Index: DIRECTS_FK                                            */
+/* Table: ROLE                                                  */
 /*==============================================================*/
-create index DIRECTS_FK on SECTION (
-DOCTOR_ID ASC
+create table ROLE (
+   ROLE_ID              int       IDENTITY(1,1)           not null,
+   PERMISSIONID         int                  null,
+   ROLE_NAME            varchar(20)          null,
+   constraint PK_ROLE primary key nonclustered (ROLE_ID),
+   constraint FK_ROLE_HAS_PERMI_PERMISSI foreign key (PERMISSIONID)
+      references PERMISSIONS (PERMISSIONID)
 )
 go
 
@@ -219,57 +203,29 @@ create table TEACHES (
 go
 
 /*==============================================================*/
-/* Table: "USER"                                                */
+/* Table: "USERS"                                                */
 /*==============================================================*/
-create table "USER" (
-   EMP_ID2              int                  not null,
+create table "USERS" (
+   USER_ID              int        IDENTITY(1,1)          not null,
    DOCTOR_ID            int                  null,
    EMP_ID               int                  null,
-   PERMISSIONID         int                  null,
-   FIRSTNAME            varchar(20)          null,
-   LASTNAME             varchar(20)          null,
-   AGE                  int                  null,
-   EMAIL                varchar(30)          null,
-   CITY                 varchar(30)          null,
-   DATECREATED          datetime             null,
-   LASTMODIFIED         datetime             null,
-   constraint PK_USER primary key nonclustered (EMP_ID2),
+   ROLE_ID              int                  null,
+   USER_USERNAME             varchar(50)          null,
+   USER_PASSWORD             varchar(50)          null,
+   DATE_CREATED         datetime             null,
+   LAST_MODIFIED        datetime             null,
+   constraint PK_USER primary key nonclustered (USER_ID),
    constraint FK_USER_USES_DOCTOR foreign key (DOCTOR_ID)
       references DOCTOR (DOCTOR_ID),
    constraint FK_USER_RELATIONS_EMPLOYEE foreign key (EMP_ID)
       references EMPLOYEE (EMP_ID),
-   constraint FK_USER_HAS_PERMI_PERMISSI foreign key (PERMISSIONID)
-      references PERMISSIONS (PERMISSIONID)
+   constraint FK_USER_HAS_ROLE_ROLE foreign key (ROLE_ID)
+      references ROLE (ROLE_ID)
 )
 go
 
-
-
-/*==============================================================*/
-                           /* Indicies*/
-/*==============================================================*/
-
-
-/*==============================================================*/
-/* Index: USES_FK                                               */
-/*==============================================================*/
-create index USES_FK on "USER" (
-DOCTOR_ID ASC
-)
-go
-
-/*==============================================================*/
-/* Index: RELATIONSHIP_9_FK                                     */
-/*==============================================================*/
-create index RELATIONSHIP_9_FK on "USER" (
-EMP_ID ASC
-)
-go
-
-/*==============================================================*/
-/* Index: HAS_PERMISISON_FK                                     */
-/*==============================================================*/
-create index HAS_PERMISISON_FK on "USER" (
-PERMISSIONID ASC
-)
-go
+use Doctor_Attendance
+insert into CATEGORY values ('contract'),('no-contract'),('permanent');
+insert into Doctor values (3, 'fff','ttt', 29, 'abc@live.com', 'Beirut');
+insert into DEPARTMENT values (1,'Applied Maths',1,10), (1,'Computer Science',2,15), (1,'Physics',3,12),
+(1,'Biology',4,8);

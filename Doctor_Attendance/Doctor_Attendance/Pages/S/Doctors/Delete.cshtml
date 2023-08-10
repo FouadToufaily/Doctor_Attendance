@@ -13,6 +13,12 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Doctor.FileNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Doctor.FileNumber)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Doctor.Firstname)
         </dt>
         <dd class="col-sm-10">
@@ -47,6 +53,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Doctor.Category.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Doctor.Dep)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Doctor.Dep.DepName)
         </dd>
     </dl>
     
