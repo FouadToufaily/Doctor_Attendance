@@ -90,9 +90,9 @@ namespace Doctor_Attendance.Pages.ViewByDate
             for (i = 0; i < Records.Count; i++)
             {
                 if (Records[i] == true)
-                    AttendenceRecords[i].Attended = 1;
+                    AttendenceRecords[i].Attended = true;
             } 
-            var checkedRecords = AttendenceRecords.Where(r => r.Attended == 1).ToList();
+            var checkedRecords = AttendenceRecords.Where(r => r.Attended == true).ToList();
             if(checkedRecords.Count == 0)
                 return NotFound();
 

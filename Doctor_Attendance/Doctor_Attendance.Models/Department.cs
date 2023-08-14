@@ -10,7 +10,7 @@ namespace Doctor_Attendance.Models
             Attendances = new HashSet<Attendance>();
             Doctors = new HashSet<Doctor>();
             Employees = new HashSet<Employee>();
-            Sections = new HashSet<Section>();
+            Faculties = new HashSet<Faculty>();
         }
 
         public int DepId { get; set; }
@@ -23,6 +23,6 @@ namespace Doctor_Attendance.Models
         public virtual ICollection<Doctor> Doctors { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
 
-        public virtual ICollection<Section> Sections { get; set; }
+        public virtual ICollection<Faculty> Faculties { get; set; }
     }
 }

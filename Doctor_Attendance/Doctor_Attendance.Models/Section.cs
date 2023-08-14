@@ -7,7 +7,6 @@ namespace Doctor_Attendance.Models
     {
         public Section()
         {
-            Deps = new HashSet<Department>();
             Faculties = new HashSet<Faculty>();
         }
 
@@ -19,7 +18,6 @@ namespace Doctor_Attendance.Models
 
         public virtual Doctor? Doctor { get; set; }
 
-        public virtual ICollection<Department> Deps { get; set; }
         public virtual ICollection<Faculty> Faculties { get; set; }
     }
 }

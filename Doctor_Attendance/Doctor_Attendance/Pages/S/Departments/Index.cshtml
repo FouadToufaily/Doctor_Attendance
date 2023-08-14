@@ -22,6 +22,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Department[0].Doctor)
             </th>
+            <th>
+                Faculty
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,6 +45,23 @@
                             string parameterValue = item.Doctor.Firstname + " " + item.Doctor.Lastname;
                             @Html.DisplayFor(modelItem => parameterValue)
                         }
+                    }
+                </td>
+                <td>
+                    @if (item.Faculties.Any())
+                    {
+                        <ul>
+                            @foreach (var faculty in item.Faculties)
+                            {
+                                <li>
+                                    @Html.DisplayFor(modelItem => faculty.Name)
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No sections found for this faculty.</span>
                     }
                 </td>
                 <td>

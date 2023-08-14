@@ -20,7 +20,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
             _context = context;
         }
 
-        public IEnumerable<Attendance> Attendances { get; set; } = default!;
+        public IList<Attendance> Attendances { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; } = default!;
@@ -33,15 +33,13 @@ namespace Doctor_Attendance.Pages.S.Attendances
         {
             Attendances = await _context.Attendances.Include(a => a.Dep)
                      .Include(a => a.Doctor).ToListAsync();
-            Attendances = _context.SearchAttendance(SearchString);
+            Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
         }
         public IActionResult OnPostPublish(int attendanceToPublishId)
         {
-            //s1 = "in publish "+ attendanceToPublishId;
-
             var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);
             if (att is not null)
-            att.Published = 1;
+            att.Published = true;
             _context.SaveChanges();
             return RedirectToPage("./Index");
         }

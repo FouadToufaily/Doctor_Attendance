@@ -7,6 +7,7 @@ namespace Doctor_Attendance.Models
     {
         public Faculty()
         {
+            Deps = new HashSet<Department>();
             Sections = new HashSet<Section>();
         }
 
@@ -16,6 +17,7 @@ namespace Doctor_Attendance.Models
 
         public virtual Doctor? Doctor { get; set; }
 
+        public virtual ICollection<Department> Deps { get; set; }
         public virtual ICollection<Section> Sections { get; set; }
     }
 }

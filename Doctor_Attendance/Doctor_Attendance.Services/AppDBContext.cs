@@ -32,6 +32,7 @@ namespace Doctor_Attendance.Services
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source=DESKTOP-MDTVBJQ\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
             }
         }
@@ -40,20 +41,20 @@ namespace Doctor_Attendance.Services
         {
             modelBuilder.Entity<Attendance>(entity =>
             {
-                entity.HasKey(e => new { e.DepId, e.DoctorId });
+                entity.HasKey(e => new { e.AttId, e.Date });
 
                 entity.ToTable("ATTENDANCE");
 
                 entity.HasIndex(e => e.AttId, "ATT_PK")
                     .IsUnique();
 
-                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
-
-                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
-
                 entity.Property(e => e.AttId)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("ATT_ID");
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DATE");
 
                 entity.Property(e => e.Attended).HasColumnName("ATTENDED");
 
@@ -62,9 +63,9 @@ namespace Doctor_Attendance.Services
                     .IsUnicode(false)
                     .HasColumnName("COMMENTS");
 
-                entity.Property(e => e.Date)
-                    .HasColumnType("datetime")
-                    .HasColumnName("DATE");
+                entity.Property(e => e.DepId).HasColumnName("DEP_ID");
+
+                entity.Property(e => e.DoctorId).HasColumnName("DOCTOR_ID");
 
                 entity.Property(e => e.NbHours).HasColumnName("NB_HOURS");
 
@@ -127,21 +128,21 @@ namespace Doctor_Attendance.Services
                     .HasForeignKey(d => d.DoctorId)
                     .HasConstraintName("FK_DEPARTME_COORDINAT_DOCTOR");
 
-                entity.HasMany(d => d.Sections)
+                entity.HasMany(d => d.Faculties)
                     .WithMany(p => p.Deps)
                     .UsingEntity<Dictionary<string, object>>(
                         "BelongTo",
-                        l => l.HasOne<Section>().WithMany().HasForeignKey("Sectionid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_BELONG_T_BELONG_TO_SECTION"),
+                        l => l.HasOne<Faculty>().WithMany().HasForeignKey("Facultyid").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_BELONG_T_BELONG_TO_FACULTY"),
                         r => r.HasOne<Department>().WithMany().HasForeignKey("DepId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_BELONG_T_BELONG_TO_DEPARTME"),
                         j =>
                         {
-                            j.HasKey("DepId", "Sectionid");
+                            j.HasKey("DepId", "Facultyid");
 
                             j.ToTable("BELONG_TO");
 
                             j.IndexerProperty<int>("DepId").HasColumnName("DEP_ID");
 
-                            j.IndexerProperty<int>("Sectionid").HasColumnName("SECTIONID");
+                            j.IndexerProperty<int>("Facultyid").HasColumnName("FACULTYID");
                         });
             });
 
@@ -454,7 +455,6 @@ namespace Doctor_Attendance.Services
                 // If searchTerm is null or empty, return the original collection without filtering.
                 return Attendances.ToList();
             }
-
         }
 
     }

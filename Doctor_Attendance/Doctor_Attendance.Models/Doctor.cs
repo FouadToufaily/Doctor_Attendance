@@ -12,7 +12,7 @@ namespace Doctor_Attendance.Models
             Faculties = new HashSet<Faculty>();
             Sections = new HashSet<Section>();
             Users = new HashSet<User>();
-        } 
+        }
 
         public int DoctorId { get; set; }
         public int? DepId { get; set; }
@@ -25,6 +25,7 @@ namespace Doctor_Attendance.Models
         public string? City { get; set; }
 
         public string Fullname { get { return this.Firstname + " " + this.Lastname; } }
+
 
         public virtual Category? Category { get; set; }
         public virtual Department? Dep { get; set; }

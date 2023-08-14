@@ -36,15 +36,15 @@ namespace Doctor_Attendance.Pages.S.Attendances
                 return NotFound();
             }
             Attendance = attendence;
-           ViewData["DepId"] = new SelectList(_context.Departments, "DepId", "DepId");
-           ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
+           ViewData["DepId"] = new SelectList(_context.Departments, "DepId", "DepName");
+           ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Fullname");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            var errors = ModelState.Values.SelectMany(v => v.Errors); // To see all the errors in model state
+
             if (!ModelState.IsValid)
             {
                 return Page();

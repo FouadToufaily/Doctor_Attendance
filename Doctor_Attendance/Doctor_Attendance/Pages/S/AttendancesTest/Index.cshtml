@@ -50,7 +50,7 @@
                 Comments
             </th>
             <th>
-                Attended
+                Published
             </th>
             <th></th>
         </tr>
@@ -78,14 +78,17 @@
                     @Html.DisplayFor(modelItem => item.Comments)
                 </td>
                 <td style="padding-left: 10px">
-                    <input class="form-check-input" type="checkbox" value="true" />
-                    @*<input class="form-check-input" type="checkbox" name="Records[@i]" value="true" checked="@(Model.Records[i] == true)" />*@
+                    @*checking if published and corssing it out <fouad></fouad>*@
+                    <input type="checkbox" disabled="disabled" @(item.Published.HasValue && item.Published.Value ? "checked" : "") />
                 </td>
 
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.AttId">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.AttId">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.AttId">Delete</a>
+                    @if (!item.Published.HasValue || !item.Published.Value)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.AttId">Edit | </a>
+                        <a asp-page="./Delete" asp-route-id="@item.AttId">Delete | </a>
+                    }
+                    <a asp-page="./Details" asp-route-id="@item.AttId">Details</a>
                 </td>
             </tr>
         }

@@ -10,12 +10,12 @@
 <h3>
     <a asp-page="AddAttendance">Add Attendance</a>
 </h3>
-<p>
+@*<p>
     @Model.s
 </p>
 <p>
     @Model.s1
-</p>
+</p>*@
 
 <form>
     <p>
@@ -42,44 +42,44 @@
             <th>
                 Doctor
             </th>
+            <th>
+                Published
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Attendances) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NbHours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comments)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dep.DepName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Doctor.Fullname)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AttId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.AttId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AttId">Delete</a>
-
-                <form method="post">
-                <div class="form-group">
-                    <input type="hidden" name="attendanceToPublishId" value="@item.AttId" />
-                    
-                                <button type="submit" class="btn btn-primary" name="attendanceToPublishId"  asp-route-id="@item.AttId" asp-page="./Details">View</button>
-
-                             if (@item.Published == 0)
-                                 <button type="submit" class="btn btn-primary" name="attendanceToPublishId"  asp-route-id="@item.AttId" asp-page-handler="Publish">Publish</button>
-            </div>
-                </form>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Attendances)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NbHours)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dep.DepName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Doctor.Fullname)
+                </td>
+                <td style="padding-left: 10px">
+                    @*checking if published and corssing it out <fouad></fouad>*@
+                    <input type="checkbox" disabled="disabled" @(item.Published.HasValue && item.Published.Value ? "checked" : "") />
+                </td>
+                <td>
+                    @if (!item.Published.HasValue || !item.Published.Value)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.AttId" asp-route-Date="@item.Date">Edit | </a>
+                        <a asp-page="./Delete" asp-route-id="@item.AttId" asp-route-Date="@item.Date">Delete | </a>
+                    }
+                    <a asp-page="./Details" asp-route-id="@item.AttId">Details</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
