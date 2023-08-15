@@ -1,0 +1,167 @@
+﻿@page
+@model Doctor_Attendance.Pages.ViewByDate.AddAttendanceModel
+@{
+}
+
+<form method="post" enctype="multipart/form-data">
+    @{
+        var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+    }
+
+    <div >
+        <h1>
+            Add Attendance
+        </h1>
+    </div>
+
+    <div >
+        <h4>
+            Department Of @Model.department.DepName
+        </h4>
+    </div>
+    
+
+    <div class="form-group">
+    <input  type="text" id="datepicker" asp-for="@Model.datev"  name="datepicker" value="@currentDate" />
+    </div>
+
+    <table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.AttendenceRecords[0].NbHours)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AttendenceRecords[0].Comments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AttendenceRecords[0].Attended)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+                @for (int i = 0; i < Model.AttendenceRecords.Count; i++)
+                {
+                    var doctor = Model.Doctors.FirstOrDefault(d => d.DoctorId == Model.AttendenceRecords[i].DoctorId);
+                    var firstname = doctor != null ? doctor.Firstname : "N/A";
+                    var lastname = doctor != null ? doctor.Lastname : "N/A";
+                    var name = firstname + " " + lastname;
+                    var idstr = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                    int id = doctor != null ? doctor.DoctorId : 0;
+
+                    var categoryId = doctor?.Category?.CategoryId ?? 0;
+                    var isCategoryIdOne = categoryId == 1;
+                
+
+        <tr>
+            <td>
+                <a asp-page="/S/Doctors/Details"  asp-route-id="@doctor.DoctorId" >@name</a> 
+                <input  type="number" asp-for="@Model.AttendenceRecords[i].DoctorId" value="@doctor.DoctorId" hidden />
+                
+            
+            </td>
+            
+            <td>
+                
+                @if (isCategoryIdOne)
+                        {
+                        <input type="number" class=form-control asp-for="@Model.AttendenceRecords[i].NbHours" />
+                        }
+                        else
+                        {
+                        <input type="number" class=form-control asp-for="@Model.AttendenceRecords[i].NbHours" disabled />
+                        }
+            </td>
+            <td>
+                        <input type="text" class=form-control asp-for="@Model.AttendenceRecords[i].Comments" />
+                        
+            </td>
+            
+               <td style="padding-left: 10px"><input class="form-check-input" type="checkbox"  name="Records[@i]" value="true" checked="@(Model.Records[i] == true)" /></td>
+            
+               
+               <td><input  type="text" asp-for="@Model.AttendenceRecords[i].Date" id="datePicker_@i" value="@currentDate" readonly hidden/></td>
+                                 <input  type="number" asp-for="@Model.AttendenceRecords[i].DepId" value="1" hidden />
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].Attended" value="0" hidden />
+                                <input  type="number" asp-for="@Model.AttendenceRecords[i].Published" value="0" hidden />
+                                <input  type="hidden" asp-for="@Model.Records[@i]" value="false" />
+               
+
+            <td>
+                <a asp-page="" asp-route-id="@doctor.DoctorId">View Attendances</a> 
+            </td>
+            
+        </tr>
+
+}
+
+    </tbody>
+
+  
+    </table>
+  
+    <div class="form-group">
+    <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+
+</form>
+@section Scripts { 
+    
+   <script> 
+        $(function () { 
+            $("#datepicker").attr("max", getCurrentDate()); 
+ 
+            function getCurrentDate() { 
+                var currentDate = new Date(); 
+                currentDate.setDate(currentDate.getDate() + 1); 
+                var year = currentDate.getFullYear(); 
+                var month = ("0" + (currentDate.getMonth() + 1)).slice(-2); 
+                var day = ("0" + currentDate.getDate()).slice(-2); 
+                return $; { year } -$; { month } -$; {day}; 
+            } 
+ 
+            $("#datepicker").change(function () { 
+                var selectedDate = $(this).val(); 
+                $('[id^="datePicker_"]').val(selectedDate); 
+            }); 
+        }); 
+    </script> 
+ 
+    <script> 
+        $(function () { 
+            $("#datepicker").datepicker({ 
+                dateFormat: "yy-mm-dd", 
+                maxDate: "+0d", 
+                beforeShowDay: function (date) { 
+                    var currentDate = new Date(); 
+                    currentDate.setHours(0, 0, 0, 0); 
+                    var day = date.getDay(); // Get the day of the week (0-6, where 0 is Sunday) 
+                    var formattedDate = $.datepicker.formatDate("dd/mm", date); // Get the formatted date (dd/mm) 
+                     var disabledDates = ["22/11", "01/06", "10/12", "25/12"]; 
+                    // Disable Saturdays (day = 6), Sundays (day = 0) 
+                    if (day === 0 || day === 6 ) { 
+                        return [false]; 
+                    } 
+                    // Disable specific dates 
+                    for (var i = 0; i < disabledDates.length; i++) { 
+                     if (formattedDate === disabledDates[i]) { 
+                       return [false]; 
+                        } 
+                    } 
+                    return [date <= currentDate]; 
+                }, 
+                onSelect: function (dateText) { 
+                    $('[id^="datePicker_"]').val(dateText); 
+                } 
+            }); 
+        }); 
+    </script> 
+}
+
