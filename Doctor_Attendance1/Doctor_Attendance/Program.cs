@@ -9,10 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 //builder.Services.AddSingleton<IDoctorRepository, SQLDoctorRepository>();
 
+string serverName = Environment.MachineName;
+
 builder.Services.AddDbContextPool<AppDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DBconnectionstring"));
+    options.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
 });
+
+//builder.Services.AddDbContextPool<AppDBContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DBconnectionstring"));
+//});
 //adding identity framework here
 /*
 builder.Services.AddIdentity<User, IdentityRole>()
