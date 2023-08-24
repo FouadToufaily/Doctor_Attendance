@@ -1,0 +1,121 @@
+﻿@page
+@model Doctor_Attendance.Pages.S.Test.IndexModel
+
+@{
+    ViewData["Title"] = "Attendance";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance</title>
+</head>
+<body>
+    <h1>Attendance</h1>
+
+    <!-- Doctor and Month Selection Form -->
+    <form method="get" id="selectionForm" style="display: @(Model.ShowRecords || (Model.SelectedDoctor > 0 && Model.SelectedMonth > 0))">
+        <p>
+            Doctor:
+            <select asp-for="SelectedDoctor" asp-items="Model.DoctorItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="">-- Select Doctor --</option>
+            </select>
+            &nbsp; &nbsp; &nbsp;
+            Month:
+            <select asp-for="SelectedMonth" asp-items="Model.MonthItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="">-- Select Month --</option>
+            </select>
+        </p>
+        @if (!ModelState.IsValid)
+        {
+            <span style="color: red; margin-left: 10px;">Please select a doctor and a month.</span>
+        }
+        <input type="submit" value="Show Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+    <!-- Attendance Records Table -->
+    <div id="attendanceTable" style="display: @(Model.ShowRecords)">
+        @if (Model.ShowRecords) // Error here preventing from submitting changes
+        {
+            var startDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
+            var daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, Model.SelectedMonth);
+
+            <form method="post">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Published</th>
+                            <th>Attended</th>
+                            <th>Nb Hours</th>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int day = 1; day <= daysInMonth; day++)
+                        {
+                            var currentDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, day);
+
+                            if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
+                            {
+                                var attendanceForDay = Model.AttendanceRecords.FirstOrDefault(a => a.Date.Date == currentDate.Date);
+                                var isPublished = attendanceForDay?.Published ?? false;
+                                var inputModelForDay = Model.AttendanceInput.FirstOrDefault(a => a.Date.Date == currentDate.Date);
+                                var attendedValue = inputModelForDay?.Attended ?? false;
+                                var inputFieldName = $"AttendanceInput[{day - 1}].Comments";
+
+                                <tr>
+                                    <td>@currentDate.ToString("dddd, yyyy-MM-dd")</td>
+                                    <td>
+                                        <input type="hidden" name="AttendanceInput[@day].Date" value="@currentDate.ToString("yyyy-MM-dd")" />
+                                        <input type="hidden" name="AttendanceInput[@day].Published" value="@isPublished" />
+                                        @if (isPublished)
+                                        {
+                                            <input type="checkbox" disabled name="AttendanceInput[@day].Published" value="true" checked />
+                                        }
+                                    </td>
+                                    <td>
+                                        <!-- Make the "Attended" checkbox editable only if not published -->
+                                        @if (!isPublished)
+                                        {
+                                            @if (attendanceForDay != null)
+                                            {
+                                                <input type="checkbox"
+                                                       name="AttendanceInput[@day].Attended"
+                                                       value="true"
+                                                       @(attendanceForDay.Attended == true ? "checked" : "") />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox"
+                                                       name="AttendanceInput[@day].Attended"
+                                                       value="true" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @if (attendanceForDay != null && attendanceForDay.Attended == true)
+                                            {
+                                                <input type="checkbox" disabled checked />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" disabled />
+                                            }
+                                        }
+                                    </td>
+                                    <td><input type="text" name="AttendanceInput[@day].NbHours" value="@inputModelForDay?.NbHours" /></td>
+                                    <td><input type="text" name="@inputFieldName" value="@inputModelForDay?.Comments" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <input type="submit" value="Submit Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
+            </form>
+        }
+    </div>
+</body>
+</html>

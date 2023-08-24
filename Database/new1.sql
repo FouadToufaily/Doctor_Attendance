@@ -18,6 +18,18 @@ go
 
 
 /*==============================================================*/
+/* Table: HOLIDAYS                                              */
+/*==============================================================*/
+create table HOLIDAYS (
+   ID                   int                  not null,
+   DATE                 datetime             null,
+   NAME                 varchar(50)          null,
+   constraint PK_HOLIDAYS primary key nonclustered (ID)
+)
+go
+
+
+/*==============================================================*/
 /* Table: ATTENDANCE                                            */
 /*==============================================================*/
 create table ATTENDANCE (
@@ -383,7 +395,3 @@ insert into SECTION values (2, 1,'01xxxxxx','Hadath'), (4, 3,'01xxxxxx', 'Zahle'
 insert into HAS values (1,1), (2,1) , (3,1), (1,2), (3,2);
 
 insert into BELONG_TO values (1,1), (2,1) , (3,1), (4,1), (5,2), (6,3);
-
-
-
-		 

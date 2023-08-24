@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Doctor_Attendance.Models
 {
-    public partial class User 
+    public partial class User
     {
         public int UserId { get; set; }
         public int? DoctorId { get; set; }

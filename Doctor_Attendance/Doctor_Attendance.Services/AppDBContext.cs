@@ -8,7 +8,7 @@ namespace Doctor_Attendance.Services
 {
     public partial class AppDBContext : DbContext
     {
-        //public AppDBContext()
+        //public Doctor_AttendanceContext()
         //{
         //}
 
@@ -33,7 +33,7 @@ namespace Doctor_Attendance.Services
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-O8T7K8E\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-MDTVBJQ\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
             }
         }
 
@@ -456,6 +456,5 @@ namespace Doctor_Attendance.Services
                 return Attendances.ToList();
             }
         }
-
     }
 }

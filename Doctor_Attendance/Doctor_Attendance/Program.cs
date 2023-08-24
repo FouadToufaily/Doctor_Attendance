@@ -2,6 +2,7 @@ using Doctor_Attendance.Models;
 using Doctor_Attendance.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +10,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 //builder.Services.AddSingleton<IDoctorRepository, SQLDoctorRepository>();
 
+string serverName = Environment.MachineName;
+
 builder.Services.AddDbContextPool<AppDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DBconnectionstring"));
+    options.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
 });
+
+
+//bool isExpressEdition;
+//using (var connection = new SqlConnection($"Data Source={Environment.MachineName};Initial Catalog=Doctor_Attendance;Integrated Security=True"))
+//{
+//    connection.Open();
+//    var command = new SqlCommand("SELECT SERVERPROPERTY('EngineEdition') AS Edition", connection);
+//    isExpressEdition = ((int)command.ExecuteScalar()) == 5;
+//}
+
+//string serverName = Environment.MachineName;
+//string instanceName = isExpressEdition ? "SQLEXPRESS" : ""; // Replace with your instance name
+
+//string connectionString = $"Data Source={serverName}\\{instanceName};Database=master;Initial Catalog=Doctor_Attendance;Integrated Security=True";
+
+//builder.Services.AddDbContextPool<AppDBContext>(options =>
+//{
+//    options.UseSqlServer(connectionString);
+//});
+
+
+
 //adding identity framework here
 /*
 builder.Services.AddIdentity<User, IdentityRole>()

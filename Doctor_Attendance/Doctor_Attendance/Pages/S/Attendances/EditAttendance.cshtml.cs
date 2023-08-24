@@ -297,11 +297,6 @@ namespace Doctor_Attendance.Pages.New
             return RedirectToPage("EditAttendance", new { date = datev, name = "Month" });
         }
 
-
-
-
-
-
     }
 }
 
