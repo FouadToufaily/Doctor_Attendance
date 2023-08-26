@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Doctor_Attendance.Models;
 using Doctor_Attendance.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace Doctor_Attendance.Pages.S.Account
 {
@@ -18,22 +21,7 @@ namespace Doctor_Attendance.Pages.S.Account
         }
 
         [BindProperty]
-        public RegisterInputModel Input { get; set; } = new RegisterInputModel();
-
-        public class RegisterInputModel
-        {
-            [Required]
-            public string Username { get; set; }
-
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-
-            [Required]
-            public int SelectedRoleId { get; set; } // Added role selection
-
-            // Other properties if needed
-        }
+        public RegisterInputModel Input { get; set; }
 
         public void OnGet()
         {
@@ -43,23 +31,46 @@ namespace Doctor_Attendance.Pages.S.Account
         {
             if (ModelState.IsValid)
             {
-                // Create a new user
-                var newUser = new User
+                // Check if the username already exists
+                if (_context.Users.Any(u => u.Username == Input.Username))
+                {
+                    ModelState.AddModelError("Input.Username", "Username already exists.");
+                    return Page();
+                }
+
+                // Create a new user based on the input
+                var user = new User
                 {
                     Username = Input.Username,
                     Password = Input.Password,
-                    RoleId = Input.SelectedRoleId // Use the selected role ID
+                    RoleId = Input.Role == "Doctor" ? 1 : 2, // Assuming 1 is for Doctor and 2 is for Secretary
+                    DateCreated = DateTime.Now,
+                    LastModified = DateTime.Now
                 };
 
-                _context.Users.Add(newUser);
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                // Redirect to the index page or perform other actions
-                return RedirectToPage("/S/Test/Index");
+                return RedirectToPage("/Index"); // Redirect to the Index page
             }
 
-            // If ModelState is invalid, stay on the page and show the validation errors
             return Page();
+        }
+
+        public class RegisterInputModel
+        {
+            [Required]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
+
+            [Required]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string Password { get; set; }
+
+            [Required]
+            [Display(Name = "Role")]
+            public string Role { get; set; }
         }
     }
 }
