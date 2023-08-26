@@ -34,7 +34,7 @@
     </form>
     <!-- Attendance Records Table -->
     <div id="attendanceTable" style="display: @(Model.ShowRecords)">
-        @if (Model.ShowRecords) // Error here preventing from submitting changes
+        @if (Model.ShowRecords)
         {
             var startDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, 1);
             var endDate = startDate.AddMonths(1).AddDays(-1);
@@ -53,49 +53,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int day = 1; day <= daysInMonth; day++)
+                        @for (int currentDay = 1; currentDay <= daysInMonth; currentDay++)
                         {
-                            var currentDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, day);
+                            var currentDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, currentDay);
 
                             if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
                             {
-                                var attendanceForDay = Model.AttendanceRecords.FirstOrDefault(a => a.Date.Date == currentDate.Date);
-                                var isPublished = attendanceForDay?.Published ?? false;
-                                var inputModelForDay = Model.AttendanceInput.FirstOrDefault(a => a.Date.Date == currentDate.Date);
-                                var attendedValue = inputModelForDay?.Attended ?? false;
-                                var inputFieldName = $"AttendanceInput[{day - 1}].Comments";
+                                var attendanceInputForDay = Model.AttendanceInput[currentDay - 1];
+                                var inputFieldName = $"AttendanceInput[{currentDay - 1}]";
 
                                 <tr>
                                     <td>@currentDate.ToString("dddd, yyyy-MM-dd")</td>
                                     <td>
-                                        <input type="hidden" name="AttendanceInput[@day].Date" value="@currentDate.ToString("yyyy-MM-dd")" />
-                                        <input type="hidden" name="AttendanceInput[@day].Published" value="@isPublished" />
-                                        @if (isPublished)
+                                        <input type="hidden" name="@($"{inputFieldName}.Date")" value="@currentDate.ToString("yyyy-MM-dd")" />
+                                        <input type="hidden" name="@($"{inputFieldName}.Published")" value="@attendanceInputForDay.Published" />
+                                        @if (attendanceInputForDay.Published)
                                         {
-                                            <input type="checkbox" disabled name="AttendanceInput[@day].Published" value="true" checked />
+                                            <input type="checkbox" disabled name="@($"{inputFieldName}.Published")" value="true" checked />
                                         }
                                     </td>
                                     <td>
                                         <!-- Make the "Attended" checkbox editable only if not published -->
-                                        @if (!isPublished)
+                                        @if (!attendanceInputForDay.Published)
                                         {
-                                            @if (attendanceForDay != null)
-                                            {
-                                                <input type="checkbox"
-                                                       name="AttendanceInput[@day].Attended"
-                                                       value="true"
-                                                       @(attendanceForDay.Attended == true ? "checked" : "") />
-                                            }
-                                            else
-                                            {
-                                                <input type="checkbox"
-                                                       name="AttendanceInput[@day].Attended"
-                                                       value="true" />
-                                            }
+                                            <input type="checkbox"
+                                                   name="@($"{inputFieldName}.Attended")"
+                                                   value="true"
+                                                   @(attendanceInputForDay.Attended == true ? "checked" : "") />
                                         }
                                         else
                                         {
-                                            @if (attendanceForDay != null && attendanceForDay.Attended == true)
+                                            @if (attendanceInputForDay.Attended == true)
                                             {
                                                 <input type="checkbox" disabled checked />
                                             }
@@ -105,8 +93,8 @@
                                             }
                                         }
                                     </td>
-                                    <td><input type="text" name="AttendanceInput[@day].NbHours" value="@inputModelForDay?.NbHours" /></td>
-                                    <td><input type="text" name="@inputFieldName" value="@inputModelForDay?.Comments" /></td>
+                                    <td><input type="text" name="@($"{inputFieldName}.NbHours")" value="@attendanceInputForDay.NbHours" /></td>
+                                    <td><input type="text" name="@($"{inputFieldName}.Comments")" value="@attendanceInputForDay.Comments" /></td>
                                 </tr>
                             }
                         }

@@ -62,8 +62,6 @@ namespace Doctor_Attendance.Pages.S.Test
                 Text = $"{doctor.Firstname} {doctor.Lastname}"
             }).ToList();
 
-            AttendanceInput = new List<AttendanceInputModel>(); // Initialize the list here
-
             if (SelectedDoctor > 0 && SelectedMonth > 0)
             {
                 var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
@@ -73,50 +71,79 @@ namespace Doctor_Attendance.Pages.S.Test
                     .Where(a => a.DoctorId == SelectedDoctor && a.Date >= startDate && a.Date <= endDate)
                     .ToListAsync();
 
-                ShowRecords = true; // Set the flag to show records
+                ShowRecords = true;
 
-                AttendanceInput = AttendanceRecords.Select(a => new AttendanceInputModel
-                {
-                    Date = a.Date,
-                    NbHours = a.NbHours ?? 0,
-                    Attended = a.Attended ?? false,
-                    Published = a.Published ?? false, // Convert nullable bool to non-nullable bool
-                    Comments = a.Comments
-                }).ToList();
+                // Populate the AttendanceInput list with data from the database, if available
+                AttendanceInput = Enumerable.Range(1, DateTime.DaysInMonth(startDate.Year, SelectedMonth))
+                    .Select(day =>
+                    {
+                        var date = new DateTime(startDate.Year, SelectedMonth, day);
+                        var existingAttendance = AttendanceRecords.FirstOrDefault(a => a.Date.Date == date.Date);
+
+                        return new AttendanceInputModel
+                        {
+                            Date = date,
+                            NbHours = existingAttendance?.NbHours ?? 0,
+                            Attended = existingAttendance?.Attended,
+                            Published = existingAttendance?.Published ?? false,
+                            Comments = existingAttendance?.Comments
+                        };
+                    }).ToList();
             }
             else
             {
-                ShowRecords = false; // Set the flag to hide records
-                AttendanceInput = new List<AttendanceInputModel>(); // Initialize the list to an empty list
+                ShowRecords = false;
+                AttendanceInput = new List<AttendanceInputModel>();
             }
-
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {
-                foreach (var attendanceInput in AttendanceInput)
-                {
-                    var existingAttendance = _context.Attendances.FirstOrDefault(a =>
-                        a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInput.Date.Date);
+                var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
+                var endDate = startDate.AddMonths(1).AddDays(-1);
 
-                    if (existingAttendance != null && (!existingAttendance.Published ?? false))
+                for (int currentDay = 1; currentDay <= DateTime.DaysInMonth(DateTime.Now.Year, SelectedMonth); currentDay++)
+                {
+                    var currentDate = new DateTime(DateTime.Now.Year, SelectedMonth, currentDay);
+                    var attendanceInputForDay = new AttendanceInputModel
                     {
-                        existingAttendance.Attended = attendanceInput.Attended;
-                        existingAttendance.Comments = attendanceInput.Comments;
-                        existingAttendance.NbHours = attendanceInput.NbHours;
+                        Date = currentDate,
+                        NbHours = ConvertToInt32(Request.Form[$"AttendanceInput[{currentDay - 1}].NbHours"]),
+                        Attended = Request.Form[$"AttendanceInput[{currentDay - 1}].Attended"] == "true",
+                        Comments = Request.Form[$"AttendanceInput[{currentDay - 1}].Comments"]
+                    };
+
+                    var existingAttendance = _context.Attendances.FirstOrDefault(a =>
+                        a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInputForDay.Date.Date);
+
+                    if (existingAttendance != null)
+                    {
+                        if (!attendanceInputForDay.Attended.Value)
+                        {
+                            // Delete the attendance record if the "Attended" checkbox is unchecked
+                            _context.Attendances.Remove(existingAttendance);
+                        }
+                        else
+                        {
+                            existingAttendance.Attended = true;
+                            existingAttendance.Comments = attendanceInputForDay.Comments;
+                            existingAttendance.NbHours = attendanceInputForDay.NbHours;
+                            existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
+                        }
                     }
-                    else if (existingAttendance == null)
+                    else if (attendanceInputForDay.Attended == true)
                     {
-                        // Create a new attendance record if it doesn't exist
+                        // Create a new attendance record only if the Attended checkbox was checked
                         var newAttendance = new Attendance
                         {
                             DoctorId = SelectedDoctor,
-                            Date = attendanceInput.Date,
-                            Attended = attendanceInput.Attended,
-                            Comments = attendanceInput.Comments,
-                            NbHours = attendanceInput.NbHours
+                            Date = attendanceInputForDay.Date,
+                            Attended = true,
+                            Comments = attendanceInputForDay.Comments,
+                            NbHours = attendanceInputForDay.NbHours,
+                            DepId = 1 // new added since depid was causing a conflict on foreign key
                         };
                         _context.Attendances.Add(newAttendance);
                     }
@@ -144,6 +171,7 @@ namespace Doctor_Attendance.Pages.S.Test
             // If ModelState is invalid, stay on the page and show the validation errors
             return Page();
         }
+
 
 
         private int ConvertToInt32(string value)

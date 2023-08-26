@@ -1,0 +1,28 @@
+﻿@page
+@model Doctor_Attendance.Pages.S.Account.RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<form method="post">
+    <div class="form-group">
+        <input type="text" name="Username" class="form-control col-md-6" placeholder="Username" required />
+    </div>
+    <div class="form-group">
+        <input type="password" name="Password" class="form-control col-md-6" placeholder="Password" required />
+    </div>
+    <div class="form-group">
+        <label>Role</label>
+        <div class="form-check">
+            <input type="radio" id="doctorRole" name="Role" value="Doctor" class="form-check-input" required />
+            <label class="form-check-label" for="doctorRole">Doctor</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" id="secretaryRole" name="Role" value="Secretary" class="form-check-input" required />
+            <label class="form-check-label" for="secretaryRole">Secretary</label>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
