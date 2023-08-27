@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\ByDate\**" />
+    <Content Remove="Pages\ByDate\**" />
+    <EmbeddedResource Remove="Pages\ByDate\**" />
+    <None Remove="Pages\ByDate\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.19" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.19">
@@ -24,10 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Doctor_Attendance.Models\Doctor_Attendance.Models.csproj" />
     <ProjectReference Include="..\Doctor_Attendance.Services\Doctor_Attendance.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\ByDate\" />
   </ItemGroup>
 
 </Project>
