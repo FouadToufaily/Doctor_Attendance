@@ -98,10 +98,32 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string? publishButton)
         {
             if (ModelState.IsValid)
             {
+                if (!string.IsNullOrEmpty(publishButton))
+                {
+                    var existingRecords = await _context.Attendances
+                        .Where(a => a.DoctorId == SelectedDoctor && a.Date.Month == SelectedMonth)
+                        .ToListAsync();
+
+                    foreach (var attendanceRecord in existingRecords)
+                    {
+                        if (attendanceRecord.Attended == true || attendanceRecord.Attended == null)
+                        {
+                            attendanceRecord.Published = true;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Refresh the page data to reflect the changes
+                    await OnGetAsync();
+
+                    return Page();
+                }
+
                 var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
 
@@ -172,8 +194,6 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             // If ModelState is invalid, stay on the page and show the validation errors
             return Page();
         }
-
-
 
         private int ConvertToInt32(string value)
         {

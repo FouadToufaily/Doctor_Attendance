@@ -8,19 +8,20 @@ namespace Doctor_Attendance.Pages.S.Account
 {
     public class LoginModel : PageModel
     {
-
         private readonly AppDBContext _context;
 
-        public LoginModel (AppDBContext context)
+        public LoginModel(AppDBContext context)
         {
             _context = context;
         }
-        
-       [BindProperty]
+
+        [BindProperty]
         public LoginInputModel Input { get; set; }
 
         [Display(Name = "Remember Me")]
         public bool RememberMe { get; set; }
+
+        public string LogInValid { get; set; } // for error messages
 
         public IActionResult OnGet()
         {
@@ -29,25 +30,30 @@ namespace Doctor_Attendance.Pages.S.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            string LogInValid = "";
+            LogInValid = ""; // Reset the error message
+
             if (ModelState.IsValid)
             {
-                if (_context.Users.Any(u => u.Username == Input.Username))//username exists
+                if (_context.Users.Any(u => u.Username == Input.Username))
                 {
-                    //if password is incorrect
                     if (_context.Users.Any(u => u.Username == Input.Username && !(u.Password == Input.Password)))
-
+                    {
                         LogInValid = "Incorrect Password";
+                    }
                     else
-                        return RedirectToPage("/S/Test/Index");
-
-                }//username is incorrect
+                    {
+                        return RedirectToPage("../../Index");
+                    }
+                }
                 else
-                     LogInValid = "This username does not exists";
-
+                {
+                    LogInValid = "This username does not exist";
+                }
             }
+
             return Page();
         }
+
         public class LoginInputModel
         {
             [Required]
@@ -58,8 +64,6 @@ namespace Doctor_Attendance.Pages.S.Account
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
-
-            
         }
     }
 }
