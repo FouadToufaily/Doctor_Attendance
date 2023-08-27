@@ -43,7 +43,7 @@ namespace Doctor_Attendance.Pages.S.Account
                 {
                     Username = Input.Username,
                     Password = Input.Password,
-                    RoleId = Input.Role == "Doctor" ? 1 : 2, // Assuming 1 is for Doctor and 2 is for Secretary
+                    RoleId = Input.Role == "Doctor" ? 1 : 5, // Assuming 1 is for Doctor and 2 is for Secretary
                     DateCreated = DateTime.Now,
                     LastModified = DateTime.Now
                 };

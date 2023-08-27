@@ -4,41 +4,34 @@
     ViewBag.Title = "User Login";
 }
 
-<h1>User Login</h1>
+<div class="container mt-5" >
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-4">
+        <h1 class="mb-3">Login</h1>    
 
-<div class="row">
-    <div class="col-md-12">
-
-        <form method="post" asp-page="/Account/Register" asp-page-handler="Login">
-
-            <div asp-validation-summary="All" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="@Model.Email"></label>
-                <input asp-for="@Model.Email" class="form-control" />
-                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label" asp-for="@Model.Input.Username">Email Address</label>
+                <input type="text" asp-for="@Model.Input.Username" class="form-control">
+                <span asp-validation-for="@Model.Input.Username" class="text-danger"></span>
+            </div>
+             <div class="mb-3">
+                <label class="form-label" asp-for="@Model.Input.Password">Password</label>
+                <input type="password" asp-for="@Model.Input.Password" class="form-control">
+                <span asp-validation-for="@Model.Input.Password" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" asp-for="@Model.RememberMe" class="form-check-input">
+                <label class="form-check-label" asp-for="@Model.RememberMe">Remember me?</label>
+            </div>
+            
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Login</button>
             </div>
 
-            <div class="form-group">
-                <label asp-for="@Model.Password"></label>
-                <input asp-for="@Model.Password" class="form-control" />
-                <span asp-validation-for="@Model.Password" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="@Model.RememberMe">
-                        <input asp-for="@Model.RememberMe" />@Html.DisplayNameFor(m => m.RememberMe)
-                    </label>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Login</button>
-            <div>
-                <a asp-page="./Register">Register</a>
-            </div>
 
         </form>
-
+        </div>
     </div>
+
 </div>
