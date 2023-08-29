@@ -60,7 +60,7 @@
             }
             if (totalDays == 0)
             {
-                <h4>No Days Attended yet</h4>
+                <h4>No published attendances yet.</h4>
             }
             else
             {
@@ -81,9 +81,7 @@
                             <th>
                                 Comments
                             </th>           
-                            <th>
-                                Published
-                            </th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -94,11 +92,9 @@
                             <tr>
                                 <td>@item.Date.ToString("dddd, yyyy-MM-dd")</td>                           
 
-                                <td><input type="text" disabled name="@($"{item}.NbHours")" value="@item.NbHours" /></td>
-                                <td><input type="text" disabled name="@($"{item}.Comments")" value="@item.Comments" /></td>
-                                <td>
-                                    <input type="checkbox" disabled name="@($"{item}.Published")" value="true" @(item.Published.HasValue && item.Published.Value ? "checked" : "")/>
-                                </td>
+                                <td>@item.NbHours"</td>
+                                <td>@item.Comments"</td>
+                                
                                 <td> <a asp-page="./Details" asp-route-id="@item.AttId">Details</a> </td>
                             </tr>
                         }

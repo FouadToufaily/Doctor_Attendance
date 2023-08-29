@@ -79,7 +79,7 @@ namespace Doctor_Attendance.Pages.Manager
                 var endDate = startDate.AddMonths(1).AddDays(-1);
 
                 AttendanceRecords = await _context.Attendances
-                    .Where(a => a.DoctorId == SelectedDoctor && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)
+                    .Where(a => a.DoctorId == SelectedDoctor && a.Published == true && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)
                     .ToListAsync();
               
 
@@ -133,8 +133,6 @@ namespace Doctor_Attendance.Pages.Manager
             [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
             public DateTime Date { get; set; }
             public int NbHours { get; set; }
-            public bool? Attended { get; set; }
-            public bool Published { get; set; }
             public string? Comments { get; set; }
         }
     }

@@ -23,6 +23,13 @@
                 <input asp-for="Holiday.Name" class="form-control" />
                 <span asp-validation-for="Holiday.Name" class="text-danger"></span>
             </div>
+            @if(!String.IsNullOrEmpty(Model.ValidStr))
+            {
+                @if (!Model.ValidStr.Equals(""))
+                {
+                    <span class="text-danger">@Model.ValidStr</span>
+                }
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
