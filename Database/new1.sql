@@ -21,7 +21,7 @@ go
 /* Table: HOLIDAYS                                              */
 /*==============================================================*/
 create table HOLIDAYS (
-   ID                   int                  not null,
+   ID                   int         IDENTITY(1,1)         not null,
    DATE                 datetime             null,
    NAME                 varchar(50)          null,
    constraint PK_HOLIDAYS primary key nonclustered (ID)

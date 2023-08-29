@@ -1,0 +1,35 @@
+﻿@page
+@model Doctor_Attendance.Pages.LoginModel
+@{
+
+}
+<div class="row justify-content-center align-self-lg-center">
+    <div class="col-10 mt-5">                            
+        <div class="card login-logout-card">
+            <div class="card-header">
+            </div>
+
+<div class="row">
+    <div class="col-md-4">
+    <form method="post">
+        <div class="form-group mt-5 ms-5">
+                <label asp-for="credential.Username" class="control-label" ></label>
+            
+                <input class="form-control col" type="text" asp-for="credential.Username" />
+                <span asp-validation-for="credential.Username" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group mt-5 ms-5">
+            <label asp-for="credential.Password" class="control-label"></label>
+                <input class="form-control" type="text" asp-for="credential.Password" />
+                <span asp-validation-for="credential.Password" class="text-danger"></span>
+        </div>
+        <div class=" col-10 mt-5 ms-lg-5 mb-5">
+                <input type="submit" value="Login" class="btn btn-primary" />
+            </div>        
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
