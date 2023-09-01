@@ -14,6 +14,9 @@ namespace Doctor_Attendance.Models
         public bool? Published { get; set; }
         public string? Comments { get; set; }
 
+        public String DateOnly { get { return Date.ToShortDateString(); } }
+
+
         public virtual Department Dep { get; set; } = null!;
         public virtual Doctor Doctor { get; set; } = null!;
     }

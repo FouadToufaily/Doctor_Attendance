@@ -63,43 +63,49 @@
 
                             if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
                             {
-                                var attendanceInputForDay = Model.AttendanceInput[currentDay - 1];
-                                var inputFieldName = $"AttendanceInput[{currentDay - 1}]";
+                                // Check if the current date is a holiday
+                                bool isHoliday = Model.HolidayDates.Contains(currentDate.Date);
 
-                                <tr>
-                                    <td>@currentDate.ToString("dddd, yyyy-MM-dd")</td>
-                                    <td>
-                                        <input type="hidden" name="@($"{inputFieldName}.Date")" value="@currentDate.ToString("yyyy-MM-dd")" />
-                                        <input type="hidden" name="@($"{inputFieldName}.Published")" value="@attendanceInputForDay.Published" />
-                                        @if (attendanceInputForDay.Published)
-                                        {
-                                            <input type="checkbox" disabled name="@($"{inputFieldName}.Published")" value="true" checked />
-                                        }
-                                    </td>
-                                    <td>
-                                        <!-- Make the "Attended" checkbox editable only if not published -->
-                                        @if (!attendanceInputForDay.Published)
-                                        {
-                                            <input type="checkbox"
-                                                   name="@($"{inputFieldName}.Attended")"
-                                                   value="true"
-                                                   @(attendanceInputForDay.Attended == true ? "checked" : "") />
-                                        }
-                                        else
-                                        {
-                                            @if (attendanceInputForDay.Attended == true)
+                                if (!isHoliday)
+                                {
+                                    var attendanceInputForDay = Model.AttendanceInput.FirstOrDefault(a => a.Date.Date == currentDate.Date);
+                                    var inputFieldName = $"AttendanceInput[{currentDay - 1}]";
+
+                                    <tr>
+                                        <td>@currentDate.ToString("dddd, yyyy-MM-dd")</td>
+                                        <td>
+                                            <input type="hidden" name="@($"{inputFieldName}.Date")" value="@currentDate.ToString("yyyy-MM-dd")" />
+                                            <input type="hidden" name="@($"{inputFieldName}.Published")" value="@attendanceInputForDay?.Published" />
+                                            @if (attendanceInputForDay?.Published ?? false)
                                             {
-                                                <input type="checkbox" disabled checked />
+                                                <input type="checkbox" disabled name="@($"{inputFieldName}.Published")" value="true" checked />
+                                            }
+                                        </td>
+                                        <td>
+                                            <!-- Make the "Attended" checkbox editable only if not published -->
+                                            @if (!(attendanceInputForDay?.Published ?? false))
+                                            {
+                                                <input type="checkbox"
+                                                       name="@($"{inputFieldName}.Attended")"
+                                                       value="true"
+                                                       @(attendanceInputForDay?.Attended == true ? "checked" : "") />
                                             }
                                             else
                                             {
-                                                <input type="checkbox" disabled />
+                                                @if (attendanceInputForDay?.Attended == true)
+                                                {
+                                                    <input type="checkbox" disabled checked />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" disabled />
+                                                }
                                             }
-                                        }
-                                    </td>
-                                    <td><input type="text" name="@($"{inputFieldName}.NbHours")" value="@attendanceInputForDay.NbHours" /></td>
-                                    <td><input type="text" name="@($"{inputFieldName}.Comments")" value="@attendanceInputForDay.Comments" /></td>
-                                </tr>
+                                        </td>
+                                        <td><input type="text" name="@($"{inputFieldName}.NbHours")" value="@attendanceInputForDay?.NbHours" /></td>
+                                        <td><input type="text" name="@($"{inputFieldName}.Comments")" value="@attendanceInputForDay?.Comments" /></td>
+                                    </tr>
+                                }
                             }
                         }
                     </tbody>
@@ -107,7 +113,6 @@
 
                 <input type="submit" value="Submit Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
                 <input type="submit" name="publishButton" value="Publish" style="display: block; margin-top: 20px; margin-left: auto; padding: 8px 16px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;" />
-
             </form>
         }
     </div>

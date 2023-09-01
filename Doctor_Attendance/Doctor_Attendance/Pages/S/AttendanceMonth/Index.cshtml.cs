@@ -64,6 +64,8 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
         [BindProperty]
         public List<AttendanceInputModel> AttendanceInput { get; set; }
 
+        public List<DateTime> HolidayDates { get; set; } // Added property for holiday dates
+
         public async Task OnGetAsync()
         {
             Doctor = await _context.Doctors.ToListAsync();
@@ -74,18 +76,29 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             }).ToList();
 
             if (SelectedDoctor > 0 && SelectedMonth > 0)
-            {   
+            {
                 var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
 
+                // Get the list of holiday dates for the selected year and month
+                HolidayDates = await GetHolidayDatesAsync(SelectedYear, SelectedMonth);
+
+                // Filter out holidays from the AttendanceRecords
                 AttendanceRecords = await _context.Attendances
                     .Where(a => a.DoctorId == SelectedDoctor && a.Date >= startDate && a.Date <= endDate)
+                    .Where(a => !HolidayDates.Contains(a.Date.Date))
                     .ToListAsync();
 
                 ShowRecords = true;
 
                 // Populate the AttendanceInput list with data from the database, if available
-                AttendanceInput = Enumerable.Range(1, DateTime.DaysInMonth(startDate.Year, SelectedMonth))
+                // Populate the AttendanceInput list with data from the database, if available
+                AttendanceInput = Enumerable.Range(1, DateTime.DaysInMonth(SelectedYear, SelectedMonth))
+                    .Where(day =>
+                    {
+                        var date = new DateTime(startDate.Year, SelectedMonth, day).Date; // Extract date part
+                        return !HolidayDates.Contains(date); // Compare without time portion
+                    })
                     .Select(day =>
                     {
                         var date = new DateTime(startDate.Year, SelectedMonth, day);
@@ -190,13 +203,23 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             return Page();
         }
 
-
         private int ConvertToInt32(string value)
         {
             int result;
             int.TryParse(value, out result);
             return result;
         }
+
+        private async Task<List<DateTime>> GetHolidayDatesAsync(int selectedYear, int selectedMonth)
+        {
+            var holidays = await _context.Holidays
+                .Where(h => h.Date.Year == selectedYear && h.Date.Month == selectedMonth)
+                .Select(h => h.Date.Date) // Select only the date part
+                .ToListAsync();
+
+            return holidays;
+        }
+
 
         public class AttendanceInputModel
         {

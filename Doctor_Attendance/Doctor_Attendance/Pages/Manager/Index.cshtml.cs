@@ -1,8 +1,16 @@
-﻿using Doctor_Attendance.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Doctor_Attendance.Models;
+using Doctor_Attendance.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Runtime.Intrinsics.X86;
 using System.ComponentModel.DataAnnotations;
 
 namespace Doctor_Attendance.Pages.Manager
@@ -46,65 +54,76 @@ namespace Doctor_Attendance.Pages.Manager
         [BindProperty(SupportsGet = true)]
         public int SelectedDep { get; set; }
 
-        public int FacultyId { get; set; }
-        public int SectionId { get; set; }
-        public Doctor doctor { get; set; }
-
         [BindProperty]
         public List<Attendance> AttendanceRecords { get; set; }
-        public async Task OnGetAsync(int? drId)//from login page 
+        public async Task OnGetAsync()
         {
-           
-            
-            drId = 2; //for testing
-            // getting the doctor
-            doctor = _context.Doctors.FirstOrDefault(d => d.DoctorId == drId);
-
-            //getting faculty that this dr manages
-            Faculty faculty =  await _context.Faculties.FirstOrDefaultAsync(d => d.DoctorId == doctor.DoctorId);
-            
-            //geting departments of this faculty and this section
-            var query = _context.Departments
-            .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid &&
-            f.Sections.Any(s => s.DoctorId == drId)));
-            //Load list of deps for select
-            var departments = await query.ToListAsync();
-            DepItems = departments.Select(dep => new SelectListItem
-            {
-                Value = dep.DepId.ToString(),
-                Text = dep.DepName.ToString(),
-            }).ToList();
-
-            //Load list of doctors for select
+            //doctors list
             Doctor = await _context.Doctors.ToListAsync();
             DoctorItems = Doctor.Select(doctor => new SelectListItem
             {
                 Value = doctor.DoctorId.ToString(),
                 Text = $"{doctor.Firstname} {doctor.Lastname}"
             }).ToList();
-            
-            //if there is a selected doctor, month and a department
+            //departments list
+            Departments = await _context.Departments.ToListAsync();
+            DepItems = Departments.Select(dep => new SelectListItem
+            {
+                Value = dep.DepId.ToString(),
+                Text = dep.DepName.ToString(),
+            }).ToList();
+
             if (SelectedDoctor > 0 && SelectedMonth > 0 && SelectedDep > 0)
             {
-                // setting the start and end date of the selected month
                 var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
-                // Getting the specified records
+
                 AttendanceRecords = await _context.Attendances
                     .Where(a => a.DoctorId == SelectedDoctor && a.Published == true && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)
                     .ToListAsync();
+              
 
-                //setting the flag to display attendance records
                 ShowRecords = true;
 
+                // Populate the AttendanceInput list with data from the database, if available
+             //  AttendanceInput = AttendanceRecords.Select(a => new SelectListItem
             }
-            else //if ModelState is invalid
+            else
             {
+                
                 ShowRecords = false;
-                //initialize an empty list of attendances
                 AttendanceRecords = new List<Attendance>();
             }
-          
+        }
+        /*
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
+                var endDate = startDate.AddMonths(1).AddDays(-1);
+
+               
+
+            // Repopulate DoctorItems if there's an error in the model
+            Doctor = await _context.Doctors.ToListAsync();
+            DoctorItems = Doctor.Select(doctor => new SelectListItem
+            {
+                Value = doctor.DoctorId.ToString(),
+                Text = $"{doctor.Firstname} {doctor.Lastname}"
+            }).ToList();
+
+            // If ModelState is invalid, stay on the page and show the validation errors
+            return Page();
+        }
+        */
+
+
+        private int ConvertToInt32(string value)
+        {
+            int result;
+            int.TryParse(value, out result);
+            return result;
         }
 
         public class AttendanceInputModel

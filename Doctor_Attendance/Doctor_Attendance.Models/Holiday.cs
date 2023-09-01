@@ -12,7 +12,6 @@ namespace Doctor_Attendance.Models
         public DateTime Date { get; set; }
         public string? Name { get; set; }
 
-
         public String DateOnly { get { return Date.ToShortDateString(); } }
 
     }

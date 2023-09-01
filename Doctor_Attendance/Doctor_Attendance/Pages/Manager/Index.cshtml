@@ -21,26 +21,21 @@
                 <option value="">-- Select Doctor --</option>
             </select>
             &nbsp; &nbsp; &nbsp;
-
             Month:
             <select asp-for="SelectedMonth" asp-items="Model.MonthItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                 <option value="">-- Select Month --</option>
             </select>
              &nbsp; &nbsp; &nbsp;
-
             Department:
             <select asp-for="SelectedDep" asp-items="Model.DepItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                 <option value="">-- Select Department --</option>
             </select>
-            &nbsp; &nbsp; &nbsp;
-
-            <input type="submit" value="Show Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
         </p>
         @if (!ModelState.IsValid)
         {
             <span style="color: red; margin-left: 10px;">Please select a doctor and a month and a department.</span>
         }
-        
+        <input type="submit" value="Show Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
     <!-- Attendance Records Table -->
     <div id="attendanceTable" style="display: @(Model.ShowRecords)">
@@ -86,6 +81,7 @@
                             <th>
                                 Comments
                             </th>           
+
                         </tr>
                     </thead>
                     <tbody>
@@ -94,10 +90,12 @@
                         {
 
                             <tr>
-                                <td>@item.Date.ToString("dddd, yyyy-MM-dd")</td>     
-                                <td>@item.NbHours</td>
-                                <td>@item.Comments</td>                      
-                                <td> <a asp-page="/S/Attendances/Details" asp-route-id="@item.AttId">Details</a> </td>
+                                <td>@item.Date.ToString("dddd, yyyy-MM-dd")</td>                           
+
+                                <td>@item.NbHours"</td>
+                                <td>@item.Comments"</td>
+                                
+                                <td> <a asp-page="./Details" asp-route-id="@item.AttId">Details</a> </td>
                             </tr>
                         }
                     </tbody>
