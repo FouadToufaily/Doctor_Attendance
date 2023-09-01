@@ -24,6 +24,11 @@
             <select asp-for="SelectedMonth" asp-items="Model.MonthItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                 <option value="">-- Select Month --</option>
             </select>
+            &nbsp; &nbsp; &nbsp;
+            <select asp-for="SelectedYear" asp-items="Model.YearItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="">-- Select Year --</option>
+            </select>
+
         </p>
         @if (!ModelState.IsValid)
         {
@@ -35,10 +40,10 @@
     <div id="attendanceTable" style="display: @(Model.ShowRecords)">
         @if (Model.ShowRecords)
         {
-            var startDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, 1);
+            var startDate = new DateTime(Model.SelectedYear, Model.SelectedMonth, 1);
             var endDate = startDate.AddMonths(1).AddDays(-1);
 
-            var daysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, Model.SelectedMonth);
+            var daysInMonth = DateTime.DaysInMonth(Model.SelectedYear, Model.SelectedMonth);
 
             <form method="post">
                 <table class="table">
@@ -54,7 +59,7 @@
                     <tbody>
                         @for (int currentDay = 1; currentDay <= daysInMonth; currentDay++)
                         {
-                            var currentDate = new DateTime(DateTime.Now.Year, Model.SelectedMonth, currentDay);
+                            var currentDate = new DateTime(Model.SelectedYear, Model.SelectedMonth, currentDay);
 
                             if (currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
                             {

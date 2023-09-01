@@ -42,6 +42,16 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             new SelectListItem { Value = "12", Text = "December" }
         };
 
+        [BindProperty(SupportsGet = true)]
+        public int SelectedYear { get; set; }
+
+        public List<SelectListItem> YearItems { get; } = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "2023", Text = "2023" },
+            new SelectListItem { Value = "2022", Text = "2022" },
+            new SelectListItem { Value = "2021", Text = "2021" },
+        };
+
         public bool ShowRecords { get; set; }
 
         [BindProperty(SupportsGet = true)]
@@ -64,8 +74,8 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
             }).ToList();
 
             if (SelectedDoctor > 0 && SelectedMonth > 0)
-            {
-                var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
+            {   
+                var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
 
                 AttendanceRecords = await _context.Attendances
@@ -100,82 +110,21 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
         public async Task<IActionResult> OnPostAsync(string? publishButton)
         {
-            if (ModelState.IsValid)
+            if (!string.IsNullOrEmpty(publishButton))
             {
-                if (!string.IsNullOrEmpty(publishButton))
+                var existingRecords = await _context.Attendances
+                    .Where(a => a.DoctorId == SelectedDoctor && a.Date.Month == SelectedMonth)
+                    .ToListAsync();
+
+                foreach (var attendanceRecord in existingRecords)
                 {
-                    var existingRecords = await _context.Attendances
-                        .Where(a => a.DoctorId == SelectedDoctor && a.Date.Month == SelectedMonth)
-                        .ToListAsync();
-
-                    foreach (var attendanceRecord in existingRecords)
+                    if (attendanceRecord.Attended == true || attendanceRecord.Attended == null)
                     {
-                        if (attendanceRecord.Attended == true || attendanceRecord.Attended == null)
-                        {
-                            attendanceRecord.Published = true;
-                        }
-                    }
-
-                    await _context.SaveChangesAsync();
-
-                    // Refresh the page data to reflect the changes
-                    await OnGetAsync();
-
-                    return Page();
-                }
-
-                var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
-                var endDate = startDate.AddMonths(1).AddDays(-1);
-
-                for (int currentDay = 1; currentDay <= DateTime.DaysInMonth(DateTime.Now.Year, SelectedMonth); currentDay++)
-                {
-                    var currentDate = new DateTime(DateTime.Now.Year, SelectedMonth, currentDay);
-                    var attendanceInputForDay = new AttendanceInputModel
-                    {
-                        Date = currentDate,
-                        NbHours = ConvertToInt32(Request.Form[$"AttendanceInput[{currentDay - 1}].NbHours"]),
-                        Attended = Request.Form[$"AttendanceInput[{currentDay - 1}].Attended"] == "true",
-                        Comments = Request.Form[$"AttendanceInput[{currentDay - 1}].Comments"]
-                    };
-
-                    var existingAttendance = _context.Attendances.FirstOrDefault(a =>
-                        a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInputForDay.Date.Date);
-
-                    if (existingAttendance != null && existingAttendance.Published != true)
-                    { //existing attendances were being removed here, Adding a constraint to check for published != true was the solution, otherwise the secretary can check/uncheck anything else
-                        if (!attendanceInputForDay.Attended.Value)
-                        {
-                            // Delete the attendance record if the "Attended" checkbox is unchecked
-                            _context.Attendances.Remove(existingAttendance);
-                        }
-                        else
-                        {
-                            existingAttendance.Attended = true;
-                            existingAttendance.Comments = attendanceInputForDay.Comments;
-                            existingAttendance.NbHours = attendanceInputForDay.NbHours;
-                            existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
-                        }
-                    }
-                    else if (attendanceInputForDay.Attended == true)
-                    {
-                        // Create a new attendance record only if the Attended checkbox was checked
-                        var newAttendance = new Attendance
-                        {
-                            DoctorId = SelectedDoctor,
-                            Date = attendanceInputForDay.Date,
-                            Attended = true,
-                            Comments = attendanceInputForDay.Comments,
-                            NbHours = attendanceInputForDay.NbHours,
-                            DepId = 1 // new added since depid was causing a conflict on foreign key
-                        };
-                        _context.Attendances.Add(newAttendance);
+                        attendanceRecord.Published = true;
                     }
                 }
 
-                await _context.SaveChangesAsync(); // Save changes to the database
-
-                // Set ShowRecords to true to display updated records after form submission
-                ShowRecords = true;
+                await _context.SaveChangesAsync();
 
                 // Refresh the page data to reflect the changes
                 await OnGetAsync();
@@ -183,17 +132,64 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                 return Page();
             }
 
-            // Repopulate DoctorItems if there's an error in the model
-            Doctor = await _context.Doctors.ToListAsync();
-            DoctorItems = Doctor.Select(doctor => new SelectListItem
-            {
-                Value = doctor.DoctorId.ToString(),
-                Text = $"{doctor.Firstname} {doctor.Lastname}"
-            }).ToList();
+            var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
 
-            // If ModelState is invalid, stay on the page and show the validation errors
+            for (int currentDay = 1; currentDay <= DateTime.DaysInMonth(SelectedYear, SelectedMonth); currentDay++)
+            {
+                var currentDate = new DateTime(SelectedYear, SelectedMonth, currentDay);
+                var attendanceInputForDay = new AttendanceInputModel
+                {
+                    Date = currentDate,
+                    NbHours = ConvertToInt32(Request.Form[$"AttendanceInput[{currentDay - 1}].NbHours"]),
+                    Attended = Request.Form[$"AttendanceInput[{currentDay - 1}].Attended"] == "true",
+                    Comments = Request.Form[$"AttendanceInput[{currentDay - 1}].Comments"]
+                };
+
+                var existingAttendance = _context.Attendances.FirstOrDefault(a =>
+                    a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInputForDay.Date.Date);
+
+                if (existingAttendance != null && existingAttendance.Published != true)
+                {
+                    if (!attendanceInputForDay.Attended.Value)
+                    {
+                        // Delete the attendance record if the "Attended" checkbox is unchecked
+                        _context.Attendances.Remove(existingAttendance);
+                    }
+                    else
+                    {
+                        existingAttendance.Attended = true;
+                        existingAttendance.Comments = attendanceInputForDay.Comments;
+                        existingAttendance.NbHours = attendanceInputForDay.NbHours;
+                        existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
+                    }
+                }
+                else if (attendanceInputForDay.Attended == true)
+                {
+                    var newAttendance = new Attendance
+                    {
+                        DoctorId = SelectedDoctor,
+                        Date = attendanceInputForDay.Date,
+                        Attended = true,
+                        Comments = attendanceInputForDay.Comments,
+                        NbHours = attendanceInputForDay.NbHours,
+                        DepId = 1 // new added since depid was causing a conflict on foreign key
+                    };
+                    _context.Attendances.Add(newAttendance);
+                }
+            }
+
+            await _context.SaveChangesAsync(); // Save changes to the database
+
+            // Set ShowRecords to true to display updated records after form submission
+            ShowRecords = true;
+
+            // Refresh the page data to reflect the changes
+            await OnGetAsync();
+
             return Page();
         }
+
 
         private int ConvertToInt32(string value)
         {
