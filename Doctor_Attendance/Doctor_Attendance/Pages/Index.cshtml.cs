@@ -12,9 +12,9 @@ namespace Doctor_Attendance.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public void OnGet(string message)
         {
-
+            ViewData["Username"] = message;
         }
     }
 }

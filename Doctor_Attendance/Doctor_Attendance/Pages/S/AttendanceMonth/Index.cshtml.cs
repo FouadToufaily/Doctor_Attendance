@@ -47,9 +47,10 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
         public List<SelectListItem> YearItems { get; } = new List<SelectListItem>
         {
-            new SelectListItem { Value = "2023", Text = "2023" },
-            new SelectListItem { Value = "2022", Text = "2022" },
-            new SelectListItem { Value = "2021", Text = "2021" },
+            new SelectListItem { Value =  ((DateTime.Now.Year)).ToString(), Text = ((DateTime.Now.Year)).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-1).ToString(), Text = ((DateTime.Now.Year)-1).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-2).ToString(), Text = ((DateTime.Now.Year)-2).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-3).ToString(), Text = ((DateTime.Now.Year)-3).ToString() }
         };
 
         public bool ShowRecords { get; set; }
@@ -75,7 +76,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                 Text = $"{doctor.Firstname} {doctor.Lastname}"
             }).ToList();
 
-            if (SelectedDoctor > 0 && SelectedMonth > 0)
+            if (SelectedDoctor > 0 && SelectedMonth > 0 && SelectedYear > 0)
             {
                 var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);

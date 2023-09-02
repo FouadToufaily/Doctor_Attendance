@@ -32,8 +32,12 @@
             <select asp-for="SelectedDep" asp-items="Model.DepItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                 <option value="">-- Select Department --</option>
             </select>
+            
+             &nbsp; &nbsp; &nbsp;
+             <select asp-for="SelectedYear" asp-items="Model.YearItems" style="padding: 6px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="">-- Select Year --</option>
+            </select>
             &nbsp; &nbsp; &nbsp;
-
             <input type="submit" value="Show Attendance" style="padding: 8px 16px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;" />
         </p>
         @if (!ModelState.IsValid)

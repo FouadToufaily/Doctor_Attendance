@@ -50,13 +50,26 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Holidays/Index">Holidays</a>
                         </li>
 
-                        <li class="nav-item">
+                         @if(ViewData["Username"] ==null)//if not logged in
+                        {   
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Register">Register</a>
-                        </li>
+                            </li>
 
-                        <li class="nav-item">
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Login</a>
-                        </li>
+                            </li>
+                        }
+                        else //if logged in
+                        {
+                            if (!ViewData["Username"].Equals(""))
+                            {
+                                <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Logout @ViewData["Username"]</a>
+                            </li>
+                            }
+                            
+                        }
                     </ul>
                 </div>
             </div>

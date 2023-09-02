@@ -42,7 +42,7 @@ namespace Doctor_Attendance.Pages.S.Account
                     }
                     else
                     {
-                        return RedirectToPage("../../Index");
+                        return RedirectToPage("../../Index", new { message = Input.Username + "" });
                     }
                 }
                 else

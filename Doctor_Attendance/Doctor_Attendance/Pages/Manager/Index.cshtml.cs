@@ -41,10 +41,22 @@ namespace Doctor_Attendance.Pages.Manager
 
         [BindProperty(SupportsGet = true)]
         public int SelectedDoctor { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public int SelectedMonth { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public int SelectedDep { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int SelectedYear { get; set; }
+        public List<SelectListItem> YearItems { get; } = new List<SelectListItem>
+        {
+            new SelectListItem { Value =  ((DateTime.Now.Year)).ToString(), Text = ((DateTime.Now.Year)).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-1).ToString(), Text = ((DateTime.Now.Year)-1).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-2).ToString(), Text = ((DateTime.Now.Year)-2).ToString() },
+            new SelectListItem { Value =  ((DateTime.Now.Year)-3).ToString(), Text = ((DateTime.Now.Year)-3).ToString() }
+        };
 
         public int FacultyId { get; set; }
         public int SectionId { get; set; }
@@ -87,7 +99,7 @@ namespace Doctor_Attendance.Pages.Manager
             if (SelectedDoctor > 0 && SelectedMonth > 0 && SelectedDep > 0)
             {
                 // setting the start and end date of the selected month
-                var startDate = new DateTime(DateTime.Now.Year, SelectedMonth, 1);
+                var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
                 // Getting the specified records
                 AttendanceRecords = await _context.Attendances
