@@ -22,10 +22,12 @@ namespace Doctor_Attendance.Pages.S.Account
         public bool RememberMe { get; set; }
 
         public string LogInValid { get; set; } // for error messages
-
+        public string Username { get; set; }
         public IActionResult OnGet()
         {
+            Username = "";
             return Page();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -42,7 +44,8 @@ namespace Doctor_Attendance.Pages.S.Account
                     }
                     else
                     {
-                        return RedirectToPage("../../Index", new { message = Input.Username + "" });
+                        Username = Input.Username;
+                        return RedirectToPage("../../Index", new { Username = Input.Username + "" });
                     }
                 }
                 else

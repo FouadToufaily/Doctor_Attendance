@@ -22,8 +22,10 @@ namespace Doctor_Attendance.Pages.S.Doctors
         [BindProperty]
         public Doctor Doctor { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)          
         {
+            
+
             if (id == null || _context.Doctors == null)
             {
                 return NotFound();

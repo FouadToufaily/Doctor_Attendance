@@ -51,7 +51,7 @@ namespace Doctor_Attendance.Pages.S.Account
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                return RedirectToPage("/Index"); // Redirect to the Index page
+                return RedirectToPage("../../Index"); // Redirect to the Index page
             }
 
             return Page();

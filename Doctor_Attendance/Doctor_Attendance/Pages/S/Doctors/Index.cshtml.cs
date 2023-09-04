@@ -22,9 +22,12 @@ namespace Doctor_Attendance.Pages.S.Doctors
         public IEnumerable<Doctor> Doctor { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; } = default!;
+        public string message { get; set; }
 
         public async Task OnGetAsync()
         {
+            
+
             if (_context.Doctors != null)
             {
                 Doctor = await _context.Doctors

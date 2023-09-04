@@ -21,11 +21,25 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        
+
+                         @if(ViewData["Username"] ==null)//if not logged in
+                        {   
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Register">Register</a>
+                            </li>
+
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Login</a>
+                            </li>
+                        }
+                        else //if logged in
+                        {
+                            <li class="nav-item">
+                            <a class="nav-link text-dark"  asp-area="" asp-page="/Index" >Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Doctors/Index">Doctors</a>
+                            <a class="nav-link text-dark"  asp-area="" asp-page="/S/Doctors/Index">Doctors</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Attendances/Index">Attendances</a>
@@ -50,18 +64,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Holidays/Index">Holidays</a>
                         </li>
 
-                         @if(ViewData["Username"] ==null)//if not logged in
-                        {   
-                            <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Register">Register</a>
-                            </li>
-
-                            <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Login</a>
-                            </li>
-                        }
-                        else //if logged in
-                        {
                             if (!ViewData["Username"].Equals(""))
                             {
                                 <li class="nav-item">

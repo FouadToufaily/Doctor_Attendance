@@ -32,9 +32,9 @@
                     <input type="checkbox" asp-for="@Model.RememberMe" class="form-check-input">
                     <label class="form-check-label" asp-for="@Model.RememberMe">Remember me?</label>
                 </div>
-
+                
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" asp-route-Username="@Model.Username" class="btn btn-primary">Login</button>
                 </div>
             </form>
         </div>
