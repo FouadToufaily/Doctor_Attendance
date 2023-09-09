@@ -16,6 +16,12 @@ builder.Services.AddDbContextPool<AppDBContext>(options =>
 {
     options.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
 });
+//AddSession 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set the idle timeout
+    options.Cookie.HttpOnly = true; // Set HttpOnly option for the session cookie
+});
 
 
 //bool isExpressEdition;
@@ -61,6 +67,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+//Use Session
+app.UseSession();
 
 app.MapRazorPages();
 

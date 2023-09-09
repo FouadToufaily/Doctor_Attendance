@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http 
+<!DOCTYPE html>
 <html lang="en">
+    @{
+        var UserStatus = Context.Session.GetString("UserStatus");
+    }
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +27,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         
 
-                         @if(ViewData["Username"] ==null)//if not logged in
+                         @if(String.IsNullOrEmpty(UserStatus))//if not logged in
                         {   
                             <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Register">Register</a>
@@ -33,7 +37,8 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Login</a>
                             </li>
                         }
-                        else //if logged in
+                        else
+                        if(!UserStatus.Equals(""))//if logged in
                         {
                             <li class="nav-item">
                             <a class="nav-link text-dark"  asp-area="" asp-page="/Index" >Home</a>
@@ -63,13 +68,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/S/Holidays/Index">Holidays</a>
                         </li>
-
-                            if (!ViewData["Username"].Equals(""))
-                            {
                                 <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Login">Logout @ViewData["Username"]</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/S/Account/Logout">Logout @UserStatus</a>
                             </li>
-                            }
+                            
                             
                         }
                     </ul>
