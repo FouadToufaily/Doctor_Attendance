@@ -18,8 +18,7 @@ namespace Doctor_Attendance.Pages.S.Account
         [BindProperty]
         public LoginInputModel Input { get; set; }
 
-        [Display(Name = "Remember Me")]
-        public bool RememberMe { get; set; }
+        
 
         public string LogInValid { get; set; } // for error messages
         public IActionResult OnGet()

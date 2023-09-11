@@ -396,4 +396,4 @@ insert into HAS values (1,1), (2,1) , (3,1), (1,2), (3,2);
 
 insert into BELONG_TO values (1,1), (2,1) , (3,1), (4,1), (5,2), (6,3);
 
-insert into Role values (null,'Secretary'), (null,'Doctor');
+insert into Role values (null,'Secretary'), (null,'HOD'), (null,'HOF'), (null,'HOS');

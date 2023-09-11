@@ -43,10 +43,18 @@ namespace Doctor_Attendance.Pages.S.Account
                 {
                     Username = Input.Username,
                     Password = Input.Password,
-                    RoleId = Input.Role == "Doctor" ? 1 : 5, // Assuming 1 is for Doctor and 2 is for Secretary
                     DateCreated = DateTime.Now,
                     LastModified = DateTime.Now
-                };
+                };        
+                     if (Input.Role.Equals("Secratary"))
+                      user.RoleId = 1;
+                     else if (Input.Role.Equals("Head Of Department"))
+                      user.RoleId = 2;
+                     else if (Input.Role.Equals("Head Of Faculty"))
+                      user.RoleId = 3;
+                     else if (Input.Role.Equals("Head Of Section"))
+                      user.RoleId = 4; 
+
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();

@@ -28,10 +28,19 @@
         <label>Role</label>
         <div class="mb-3 form-check">
             <input type="radio" id="doctorRole" asp-for="Input.Role" value="Doctor" class="form-check-input" required />
-            <label class="form-check-label" for="doctorRole">Doctor</label>
+            <label class="form-check-label" for="doctorRole">Head Of Department</label>
+        </div>
+        <div class="mb-3 form-check">
+                <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Secratary" class="form-check-input" required>
+                <label class="form-check-label" for="secretaryRole">Head Of Faculty</label>
         </div>
         
         <div class="mb-3 form-check">
+                <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Secratary" class="form-check-input" required>
+                <label class="form-check-label" for="secretaryRole">Head Of Section</label>
+            </div>
+
+            <div class="mb-3 form-check">
                 <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Secratary" class="form-check-input" required>
                 <label class="form-check-label" for="secretaryRole">Secretary</label>
             </div>
