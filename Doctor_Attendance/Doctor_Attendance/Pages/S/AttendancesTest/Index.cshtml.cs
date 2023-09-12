@@ -20,12 +20,15 @@ namespace Doctor_Attendance.Pages.S.AttendancesTest
             _context = context;
         }
 
+        public string RoleName1 { get; set; }
+
         public Doctor Doctor { get; set; } = default!;
 
         public IList<Attendance> Attendance { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, string RoleName)
         {
+            RoleName1 = RoleName;
             if (id == null || _context.Doctors == null)
             {
                 return NotFound();

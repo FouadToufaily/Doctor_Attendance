@@ -83,7 +83,7 @@
                 </td>
 
                 <td>
-                    @if (!item.Published.HasValue || !item.Published.Value)
+                    @if ((!item.Published.HasValue || !item.Published.Value) && (Model.RoleName1.Equals("Secretary")))
                     {
                         <a asp-page="./Edit" asp-route-id="@item.AttId">Edit | </a>
                         <a asp-page="./Delete" asp-route-id="@item.AttId">Delete | </a>

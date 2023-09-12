@@ -18,11 +18,13 @@ namespace Doctor_Attendance.Pages.S.Doctors
         {
             _context = context;
         }
-
+        public string? Rolename1 { get; set; }
       public Doctor Doctor { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, string RoleName)
         {
+            Rolename1 = RoleName;
+
             if (id == null || _context.Doctors == null)
             {
                 return NotFound();
