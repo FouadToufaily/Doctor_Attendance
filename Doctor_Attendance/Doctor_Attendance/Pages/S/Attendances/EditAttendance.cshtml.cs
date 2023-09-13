@@ -26,8 +26,18 @@ namespace Doctor_Attendance.Pages.New
         [BindProperty(SupportsGet = true)]
         public string name { get; set; }
 
+        public int secrataryDepId { get; set; }
         public async Task<IActionResult> OnGetAsync(string? date, string? name)
         {
+            //get username of the current secratary
+            var username = HttpContext.Session.GetString("UserStatus");
+
+            //get current employee
+            Employee employee = dbContext.Employees.FirstOrDefault(e => e.Email.Equals(username));
+
+            //get secrataryDepId
+            secrataryDepId = (int)employee.DepId;
+
             DateTime selectedDate;
             if (DateTime.TryParse(date, out selectedDate))
             {
@@ -52,6 +62,7 @@ namespace Doctor_Attendance.Pages.New
             {
                 Doctor = await dbContext.Doctors
                     .Include(d => d.Category)
+                    .Where(d =>d.DepId == secrataryDepId)
                     .ToListAsync();
             }
 
