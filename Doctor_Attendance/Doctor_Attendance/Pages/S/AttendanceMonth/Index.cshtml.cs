@@ -67,8 +67,51 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
         public List<DateTime> HolidayDates { get; set; } // Added property for holiday dates
 
+        public int? RoleId { get; set; }
+        public int? EmpId { get; set; }
+        public int? DoctorId { get; set; }
+
+        public string? RoleName { get; set; }
+        public string? EmpDep { get; set; }
+
+        public string? DoctorDep { get; set; }
+
         public async Task OnGetAsync()
         {
+
+            var userStatus = HttpContext.Session.GetString("UserStatus");
+
+            RoleId = await _context.Users // getting the Role Id
+                   .Where(u => u.Username == userStatus)
+                   .Select(u => u.RoleId)
+                   .FirstOrDefaultAsync();
+            RoleName = await _context.Roles //Extracting the Role name(might need it later because i dont know the Ids of the roles now
+                .Where(r => r.RoleId == RoleId)
+                .Select(r => r.RoleName)
+                .FirstOrDefaultAsync();
+            DoctorId = await _context.Users // checking if it's a doctor, if not this stays null
+                  .Where(u => u.Username == userStatus)
+                  .Select(u => u.DoctorId)
+                  .FirstOrDefaultAsync();
+
+            DoctorDep = await _context.Doctors //getting Doctor's Department
+            .Where(u => u.DoctorId == DoctorId)
+            .Select(u => u.Dep.DepName)
+            .FirstOrDefaultAsync();
+
+            if (!DoctorId.HasValue)
+            {
+                EmpId = await _context.Users // if it's a Secretary we get his/her ID
+                 .Where(u => u.Username == userStatus)
+                 .Select(u => u.EmpId)
+                 .FirstOrDefaultAsync();
+                EmpDep = await _context.Employees // Get her Department
+                   .Where(u => u.EmpId == EmpId)
+                   .Select(u => u.Dep.DepName)
+                   .FirstOrDefaultAsync();
+            }
+
+
             Doctor = await _context.Doctors.ToListAsync();
             DoctorItems = Doctor.Select(doctor => new SelectListItem
             {
@@ -124,6 +167,26 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
         public async Task<IActionResult> OnPostAsync(string? publishButton)
         {
+            var userStatus = HttpContext.Session.GetString("UserStatus");
+
+            RoleId = await _context.Users // getting the Role Id
+                   .Where(u => u.Username == userStatus)
+                   .Select(u => u.RoleId)
+                   .FirstOrDefaultAsync();
+            RoleName = await _context.Roles //Extracting the Role name(might need it later because i dont know the Ids of the roles now
+                .Where(r => r.RoleId == RoleId)
+                .Select(r => r.RoleName)
+                .FirstOrDefaultAsync();
+
+            EmpId = await _context.Users // if it's a Secretary we get his/her ID
+             .Where(u => u.Username == userStatus)
+             .Select(u => u.EmpId)
+             .FirstOrDefaultAsync();
+            EmpDep = await _context.Employees // Get her Department
+               .Where(u => u.EmpId == EmpId)
+               .Select(u => u.Dep.DepName)
+               .FirstOrDefaultAsync();
+
             if (!string.IsNullOrEmpty(publishButton))
             {
                 var existingRecords = await _context.Attendances
@@ -159,7 +222,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                     Attended = Request.Form[$"AttendanceInput[{currentDay - 1}].Attended"] == "true",
                     Comments = Request.Form[$"AttendanceInput[{currentDay - 1}].Comments"]
                 };
-
+                int EmpDepId = 1; //added
                 var existingAttendance = _context.Attendances.FirstOrDefault(a =>
                     a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInputForDay.Date.Date);
 
@@ -175,11 +238,30 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                         existingAttendance.Attended = true;
                         existingAttendance.Comments = attendanceInputForDay.Comments;
                         existingAttendance.NbHours = attendanceInputForDay.NbHours;
-                        existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
+                        if (EmpDep != null)
+                        {
+                            EmpDepId = await _context.Departments
+                               .Where(h => h.DepName == EmpDep)
+                               .Select(h => h.DepId)
+                               .FirstOrDefaultAsync();
+                        }
+
+                        existingAttendance.DepId = EmpDepId;
+
+                        //existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
                     }
                 }
                 else if (attendanceInputForDay.Attended == true)
                 {
+                    int tempEmpDepId = 1;
+                    if (EmpDep != null)
+                    {
+                        tempEmpDepId = await _context.Departments
+                           .Where(h => h.DepName == EmpDep)
+                           .Select(h => h.DepId)
+                           .FirstOrDefaultAsync();
+                    }
+
                     var newAttendance = new Attendance
                     {
                         DoctorId = SelectedDoctor,
@@ -187,7 +269,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                         Attended = true,
                         Comments = attendanceInputForDay.Comments,
                         NbHours = attendanceInputForDay.NbHours,
-                        DepId = 1 // new added since depid was causing a conflict on foreign key
+                        DepId = tempEmpDepId // new added since depid was causing a conflict on foreign key
                     };
                     _context.Attendances.Add(newAttendance);
                 }

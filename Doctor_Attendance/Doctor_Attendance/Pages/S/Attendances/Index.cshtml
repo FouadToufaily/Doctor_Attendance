@@ -7,25 +7,18 @@
 
 <h1>Attendances</h1>
 
-@*<h3>
-        <a asp-page="AddAttendance">Add Attendance By Date</a>
-    </h3>*@
-
-    @if(Model.RoleName.Equals("Secretary")) //Only Secratary can add attendance
-    {
-        
-    
+@if (Model.RoleName.Equals("Secretary")) //Only Secratary can add attendance
+{
     <h3>
         <a asp-page="/S/AttendanceMonth/Index">Add Attendance for Doctor for Full Month</a>
     </h3>
-<nbspr>
+    <nbspr>
     </nbspr>
 
-
-<h3>
-    <a asp-page="EditAttendance">Add Attendance By Date</a>
-</h3>
-    }
+    <h3>
+        <a asp-page="EditAttendance">Add Attendance By Date</a>
+    </h3>
+}
 <form>
     <p>
         Search By Date or Doctor Name <input type="text" asp-for="SearchString" />
@@ -80,7 +73,8 @@
                     @*checking if published and corssing it out <fouad></fouad>*@
                     <input type="checkbox" disabled="disabled" @(item.Published.HasValue && item.Published.Value ? "checked" : "") />
                 </td>
-                <td>@if (Model.RoleName.Equals("Admin") || Model.RoleName.Equals("Secretary"))
+                <td>
+                    @if (Model.RoleName.Equals("Admin") || Model.RoleName.Equals("Secretary"))
                     {
                         @if (!item.Published.HasValue || !item.Published.Value)
                         {
@@ -88,9 +82,9 @@
                             <a asp-page="./Delete" asp-route-id="@item.AttId" asp-route-Date="@item.Date">Delete | </a>
                         }
                     }
-                    <a asp-page="./Details" asp-route-id="@item.AttId">Details</a>
-                </td>
-            </tr>
-        }
+                <a asp-page="./Details" asp-route-id="@item.AttId">Details</a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
