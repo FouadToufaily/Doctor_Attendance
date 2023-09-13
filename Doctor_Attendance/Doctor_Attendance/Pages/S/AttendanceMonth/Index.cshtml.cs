@@ -111,8 +111,25 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                    .FirstOrDefaultAsync();
             }
 
-
-            Doctor = await _context.Doctors.ToListAsync();
+            if (DoctorDep != null)
+            {
+                if (RoleName.Equals("HOD"))
+                {
+                    Doctor = await _context.Doctors.Where(a => a.Dep.DepName.Equals(DoctorDep)).ToListAsync();
+                }
+                else
+                {
+                    Doctor = await _context.Doctors.ToListAsync();
+                }
+            }
+            else if(EmpDep != null)
+            {
+                Doctor = await _context.Doctors.Where(a => a.Dep.DepName.Equals(EmpDep)).ToListAsync();
+            }
+            else
+            {
+                Doctor = await _context.Doctors.ToListAsync();
+            }
             DoctorItems = Doctor.Select(doctor => new SelectListItem
             {
                 Value = doctor.DoctorId.ToString(),
