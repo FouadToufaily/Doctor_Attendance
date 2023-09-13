@@ -18,11 +18,24 @@ namespace Doctor_Attendance.Pages.S.Holidays
         {
             _context = context;
         }
-
+        public string RoleName { get; set; }
         public IList<Holiday> Holiday { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
+            //Get RoleID
+            var roleIdStr = HttpContext.Session.GetString("RoleId");
+
+            //Get RoleName
+            if (!string.IsNullOrEmpty(roleIdStr))
+            {
+                int roleId = Convert.ToInt32(roleIdStr);
+                RoleName = _context.Roles
+                                   .Where(r => r.RoleId == roleId)
+                                   .Select(r => r.RoleName)
+                                   .FirstOrDefault();
+            }
+
             if (_context.Holidays != null)
             {
                 Holiday = await _context.Holidays.ToListAsync();

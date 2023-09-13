@@ -1,0 +1,48 @@
+﻿@page
+@model Doctor_Attendance.Pages.HOS.IndexModel
+@{
+}
+
+<input asp-for="Faculty.Facultyid" type="hidden"   />
+
+<h4> Faculty :@Html.DisplayFor(modelItem => Model.Faculty.Name)</h4>
+
+<h4>Head Of Faculty : @Html.DisplayFor(modelItem =>  Model.Faculty.Doctor.Fullname)</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Sections
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+                <tr>
+                    <td>
+                        @if (Model.Faculty.Sections.Any())
+                        {
+                            <ul>
+                                @foreach (var sec in Model.Faculty.Sections)
+                                {
+                                    <li>
+                                        <a asp-page="../HOF/Index"
+                                           asp-route-sectionId="@sec.Sectionid"
+                                           asp-route-facultyId="@Model.Faculty.Facultyid">
+                                            @Html.DisplayFor(modelItem => sec.Number)
+                                </a> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                           @Html.DisplayFor(modelItem => sec.Location)
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span>No Sections Exist in this Faculty.</span>
+                        }
+                    
+                    </td>
+                </tr>
+          
+
+    </tbody>
+</table>

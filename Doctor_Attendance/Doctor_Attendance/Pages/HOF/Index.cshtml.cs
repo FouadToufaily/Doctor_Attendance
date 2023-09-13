@@ -1,11 +1,12 @@
 ﻿using Doctor_Attendance.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Doctor_Attendance.Pages.Manager
+namespace Doctor_Attendance.Pages.HOF
 {
     public class IndexModel : PageModel
     {
@@ -61,24 +62,74 @@ namespace Doctor_Attendance.Pages.Manager
         public int FacultyId { get; set; }
         public int SectionId { get; set; }
         public Doctor doctor { get; set; }
+        public string RoleName { get; set; }
 
         [BindProperty]
         public List<Attendance> AttendanceRecords { get; set; }
-        public async Task OnGetAsync(int? drId)//from login page 
+        public async Task OnGetAsync(int? sectionId)//from login page (if HOD) or from HOS page (HOS)
         {
-           
-            
-            drId = 2; //for testing
-            // getting the doctor
-            doctor = _context.Doctors.FirstOrDefault(d => d.DoctorId == drId);
+            //get doctorId of the current username 
+            var username = HttpContext.Session.GetString("UserStatus");
+            //get Role Id
+            var roleIdStr = HttpContext.Session.GetString("RoleId");
+            //Get RoleName
+            if (!string.IsNullOrEmpty(roleIdStr))
+            {
+                int roleId = Convert.ToInt32(roleIdStr);
+                RoleName = _context.Roles
+                                   .Where(r => r.RoleId == roleId)
+                                   .Select(r => r.RoleName)
+                                   .FirstOrDefault();
+            }
+            var doctor = _context.Doctors
+                                   .Where(d => d.Email.Equals(username))
+                                   .FirstOrDefault();
+            Faculty faculty;
 
+            if (RoleName.Equals("HOS")) // if from HOS page (choosed section of a faculty)
+            {
+                //SectionId = (int)sectionId;
+                if (sectionId != null)// before hitting showAttendances button
+                {
+                    SectionId = (int)sectionId;
+                    HttpContext.Session.SetInt32("SectionId", (int)sectionId);
+                }
+                else // after hitting the button , section id is lost again
+                {
+                    SectionId = (int)HttpContext.Session.GetInt32("SectionId"); 
+                }
+                //getting faculty that this HOS manages and its sections
+                faculty = _context.Faculties
+                                  .Include(f => f.Doctor)
+                                  .Include(f => f.Sections)
+                                  .Where(f => f.Sections.Any(s => s.DoctorId == doctor.DoctorId)).FirstOrDefault();
+               
+                FacultyId = faculty.Facultyid;
+
+                //geting departments of this faculty and this section
+                var queryHOS = _context.Departments
+                                       .Where(d => d.Faculties
+                                       .Any(f => f.Facultyid == FacultyId && f.Sections
+                                       .Any(s => s.Sectionid == SectionId)));
+
+                //Load list of deps for select
+                var departments = await queryHOS.ToListAsync();
+                DepItems = departments.Select(dep => new SelectListItem
+                {
+                    Value = dep.DepId.ToString(),
+                    Text = dep.DepName.ToString(),
+                }).ToList();
+
+            }
+            else // if its a HOF
+            { 
             //getting faculty that this dr manages
-            Faculty faculty =  await _context.Faculties.FirstOrDefaultAsync(d => d.DoctorId == doctor.DoctorId);
-            
+            faculty = await _context.Faculties.FirstOrDefaultAsync(d => d.DoctorId == doctor.DoctorId);
+
             //geting departments of this faculty and this section
             var query = _context.Departments
-            .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid &&
-            f.Sections.Any(s => s.DoctorId == drId)));
+            .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid));
+
             //Load list of deps for select
             var departments = await query.ToListAsync();
             DepItems = departments.Select(dep => new SelectListItem
@@ -86,7 +137,7 @@ namespace Doctor_Attendance.Pages.Manager
                 Value = dep.DepId.ToString(),
                 Text = dep.DepName.ToString(),
             }).ToList();
-
+            }
             //Load list of doctors for select
             Doctor = await _context.Doctors.ToListAsync();
             DoctorItems = Doctor.Select(doctor => new SelectListItem

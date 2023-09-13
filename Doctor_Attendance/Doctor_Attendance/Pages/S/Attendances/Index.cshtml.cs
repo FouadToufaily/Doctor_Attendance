@@ -19,7 +19,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
         {
             _context = context;
         }
-
+        public string RoleName { get; set; }
         public IList<Attendance> Attendances { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)]
@@ -31,6 +31,19 @@ namespace Doctor_Attendance.Pages.S.Attendances
 
         public async Task OnGetAsync()
         {
+            //Get RoleID
+            var roleIdStr = HttpContext.Session.GetString("RoleId");
+             
+            //Get RoleName
+            if (!string.IsNullOrEmpty(roleIdStr))
+            {
+                int roleId = Convert.ToInt32(roleIdStr);
+                RoleName = _context.Roles
+                                   .Where(r => r.RoleId == roleId)
+                                   .Select(r => r.RoleName)
+                                   .FirstOrDefault();
+            }
+
             Attendances = await _context.Attendances.Include(a => a.Dep)
                      .Include(a => a.Doctor).ToListAsync();
             Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();

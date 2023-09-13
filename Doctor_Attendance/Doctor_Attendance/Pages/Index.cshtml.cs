@@ -19,7 +19,7 @@ namespace Doctor_Attendance.Pages
         public void OnGet()
         {
             string username = HttpContext.Session.GetString("UserStatus");
-            Console.WriteLine(username);
+            
             if(!String.IsNullOrEmpty(username))
             {
                 //get the user if logged in

@@ -3,6 +3,8 @@
 <html lang="en">
 @{
     var UserStatus = Context.Session.GetString("UserStatus");
+    var roleId = Context.Session.GetString("RoleId");
+    
 }
 <head>
     <meta charset="utf-8" />
@@ -12,7 +14,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Doctor_Attendance.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-
+    
+    <link rel="icon" type="image/png" href="~/event.ico" sizes="32x32">
 </head>
 <body>
     <header>
@@ -43,6 +46,18 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/S/Doctors/Index">Doctors</a>
                             </li>
+                            @if(roleId.Equals("4"))//if HOS
+                            {                 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/HOS/Index">HOS</a>
+                            </li>
+                            }
+                            @if(roleId.Equals("3"))//if HOF
+                            {                 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/HOF/Index">HOF</a>
+                            </li>
+                            }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/S/Attendances/Index">Attendances</a>
                             </li>

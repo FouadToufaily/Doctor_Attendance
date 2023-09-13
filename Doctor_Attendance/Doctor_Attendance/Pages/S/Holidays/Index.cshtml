@@ -6,10 +6,13 @@
 }
 
 <h1>Holidays</h1>
+@if (Model.RoleName.Equals("Admin") || Model.RoleName.Equals("Secretary"))
+{
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
