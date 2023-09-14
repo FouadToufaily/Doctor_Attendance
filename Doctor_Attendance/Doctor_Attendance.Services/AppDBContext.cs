@@ -420,6 +420,7 @@ namespace Doctor_Attendance.Services
 
         public IEnumerable<Doctor> SearchDoctor(string searchTerm)
         {
+            searchTerm = searchTerm.Trim();
             if (string.IsNullOrEmpty(searchTerm))
             {
                 return Doctors;
@@ -450,6 +451,7 @@ namespace Doctor_Attendance.Services
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
+                searchTerm = searchTerm.Trim();
                 // Try to parse the searchTerm as a date.
                 if (DateTime.TryParse(searchTerm, out DateTime searchDate))
                 {

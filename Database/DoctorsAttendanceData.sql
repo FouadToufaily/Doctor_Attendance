@@ -147,10 +147,14 @@ insert into Users values (11,null,2,'izein@ul.edu.lb','pass123',null,null);
 insert into Employee values (1,'Tala','Ali',30,'atala@gmail.com','Beirut');
 insert into Employee values (2,'Hala','Najem',30,'nhala@gmail.com','Beirut');
 
+insert into Employee values (1,'Admin1','Test',30,'admin1@gmail.com','Beirut');
+
 /* Employee as User*/
 insert into Users values (null,1, 1,'atala@gmail.com','pass123',null,null);
 insert into Users values (null,2, 1,'nhala@gmail.com','pass123',null,null);
 
+/* Admin */
+insert into Users values (null,3, 5,'admin1@gmail.com','pass123',null,null);
 
 
 insert into HAS values (1,1), (1,2) , (1,3), (1,4), (1,5); /* faculty of sciences has 5 sections */

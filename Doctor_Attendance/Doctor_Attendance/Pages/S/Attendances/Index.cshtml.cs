@@ -96,7 +96,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                 Attendances = await _context.Attendances.Include(a => a.Dep)
                     .Include(a => a.Doctor).ToListAsync();
             }
-            //Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+            Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
         }
         public IActionResult OnPostPublish(int attendanceToPublishId)
         {
