@@ -49,14 +49,14 @@ insert into Doctor values (4, 1, 'D0026', 'Nabil','Amacha', 30, 'anabil@ul.edu.l
 insert into Doctor values (4, 1, 'D0027', 'Haidar','Akl', 30, 'ahaidar@ul.edu.lb', 'Beirut');
 
 /* Doctors in dep 5, Chemistry and Biochemistry */
-insert into Doctor values (4, 2, 'D0028', 'ghassan','ibrahim', 30, 'gibrahim@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 1, 'D0029', 'Rabih','Hussein', 30, 'hrabih@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 1, 'D0030', 'Kamal','Hariri', 30, 'hkamal@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 2, 'D0031', 'Leila','Ghannam', 30, 'gleila@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 1, 'D0032', 'Mazen','Kurdi', 30, 'kmazen@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 3, 'D0033', 'Mostapha','Hamieh', 30, 'hmostapha@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 1, 'D0034', 'Rami','Alakoum', 30, 'arami@ul.edu.lb', 'Beirut');
-insert into Doctor values (4, 1, 'D0035', 'Ali','Kanj', 30, 'kali@ul.edu.lb', 'Beirut'),
+insert into Doctor values (5, 2, 'D0028', 'ghassan','ibrahim', 30, 'gibrahim@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 1, 'D0029', 'Rabih','Hussein', 30, 'hrabih@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 1, 'D0030', 'Kamal','Hariri', 30, 'hkamal@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 2, 'D0031', 'Leila','Ghannam', 30, 'gleila@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 1, 'D0032', 'Mazen','Kurdi', 30, 'kmazen@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 3, 'D0033', 'Mostapha','Hamieh', 30, 'hmostapha@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 1, 'D0034', 'Rami','Alakoum', 30, 'arami@ul.edu.lb', 'Beirut');
+insert into Doctor values (5, 1, 'D0035', 'Ali','Kanj', 30, 'kali@ul.edu.lb', 'Beirut'),
 
 /* Doctors in dep 6 => 9,in public health faculty */
                          
@@ -147,7 +147,6 @@ insert into Users values (11,null,4,'izein@ul.edu.lb','pass123',null,null);
 insert into Employee values (1,'Tala','Ali',30,'atala@gmail.com','Beirut');
 insert into Employee values (2,'Hala','Najem',30,'nhala@gmail.com','Beirut');
 
-insert into Employee values (1,'Admin1','Test',30,'admin1@gmail.com','Beirut');
 
 /* Employee as User*/
 insert into Users values (null,1, 1,'atala@gmail.com','pass123',null,null);

@@ -26,6 +26,10 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Faculty?.Facultyid">Edit</a> |
+    @if (Model.RoleName.Equals("Admin"))
+    {
+     <a asp-page="./Edit" asp-route-id="@Model.Faculty?.Facultyid">Edit</a>    
+    }
+    
     <a asp-page="./Index">Back to List</a>
 </div>

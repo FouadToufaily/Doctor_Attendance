@@ -2,14 +2,17 @@
 @model Doctor_Attendance.Pages.S.Employees.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Employees";
 }
 
-<h1>Index</h1>
-
+<h1>Employees</h1>
+@if(Model.RoleName.Equals("Admin"))
+{
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -56,9 +59,14 @@
                 @Html.DisplayFor(modelItem => item.Dep.DepName)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.EmpId" asp-route-dep="@item.Dep">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.EmpId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.EmpId">Delete</a>
+                @if(Model.RoleName.Equals("Admin"))
+                {
+                 <a asp-page="./Edit" asp-route-id="@item.EmpId" asp-route-dep="@item.Dep">Edit</a>  
+                 <a asp-page="./Delete" asp-route-id="@item.EmpId">Delete</a>
+                }
+                
+                <a asp-page="./Details" asp-route-id="@item.EmpId">Details</a> 
+                
             </td>
         </tr>
 }

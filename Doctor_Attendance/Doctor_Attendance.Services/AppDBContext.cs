@@ -420,11 +420,13 @@ namespace Doctor_Attendance.Services
 
         public IEnumerable<Doctor> SearchDoctor(string searchTerm)
         {
-            searchTerm = searchTerm.Trim();
+            
             if (string.IsNullOrEmpty(searchTerm))
             {
+               
                 return Doctors;
             }
+            searchTerm = searchTerm.Trim();
             return Doctors.Where(e => e.Firstname.Contains(searchTerm) ||
                                             e.Lastname.Contains(searchTerm) ||
                                             e.City.Contains(searchTerm) ||

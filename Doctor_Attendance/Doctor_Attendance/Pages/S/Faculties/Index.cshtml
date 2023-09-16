@@ -2,14 +2,16 @@
 @model Doctor_Attendance.Pages.S.Faculties.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Faculties";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<h1>Faculties</h1>
+@if(Model.RoleName.Equals("Admin"))
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -51,9 +53,14 @@
                     }
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@faculty.Facultyid">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@faculty.Facultyid">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@faculty.Facultyid">Delete</a>
+                    @if (Model.RoleName.Equals("Admin"))
+                    {
+                     <a asp-page="./Edit" asp-route-id="@faculty.Facultyid">Edit</a> 
+                     <a asp-page="./Delete" asp-route-id="@faculty.Facultyid">Delete</a>
+                    }
+                    
+                    <a asp-page="./Details" asp-route-id="@faculty.Facultyid">Details</a>
+                    
                 </td>
             </tr>
         }
