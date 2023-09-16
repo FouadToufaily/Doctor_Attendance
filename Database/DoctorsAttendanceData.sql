@@ -132,16 +132,16 @@ insert into Users values (53,null,2,'tstairsh@newsvine.com','pass123',null,null)
 insert into Users values (56,null,2,'kweepersk@ibm.com','pass123',null,null);
 
 /* HOF as users */
-insert into Users values (8,null,2,'fahmad@ul.edu.lb','pass123',null,null);
-insert into Users values (36,null,2,'tlimpricht1@gnu.org','pass123',null,null);
-insert into Users values (52,null,2,'vkeywoodg@harvard.edu','pass123',null,null);
+insert into Users values (8,null,3,'fahmad@ul.edu.lb','pass123',null,null);
+insert into Users values (36,null,3,'tlimpricht1@gnu.org','pass123',null,null);
+insert into Users values (52,null,3,'vkeywoodg@harvard.edu','pass123',null,null);
 
 /* HOS as users */
-insert into Users values (32,null,2,'kmazen@ul.edu.lb','pass123',null,null);
-insert into Users values (23,null,2,'chali@ul.edu.lb','pass123',null,null);
-insert into Users values (29,null,2,'hrabih@ul.edu.lb','pass123',null,null);
-insert into Users values (35,null,2,'kali@ul.edu.lb','pass123',null,null);
-insert into Users values (11,null,2,'izein@ul.edu.lb','pass123',null,null);
+insert into Users values (32,null,4,'kmazen@ul.edu.lb','pass123',null,null);
+insert into Users values (23,null,4,'chali@ul.edu.lb','pass123',null,null);
+insert into Users values (29,null,4,'hrabih@ul.edu.lb','pass123',null,null);
+insert into Users values (35,null,4,'kali@ul.edu.lb','pass123',null,null);
+insert into Users values (11,null,4,'izein@ul.edu.lb','pass123',null,null);
 
 /* Employees as Employees */
 insert into Employee values (1,'Tala','Ali',30,'atala@gmail.com','Beirut');
