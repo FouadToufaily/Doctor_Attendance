@@ -47,56 +47,80 @@ namespace Doctor_Attendance.Pages.S.Attendances
                     .Select(r => r.RoleName)
                     .FirstOrDefaultAsync();
             }
+            //getting dr's Id
             DoctorId = await _context.Users
                 .Where(u => u.Username == userStatus)
                 .Select(u => u.DoctorId)
                 .FirstOrDefaultAsync();
 
+            //getting dr's dep
             DoctorDep = await _context.Doctors
                 .Where(u => u.DoctorId == DoctorId)
                 .Select(u => u.Dep.DepName)
                 .FirstOrDefaultAsync();
 
+            // if it's not a dr, then it's an employee
             if (!DoctorId.HasValue)
             {
+                //getting empID
                 EmpId = await _context.Users
                     .Where(u => u.Username == userStatus)
                     .Select(u => u.EmpId)
                     .FirstOrDefaultAsync();
+
+                //getting emDep
                 EmpDep = await _context.Employees
                     .Where(u => u.EmpId == EmpId)
                     .Select(u => u.Dep.DepName)
                     .FirstOrDefaultAsync();
+
+                // getting attendance with dep of the emp
+                if (EmpDep != null)
+                {
+                    Attendances = await _context.Attendances
+                                                .Include(a => a.Dep)
+                                                .Include(a => a.Doctor)
+                                                .Where(a => a.Dep.DepName.Equals(EmpDep))
+                                                .ToListAsync();
+                }
+                if (!EmpId.HasValue)//no docId and no empId the it is an admin
+                {
+                    if (RoleName.Equals("Admin"))
+                    {
+                        Attendances = await _context.Attendances
+                                            .Include(a => a.Dep)
+                                            .Include(a => a.Doctor).ToListAsync();
+                    }
+                        
+                }
             }
-            if (EmpDep != null)
-            {
-                Attendances = await _context.Attendances.Include(a => a.Dep)
-                    .Include(a => a.Doctor)
-                    .Where(a => a.Dep.DepName.Equals(EmpDep))
-                  .ToListAsync();
-            }
+            
             else if (DoctorDep != null)
             {
                 if (RoleName.Equals("HOD"))
                 {
                     Attendances = await _context.Attendances.Include(a => a.Dep)
                         .Include(a => a.Doctor)
-                        .Where(a => a.Dep.DepName.Equals(DoctorDep))
+                        .Include(a => a.Dep)
+                        .Where(a => a.Dep.DepName.Equals(DoctorDep) && a.Published==true)
                         .ToListAsync();
                 }
+                /*
                 else
                 {
                     Attendances = await _context.Attendances.Include(a => a.Dep)
                         .Include(a => a.Doctor).ToListAsync();
                 }
+                */
 
             }
             else
             {
-                Attendances = await _context.Attendances.Include(a => a.Dep)
-                    .Include(a => a.Doctor).ToListAsync();
+                Attendances = await _context.Attendances
+                                            .Include(a => a.Dep)
+                                            .Include(a => a.Doctor).ToListAsync();
             }
-            Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+         //   Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
         }
         public IActionResult OnPostPublish(int attendanceToPublishId)
         {
