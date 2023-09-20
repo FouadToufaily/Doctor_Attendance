@@ -104,7 +104,8 @@ namespace Doctor_Attendance.Pages.New
                         attendance = new Attendance()
                         {
                             DoctorId = doctor.DoctorId,
-                            Date = datev
+                            Date = datev,
+                            DepId = (int)doctor.DepId
                         };
                     }
                     else
@@ -118,6 +119,7 @@ namespace Doctor_Attendance.Pages.New
                             attendanceRecord.NbHours = attendance.NbHours;
                             attendanceRecord.Comments = attendance.Comments;
                             attendanceRecord.Attended = attendance.Attended;
+                           
                          //   attendanceRecord.AttId = attendance.AttId;  //this
                         }
                     }

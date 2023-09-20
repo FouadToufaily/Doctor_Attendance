@@ -42,24 +42,25 @@
 
     <div class="nb-3">
       <input type="text"  id="datepicker" name="datepicker" value="@Model.datev.ToString("yyyy/MM/dd")"  class="form-control-lg" readonly  />
-    </div><br>
+    
 
      <td><input type="text" asp-for="@Model.datev" id="datePicker_2"  value="@Model.datev.ToString("yyyy/MM/dd")" hidden  /></td>
      
-    <div class="nb-3">
-       <button type="submit" name="Action" id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button><br><br></div>
-       
+       &nbsp; &nbsp; &nbsp;
+       <button type="submit" name="Action" id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button>
+    </div>
+       @*
        <h3 class="text-primary">
            @Model.datev.ToString("yyyy/MM/dd")
        </h3>
-    
+       *@
     <br>
 <table id="attendanceTable" class="table table-hover">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Id</th>
-                <th>NbHours</th>
+                <th>File Number</th>
+                <th>Nb of Hours</th>
                 <th>Comments</th>
                 <th>Attend</th>
             </tr>
@@ -75,14 +76,17 @@
                     var lastname = doctor != null ? doctor.Lastname : "N/A";
                     var name = firstname + " " + lastname ;
                     var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                    var fileNb = doctor != null ? doctor.FileNumber : "N/A";
                     var categoryId = doctor?.Category?.CategoryId ?? 0;
                     var isCategoryIdOne = categoryId == 1;
                    
 
                     <tr class="table-light">
-                        <th scope="row"><label>@name</label></th>
+                        <th scope="row"><label>@name</label>
+                            <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />
+                            </th>
 
-                        <td><input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly  /></td>
+                        <td>@fileNb</td>
                         <td>
                             @if (isCategoryIdOne)
                             {
