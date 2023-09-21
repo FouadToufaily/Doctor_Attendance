@@ -91,10 +91,10 @@ namespace Doctor_Attendance.Pages.S.Attendances
                                             .Include(a => a.Dep)
                                             .Include(a => a.Doctor).ToListAsync();
                     }
-                        
+
                 }
             }
-            
+
             else if (DoctorDep != null)
             {
                 if (RoleName.Equals("HOD"))
@@ -102,7 +102,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                     Attendances = await _context.Attendances.Include(a => a.Dep)
                         .Include(a => a.Doctor)
                         .Include(a => a.Dep)
-                        .Where(a => a.Dep.DepName.Equals(DoctorDep) && a.Published==true)
+                        .Where(a => a.Dep.DepName.Equals(DoctorDep) && a.Published == true)
                         .ToListAsync();
                 }
                 /*
@@ -120,8 +120,27 @@ namespace Doctor_Attendance.Pages.S.Attendances
                                             .Include(a => a.Dep)
                                             .Include(a => a.Doctor).ToListAsync();
             }
-         //   Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+
+            if (RoleName.Equals("Admin") || RoleName.Equals("HOS") || RoleName.Equals("HOF"))
+            {                //Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+                Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>(); // calling Search function by search criteria which is binded to the form control textbox
+            }
+            else // searchdoctor should return only doctors of same dep and HODs and hos and hof 
+            {
+                if (EmpDep != null)
+                {
+                    var Attendances1 = _context.SearchAttendance(SearchString);
+                    Attendances = Attendances1.Where(e => e.Dep != null && e.Dep.DepName == EmpDep).ToList<Attendance>();
+                }
+                else
+                {
+                    var Attendances1 = _context.SearchAttendance(SearchString);
+                    Attendances = Attendances1.Where(e => e.Dep != null && e.Dep.DepName == DoctorDep).ToList<Attendance>();
+                }
+                //Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+            }
         }
+
         public IActionResult OnPostPublish(int attendanceToPublishId)
         {
             var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);

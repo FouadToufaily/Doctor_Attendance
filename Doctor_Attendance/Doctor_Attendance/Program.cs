@@ -14,7 +14,7 @@ string serverName = Environment.MachineName;
 
 builder.Services.AddDbContextPool<AppDBContext>(options =>
 {
-    options.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True");
+    options.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True; MultipleActiveResultSets=true");
 });
 //AddSession 
 builder.Services.AddSession(options =>

@@ -108,17 +108,20 @@ namespace Doctor_Attendance.Pages.S.Doctors
             {
                 Doctor = _context.SearchDoctor(SearchString); // calling Search function by search criteria which is binded to the form control textbox
             }
-            //else // searchdoctor should return only doctors of same dep and HODs and hos and hof 
-            //{
-            //    if (EmpDep != null)
-            //    {
-            //        Doctor = _context.SearchDoctor(SearchString, EmpDep); // calling Search function by search criteria which is binded to the form control textbox
-            //    }
-            //    else
-            //    {
-            //        Doctor = _context.SearchDoctor(SearchString, DoctorDep); // calling Search function by search criteria which is binded to the form control textbox
-            //    }
-            //}
+            else // searchdoctor should return only doctors of same dep and HODs and hos and hof 
+            {
+                if (EmpDep != null)
+                {
+                    var doctor1 = _context.SearchDoctor(SearchString);
+                    Doctor = doctor1.Where(e => e.Dep != null && e.Dep.DepName == EmpDep);
+                }
+                else
+                {
+                    var doctor1 = _context.SearchDoctor(SearchString);
+                    Doctor = doctor1.Where(e => e.Dep != null && e.Dep.DepName == DoctorDep);
+                    // calling Search function by search criteria which is binded to the form control textbox
+                }
+            }
 
         }
 

@@ -435,22 +435,9 @@ namespace Doctor_Attendance.Services
                                             e.Dep.DepName.Contains(searchTerm)
                                             );
         }
-        //public IEnumerable<Doctor> SearchDoctor(string searchTerm, string depName)
-        //{
-        //    var doctors1 = Doctors.Where(e => e.Dep.DepName == depName);
-
-        //    return doctors1.Where(e => e.Firstname.Contains(searchTerm) ||
-        //                                    e.Lastname.Contains(searchTerm) ||
-        //                                    e.City.Contains(searchTerm) ||
-        //                                    e.Email.Contains(searchTerm) ||
-        //                                    e.Category.Type.Contains(searchTerm) ||
-        //                                    e.Dep.DepName.Contains(searchTerm)
-        //                                    );
-        //}
 
         public IEnumerable<Attendance> SearchAttendance(string searchTerm)
         {
-
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.Trim();
@@ -464,7 +451,9 @@ namespace Doctor_Attendance.Services
                 {
                     // Fetch the data from the database and perform the doctor's first name search in-memory using AsEnumerable().
                     return Attendances.AsEnumerable()
-                        .Where(e => e.Doctor.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                        .Where(e => e.Doctor != null && e.Doctor.Firstname != null && // Add null checks here
+                                    e.Doctor.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
                 }
             }
             else
