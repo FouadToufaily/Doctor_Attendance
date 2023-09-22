@@ -14,6 +14,7 @@ namespace Doctor_Attendance.Pages.New
         {
             this.dbContext = dbContext;
             AttendanceRecords = new List<Attendance>();
+            Holidays = GetHolidaysFromDatabase();
         }
 
         [BindProperty]
@@ -25,8 +26,17 @@ namespace Doctor_Attendance.Pages.New
         public DateTime datev { get; set; }
         [BindProperty(SupportsGet = true)]
         public string name { get; set; }
-
+        public List<string> Holidays { get; private set; }
         public int secrataryDepId { get; set; }
+        private List<string> GetHolidaysFromDatabase()
+        {
+
+            var holidayEntities = dbContext.Holidays.ToList();
+
+            // Assuming the 'Date' property in your 'Holiday' entity stores the date in yyyy-mm-dd format
+            Holidays = holidayEntities.Select(h => h.Date.ToString("yyyy-MM-dd")).ToList();
+            return Holidays;
+        }
         public async Task<IActionResult> OnGetAsync(string? date, string? name)
         {
             //get username of the current secratary
@@ -41,10 +51,11 @@ namespace Doctor_Attendance.Pages.New
             DateTime selectedDate;
             if (DateTime.TryParse(date, out selectedDate))
             {
+                bool isAny = await dbContext.Holidays.AnyAsync(a => a.Date == selectedDate);
                 // Check if the selected date is a disabled date
-                if (IsDateDisabled(selectedDate))
+                if ((IsDateDisabled(selectedDate)) || (isAny))
                 {
-                    datev = GetLastValidDate(selectedDate);
+                    datev = await GetLastValidDateAsync(selectedDate);
                 }
                 else
                 {
@@ -62,7 +73,7 @@ namespace Doctor_Attendance.Pages.New
             {
                 Doctor = await dbContext.Doctors
                     .Include(d => d.Category)
-                    .Where(d =>d.DepId == secrataryDepId)
+                    .Where(d => d.DepId == secrataryDepId)
                     .ToListAsync();
             }
 
@@ -119,8 +130,8 @@ namespace Doctor_Attendance.Pages.New
                             attendanceRecord.NbHours = attendance.NbHours;
                             attendanceRecord.Comments = attendance.Comments;
                             attendanceRecord.Attended = attendance.Attended;
-                           
-                         //   attendanceRecord.AttId = attendance.AttId;  //this
+
+                            //   attendanceRecord.AttId = attendance.AttId;  //this
                         }
                     }
                     // Add the attendance record to the list (whether it's new or existing)
@@ -196,12 +207,13 @@ namespace Doctor_Attendance.Pages.New
             return disabledDates.Contains(formattedDate);
         }
 
-        private DateTime GetLastValidDate(DateTime currentDate)
+        private async Task<DateTime> GetLastValidDateAsync(DateTime currentDate)
         {
             while (true)
             {
+                bool isAny = (bool)await GetIsAny(currentDate);
                 // Check if the current date is disabled or falls on a weekend
-                if (!IsDateDisabled(currentDate) && currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday)
+                if (!IsDateDisabled(currentDate) && currentDate.DayOfWeek != DayOfWeek.Saturday && currentDate.DayOfWeek != DayOfWeek.Sunday && !isAny)
                 {
                     return currentDate;
                 }
@@ -209,6 +221,11 @@ namespace Doctor_Attendance.Pages.New
                 // Decrement the current date by one day
                 currentDate = currentDate.AddDays(-1);
             }
+        }
+
+        private async Task<object> GetIsAny(DateTime selectedDate)
+        {
+            return await dbContext.Holidays.AnyAsync(a => a.Date == selectedDate);
         }
 
         public IActionResult OnPostNext()
@@ -258,9 +275,9 @@ namespace Doctor_Attendance.Pages.New
             */
             dbContext.Attendances.AddRange(newCheckedRecords);
             bool hasUncheckedRecords = uncheckedRecords.Any();
-            
-            
-            if (hasUncheckedRecords )
+
+
+            if (hasUncheckedRecords)
             {
                 var existingRecordsToDelete = uncheckedRecords.Where(c => dbContext.Attendances.Select(e => e.AttId).Contains(c.AttId));
                 // Remove unchecked records from the database

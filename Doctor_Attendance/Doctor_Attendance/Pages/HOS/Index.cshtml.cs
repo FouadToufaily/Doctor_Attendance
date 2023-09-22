@@ -19,15 +19,13 @@ namespace Doctor_Attendance.Pages.HOS
         public Faculty Faculty { get; set; } = default!;
         public async Task<IActionResult> OnGetAsync()
         {
-            //  int id = 3;
             //get doctorId of the current username 
             var username = HttpContext.Session.GetString("UserStatus");
             var id = _context.Doctors
                                    .Where(d => d.Email.Equals(username))
                                    .Select(d => d.DoctorId)
                                    .FirstOrDefault();
-           // Console.WriteLine("Hello " + id);
-           // Console.ReadLine();
+
             if (id == null )
             {
                 return NotFound();

@@ -146,11 +146,15 @@ insert into Users values (11,null,4,'izein@ul.edu.lb','pass123',null,null);
 /* Employees as Employees */
 insert into Employee values (1,'Tala','Ali',30,'atala@gmail.com','Beirut');
 insert into Employee values (2,'Hala','Najem',30,'nhala@gmail.com','Beirut');
+insert into Employee values (3,'Sara','Kassem',30,'ksara@gmail.com','Beirut');
+insert into Employee values (4,'Rim','Issa',30,'irim@gmail.com','Beirut');
 
 
 /* Employee as User*/
 insert into Users values (null,1, 1,'atala@gmail.com','pass123',null,null);
 insert into Users values (null,2, 1,'nhala@gmail.com','pass123',null,null);
+insert into Users values (null,3, 1,'ksara@gmail.com','pass123',null,null);
+insert into Users values (null,4, 1,'irim@gmail.com','pass123',null,null);
 
 /* Admin */
 insert into Users values (null,3, 5,'admin1@gmail.com','pass123',null,null);
@@ -165,3 +169,7 @@ insert into BELONG_TO values (6,2), (7,2) , (8,2), (9,2);
 insert into BELONG_TO values (10,3), (11,3);
 
 insert into Role values (null, 'Secretary'), (null, 'HOD'),(null, 'HOF'),(null, 'HOS'),(null, 'Admin');
+
+insert into Holidays values (2023-01-01 00:00:00.000, 'New Year'),(2023-01-06 00:00:00.000, 'Christmas - Armenian Orthodox'),
+                            (2023-02-09 00:00:00.000, 'Saint Maron Day'),(2023-02-14 00:00:00.000, 'Rafik Hariri Memorial Day'),
+							(2023-04-25 00:00:00.000, 'Annunciation');

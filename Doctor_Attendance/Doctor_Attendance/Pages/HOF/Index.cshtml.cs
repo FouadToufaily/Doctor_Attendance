@@ -114,6 +114,7 @@ namespace Doctor_Attendance.Pages.HOF
 
                 //Load list of deps for select
                 var departments = await queryHOS.ToListAsync();
+
                 DepItems = departments.Select(dep => new SelectListItem
                 {
                     Value = dep.DepId.ToString(),
@@ -152,6 +153,7 @@ namespace Doctor_Attendance.Pages.HOF
                 // setting the start and end date of the selected month
                 var startDate = new DateTime(SelectedYear, SelectedMonth, 1);
                 var endDate = startDate.AddMonths(1).AddDays(-1);
+
                 // Getting the specified records
                 AttendanceRecords = await _context.Attendances
                     .Where(a => a.DoctorId == SelectedDoctor && a.Published == true && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)

@@ -4,11 +4,6 @@
 }
 <html>
 <head>
-  <!-- Add these links for Bootstrap CSS and JS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" >
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" ></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" ></script>
 
@@ -33,8 +28,9 @@
               Publish
             </button>
             <div class="dropdown-menu">
-                <button type="submit" name="Action" class="dropdown-item " asp-page-handler="ThisDay" asp-route-datev="@Model.datev" >This Day</button>
-                <button type="submit" name="Action" class="dropdown-item " asp-page-handler="ThisMonth"  asp-route-datev="@Model.datev">This Month</button>
+                <button type="submit" class="dropdown-item " asp-page-handler="ThisDay"  >This Day</button>
+                <button type="submit"  class="dropdown-item " asp-page-handler="ThisMonth"  >This Month</button>
+                <button type="submit"  class="dropdown-item " asp-page-handler="FullMonth" >Full Month</button>
             </div>
           </div>
         </div>
@@ -42,51 +38,50 @@
 
     <div class="nb-3">
       <input type="text"  id="datepicker" name="datepicker" value="@Model.datev.ToString("yyyy/MM/dd")"  class="form-control-lg" readonly  />
-    
+    </div><br>
 
      <td><input type="text" asp-for="@Model.datev" id="datePicker_2"  value="@Model.datev.ToString("yyyy/MM/dd")" hidden  /></td>
      
-       &nbsp; &nbsp; &nbsp;
-       <button type="submit" name="Action" id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button>
-    </div>
-       @*
+    <div class="nb-3">
+       <button type="submit"  id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button><br><br></div>
+       
        <h3 class="text-primary">
            @Model.datev.ToString("yyyy/MM/dd")
        </h3>
-       *@
+    
     <br>
 <table id="attendanceTable" class="table table-hover">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>File Number</th>
-                <th>Nb of Hours</th>
+                <th>NbHours</th>
                 <th>Comments</th>
                 <th>Attend</th>
             </tr>
         </thead>
         <tbody>
-
+                
                 @for (int i = 0; i < Model.AttendanceRecords.Count; i++)
                 {
                     var record = Model.AttendanceRecords[i];
                     var doctor = Model.Doctor?.FirstOrDefault(d => d.DoctorId == Model.AttendanceRecords[i].DoctorId);
-
                     var firstname = doctor != null ? doctor.Firstname : "N/A";
                     var lastname = doctor != null ? doctor.Lastname : "N/A";
                     var name = firstname + " " + lastname ;
                     var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
-                    var fileNb = doctor != null ? doctor.FileNumber : "N/A";
                     var categoryId = doctor?.Category?.CategoryId ?? 0;
                     var isCategoryIdOne = categoryId == 1;
+                    var filenb = doctor != null ? doctor.FileNumber : "N/A";
                    
 
                     <tr class="table-light">
-                        <th scope="row"><label>@name</label>
+                        <th scope="row"><label>@name</label></th>
+                        <th scope="row"><label>@filenb</label></th>
+                        <td>
+                            
                             <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />
-                            </th>
-
-                        <td>@fileNb</td>
+                            </td>
                         <td>
                             @if (isCategoryIdOne)
                             {
@@ -113,8 +108,8 @@
                 }
         </tbody>
     </table>
-
     <button asp-page-handler="Save" type="submit" class="btn btn-outline-success btn-lg" style="width:100px" >Save</button>
+               
 </form>
 </body>
 </div>
@@ -145,6 +140,7 @@
     </script>
     <script>
         $(function () {
+            var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
             $("#datepicker").datepicker({
                 dateFormat: "yy-mm-dd",
                 maxDate: "+0d",
@@ -164,6 +160,9 @@
                        return [false];
                  
                      }
+                     if (holidays.indexOf(date.toISOString().slice(0, 10)) !== -1) {
+                    return [false];
+                }
                     }
                     return [date <= currentDate];
                 },
