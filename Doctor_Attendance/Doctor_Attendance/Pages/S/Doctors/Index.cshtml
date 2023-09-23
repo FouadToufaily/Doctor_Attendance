@@ -6,15 +6,14 @@
 }
 
 <h1>Doctors</h1>
-@if (Model.RoleName.Equals("Secretary") || Model.RoleName.Equals("Admin"))
-{
+
     <form>
         <p>
             Doctor Name: <input type="text" asp-for="SearchString" />
             <input type="submit" value="Filter" />
         </p>
     </form>
-}
+
 
 @if (Model.RoleName.Equals("Admin"))
 {

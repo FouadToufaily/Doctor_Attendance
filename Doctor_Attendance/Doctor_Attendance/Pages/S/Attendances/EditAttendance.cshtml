@@ -4,118 +4,112 @@
 }
 <html>
 <head>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" ></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 
 </head>
 <body>
-<form method="post" enctype="multipart/form-data">
-    @{
-        var currentDate = DateTime.Today.ToString("yyyy/MM/dd");
-    }
-  <div class="border p-3 mt-4">
-      <div class="row pb-2">
-        <h2 class="text-primary pl-3 col">Attendances</h2>
-        <div class="col-12 col-md-auto text-right">
-          <div class="btn-group">
-           
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px">
-           Publish
-          </button>
-                        
-            <div class="dropdown-menu">
-                <button type="submit" class="dropdown-item " asp-page-handler="ThisDay"  >This Day</button>
-                <button type="submit"  class="dropdown-item " asp-page-handler="ThisMonth"  >This Month</button>
-                <button type="submit"  class="dropdown-item " asp-page-handler="FullMonth" >Full Month</button>
+    <form method="post" enctype="multipart/form-data">
+        @{
+            var currentDate = DateTime.Today.ToString("yyyy/MM/dd");
+        }
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3 col">Attendances</h2>
+                <div class="col-12 col-md-auto text-right">
+                    <div class="btn-group">
+
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px">
+                            Publish
+                        </button>
+
+                        <div class="dropdown-menu">
+                            <button type="submit" class="dropdown-item " asp-page-handler="ThisDay">This Day</button>
+                            <button type="submit" class="dropdown-item " asp-page-handler="ThisMonth">This Month</button>
+                            <button type="submit" class="dropdown-item " asp-page-handler="FullMonth">Full Month</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-    <div class="nb-3">
-      <input type="text"  id="datepicker" name="datepicker" value="@Model.datev.ToString("yyyy/MM/dd")"  class="form-control-lg" readonly  />
-      <button type="submit"  id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button>
-  </div><br>
+            <div class="nb-3">
+                <input type="text" id="datepicker" name="datepicker" value="@Model.datev.ToString("yyyy/MM/dd")" class="form-control-lg" readonly />
+                <button type="submit" id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button>
+            </div><br>
 
-     <td><input type="text" asp-for="@Model.datev" id="datePicker_2"  value="@Model.datev.ToString("yyyy/MM/dd")" hidden  />
-         
-     </td>
-    
-     
-       
-       
-    
-    <br>
-<table id="attendanceTable" class="table table-hover">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>File Number</th>
-                <th>NbHours</th>
-                <th>Comments</th>
-                <th>Attend</th>
-            </tr>
-        </thead>
-        <tbody>
-                
-                @for (int i = 0; i < Model.AttendanceRecords.Count; i++)
-                {
-                    var record = Model.AttendanceRecords[i];
-                    var doctor = Model.Doctor?.FirstOrDefault(d => d.DoctorId == Model.AttendanceRecords[i].DoctorId);
-                    var firstname = doctor != null ? doctor.Firstname : "N/A";
-                    var lastname = doctor != null ? doctor.Lastname : "N/A";
-                    var name = firstname + " " + lastname ;
-                    var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
-                    var categoryId = doctor?.Category?.CategoryId ?? 0;
-                    var isCategoryIdOne = categoryId == 1;
-                    var filenb = doctor != null ? doctor.FileNumber : "N/A";
-                   
+            <td>
+                <input type="text" asp-for="@Model.datev" id="datePicker_2" value="@Model.datev.ToString("yyyy/MM/dd")" hidden />
 
-                    <tr class="table-light">
-                        <td scope="row">@name
-                        <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />    
+            </td>
+
+            <br>
+            <table id="attendanceTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>File Number</th>
+                        <th>NbHours</th>
+                        <th>Comments</th>
+                        <th>Attend</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int i = 0; i < Model.AttendanceRecords.Count; i++)
+                    {
+                        var record = Model.AttendanceRecords[i];
+                        var doctor = Model.Doctor?.FirstOrDefault(d => d.DoctorId == Model.AttendanceRecords[i].DoctorId);
+                        var firstname = doctor != null ? doctor.Firstname : "N/A";
+                        var lastname = doctor != null ? doctor.Lastname : "N/A";
+                        var name = firstname + " " + lastname;
+                        var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
+                        var categoryId = doctor?.Category?.CategoryId ?? 0;
+                        var isCategoryIdOne = categoryId == 1;
+                        var filenb = doctor != null ? doctor.FileNumber : "N/A";
+
+
+                        <tr class="table-light">
+                            <td scope="row">
+                                @name
+                            <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden />
                         </td>
                         <td scope="row">@filenb</td>
                         <td>
                             @if (isCategoryIdOne)
                             {
-                                <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].NbHours"  readonly="@(record.Published == true)" />
+                                <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].NbHours" readonly="@(record.Published == true)" />
                             }
                             else
                             {
-                                <input class="form-control-sm" style="width: 150px; height: 30px;"  type="number" asp-for="@Model.AttendanceRecords[i].NbHours" disabled />
+                                <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].NbHours" disabled />
                             }
                         </td>
                         <td>
-                            <input class="form-control-sm" type="text" asp-for="@Model.AttendanceRecords[i].Comments"  readonly="@(record.Published == true)" />
+                            <input class="form-control-sm" type="text" asp-for="@Model.AttendanceRecords[i].Comments" readonly="@(record.Published == true)" />
                         </td>
-                            <td><input class="form-check form-check-inline" style="position:relative; width:45px; height:15px;"  type="checkbox"  name="AttendanceRecords[@i].Attended" value="true" checked="@(Model.AttendanceRecords[i].Attended == true)" hidden="@(record.Published == true)" />
-                            
-                            <input type="text" asp-for="@Model.AttendanceRecords[i].AttId" hidden  />
-                         <input type="text" asp-for="@Model.AttendanceRecords[i].Date"  hidden />
-                        <input type="text" asp-for="@Model.AttendanceRecords[i].Published" hidden  />
-                         <input type="number" asp-for="@Model.AttendanceRecords[i].AttId" hidden />
-                         <input type="number" asp-for="@Model.AttendanceRecords[i].DepId"  hidden />
-                         <input asp-for="AttendanceRecords[i].Attended" value="false" hidden />
-                           </td>
+                        <td>
+                            <input class="form-check form-check-inline" style="position:relative; width:45px; height:15px;" type="checkbox" name="AttendanceRecords[@i].Attended" value="true" checked="@(Model.AttendanceRecords[i].Attended == true)" hidden="@(record.Published == true)" />
+
+                            <input type="text" asp-for="@Model.AttendanceRecords[i].AttId" hidden />
+                            <input type="text" asp-for="@Model.AttendanceRecords[i].Date" hidden />
+                            <input type="text" asp-for="@Model.AttendanceRecords[i].Published" hidden />
+                            <input type="number" asp-for="@Model.AttendanceRecords[i].AttId" hidden />
+                            <input type="number" asp-for="@Model.AttendanceRecords[i].DepId" hidden />
+                            <input asp-for="AttendanceRecords[i].Attended" value="false" hidden />
+                        </td>
                     </tr>
-                    
+
                 }
-        </tbody>
-    </table>
-    
-            <button asp-page-handler="Save" type="submit" class="btn btn-outline-success btn-lg" style="width:100px" >Save</button>               
-            
-               
-</form>
+                </tbody>
+            </table>
+
+            <button asp-page-handler="Save" type="submit" class="btn btn-outline-success btn-lg" style="width:100px">Save</button>
+
+
+    </form>
 </body>
-</div>
 </html>
-    @section Scripts {
-  
- 
-
-
+@section Scripts {
     <script>
         $(function () {
             $("#datepicker").attr("max", getCurrentDate());
@@ -135,6 +129,7 @@
             });
         });
     </script>
+
     <script>
         $(function () {
             var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
@@ -145,22 +140,18 @@
                     var currentDate = new Date();
                     currentDate.setHours(0, 0, 0, 0);
                     var day = date.getDay(); // Get the day of the week (0-6, where 0 is Sunday)
-                    var formattedDate = $.datepicker.formatDate("dd/mm", date); // Get the formatted date (dd/mm)
-                     var disabledDates = ["22/11", "01/06", "10/12", "25/12"];
+                    var formattedDate = $.datepicker.formatDate("yy-mm-dd", date); // Updated format
+
                     // Disable Saturdays (day = 6), Sundays (day = 0)
-                    if (day === 0 || day === 6 ) {
+                    if (day === 0 || day === 6) {
                         return [false];
                     }
-                    // Disable specific dates
-                    for (var i = 0; i < disabledDates.length; i++) {
-                     if (formattedDate === disabledDates[i]) {
-                       return [false];
-                 
-                     }
-                     if (holidays.indexOf(date.toISOString().slice(0, 10)) !== -1) {
-                    return [false];
-                }
+
+                    // Check if the formatted date is in the holidays array
+                    if (holidays.includes(formattedDate)) {
+                        return [false];
                     }
+
                     return [date <= currentDate];
                 },
                 onSelect: function (dateText) {
@@ -169,7 +160,4 @@
             });
         });
     </script>
-    
-
 }
-

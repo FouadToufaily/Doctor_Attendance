@@ -21,7 +21,10 @@
             @Html.DisplayNameFor(model => model.Faculty.Doctor)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Faculty.Doctor.Fullname)
+            @{
+                string parameterValue = @Model.Faculty.Doctor.Firstname + " " + @Model.Faculty.Doctor.Lastname;
+            }
+            @Html.DisplayFor(modelItem => parameterValue)
         </dd>
     </dl>
 </div>

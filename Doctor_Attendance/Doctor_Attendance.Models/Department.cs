@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Doctor_Attendance.Models
 {
@@ -18,6 +19,7 @@ namespace Doctor_Attendance.Models
         public string? DepName { get; set; }
         public int? Nbdoctors { get; set; }
 
+        [Display(Name = "Head of Department")]
         public virtual Doctor? Doctor { get; set; }
         public virtual ICollection<Attendance> Attendances { get; set; }
         public virtual ICollection<Doctor> Doctors { get; set; }

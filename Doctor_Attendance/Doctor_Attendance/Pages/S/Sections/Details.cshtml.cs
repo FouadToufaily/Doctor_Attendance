@@ -27,9 +27,9 @@ namespace Doctor_Attendance.Pages.S.Sections
             var userStatus = HttpContext.Session.GetString("UserStatus");
 
             RoleId = await _context.Users // getting the Role Id
-                   .Where(u => u.Username == userStatus)
-                   .Select(u => u.RoleId)
-                   .FirstOrDefaultAsync();
+                .Where(u => u.Username == userStatus)
+                .Select(u => u.RoleId)
+                .FirstOrDefaultAsync();
 
             if (RoleId != null)
             {
@@ -44,16 +44,19 @@ namespace Doctor_Attendance.Pages.S.Sections
                 return NotFound();
             }
 
-            var section = await _context.Sections.FirstOrDefaultAsync(m => m.Sectionid == id);
+            var section = await _context.Sections.Include(s => s.Doctor).FirstOrDefaultAsync(m => m.Sectionid == id);
+
             if (section == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Section = section;
             }
+
             return Page();
         }
+
     }
 }

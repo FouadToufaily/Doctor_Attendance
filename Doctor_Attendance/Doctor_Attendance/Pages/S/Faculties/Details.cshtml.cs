@@ -27,9 +27,9 @@ namespace Doctor_Attendance.Pages.S.Faculties
             var userStatus = HttpContext.Session.GetString("UserStatus");
 
             RoleId = await _context.Users // getting the Role Id
-                   .Where(u => u.Username == userStatus)
-                   .Select(u => u.RoleId)
-                   .FirstOrDefaultAsync();
+                .Where(u => u.Username == userStatus)
+                .Select(u => u.RoleId)
+                .FirstOrDefaultAsync();
 
             if (RoleId != null)
             {
@@ -44,16 +44,19 @@ namespace Doctor_Attendance.Pages.S.Faculties
                 return NotFound();
             }
 
-            var faculty = await _context.Faculties.FirstOrDefaultAsync(m => m.Facultyid == id);
+            var faculty = await _context.Faculties.Include(f => f.Doctor).FirstOrDefaultAsync(m => m.Facultyid == id);
+
             if (faculty == null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Faculty = faculty;
             }
+
             return Page();
         }
+
     }
 }
