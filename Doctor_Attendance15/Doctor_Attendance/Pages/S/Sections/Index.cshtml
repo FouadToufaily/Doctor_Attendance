@@ -1,0 +1,80 @@
+﻿@page
+@model Doctor_Attendance.Pages.S.Sections.IndexModel
+
+@{
+    ViewData["Title"] = "Sections";
+}
+
+<h1>Sections</h1>
+@if (Model.RoleName.Equals("Admin"))
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Section[0].Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section[0].Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section[0].PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Section[0].Doctor)
+            </th>
+            <th>
+                Faculties
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Section) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Doctor.Fullname)
+            </td>
+            <td>
+                @if (item.Faculties.Any())
+                {
+                    <ul>
+                        @foreach (var faculty in item.Faculties)
+                        {
+                            <li>
+                                @Html.DisplayFor(modelItem => faculty.Name)
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>No Faculties Exist in this Section.</span>
+                }
+            </td>
+            <td>
+                @if (Model.RoleName.Equals("Admin"))
+                {
+                  <a asp-page="./Edit" asp-route-id="@item.Sectionid">Edit</a> 
+                  <a asp-page="./Delete" asp-route-id="@item.Sectionid">Delete</a>
+                }
+                
+                <a asp-page="./Details" asp-route-id="@item.Sectionid">Details</a> 
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
