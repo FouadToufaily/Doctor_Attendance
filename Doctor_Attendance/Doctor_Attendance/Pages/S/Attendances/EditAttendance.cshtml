@@ -1,5 +1,5 @@
 ﻿@page
-@model Doctor_Attendance.Pages.New.EditAttendanceModel
+@model Doctor_Attendance.Pages.S.Attendances.EditAttendanceModel
 @{
 }
 <html>
@@ -10,12 +10,6 @@
 </head>
 <body>
 <form method="post" enctype="multipart/form-data">
-    @if (!string.IsNullOrEmpty(TempData["Message"] as string))
-{
-    <div class="alert alert-success">
-        @TempData["Message"]
-    </div>
-}
     @{
         var currentDate = DateTime.Today.ToString("yyyy/MM/dd");
     }
@@ -47,16 +41,8 @@
          
      </td>
     
-     @*
-    <div class="nb-3">
+     
        
-    </div>
-       *@
-       @*
-       <h3 class="text-primary">
-           @Model.datev.ToString("yyyy/MM/dd")
-       </h3>
-       *@
        
     
     <br>
@@ -86,10 +72,10 @@
                    
 
                     <tr class="table-light">
-                        <th scope="row"><label>@name</label>
+                        <td scope="row">@name
                         <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />    
-                        </th>
-                        <th scope="row"><label>@filenb</label></th>
+                        </td>
+                        <td scope="row">@filenb</td>
                         <td>
                             @if (isCategoryIdOne)
                             {
@@ -109,8 +95,8 @@
                          <input type="text" asp-for="@Model.AttendanceRecords[i].Date"  hidden />
                         <input type="text" asp-for="@Model.AttendanceRecords[i].Published" hidden  />
                          <input type="number" asp-for="@Model.AttendanceRecords[i].AttId" hidden />
-                         <input type="number" asp-for="@Model.AttendanceRecords[i].DepId" value="1" hidden />
-                        <input asp-for="AttendanceRecords[i].Attended" value="false" hidden />
+                         <input type="number" asp-for="@Model.AttendanceRecords[i].DepId"  hidden />
+                         <input asp-for="AttendanceRecords[i].Attended" value="false" hidden />
                            </td>
                     </tr>
                     
