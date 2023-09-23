@@ -47,8 +47,7 @@ namespace Doctor_Attendance.Pages.S.Account
                     LastModified = DateTime.Now
                 };        
                      if (Input.Role.Equals("Secratary"))
-                
-                    user.RoleId = 1;
+                     user.RoleId = 1;
                      else if (Input.Role.Equals("Head Of Department"))
                       user.RoleId = 2;
                      else if (Input.Role.Equals("Head Of Faculty"))

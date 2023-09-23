@@ -123,21 +123,27 @@ namespace Doctor_Attendance.Pages.HOF
             }
             else // if its a HOF
             { 
-            //getting faculty that this dr manages
-            faculty = await _context.Faculties.FirstOrDefaultAsync(d => d.DoctorId == doctor.DoctorId);
+                    //getting faculty that this dr manages
+                    faculty = await _context.Faculties.FirstOrDefaultAsync(d => d.DoctorId == doctor.DoctorId);
+                
+            
+                if(faculty != null)
+                {
+                    //geting departments of this faculty and this section
+                    var query = _context.Departments
+                                        .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid));
 
-            //geting departments of this faculty and this section
-            var query = _context.Departments
-                                .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid));
-
-            //Load list of deps for select
-            var departments = await query.ToListAsync();
-            DepItems = departments.Select(dep => new SelectListItem
-            {
-                Value = dep.DepId.ToString(),
-                Text = dep.DepName.ToString(),
-            }).ToList();
+                    //Load list of deps for select
+                    var departments = await query.ToListAsync();
+                    DepItems = departments.Select(dep => new SelectListItem
+                    {
+                        Value = dep.DepId.ToString(),
+                        Text = dep.DepName.ToString(),
+                    }).ToList();
+                }
             }
+
+                
 
             //Load list of doctors for select
             Doctor = await _context.Doctors.ToListAsync();

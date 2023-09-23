@@ -121,23 +121,19 @@
                 beforeShowDay: function (date) {
                     var currentDate = new Date();
                     currentDate.setHours(0, 0, 0, 0);
-                    var day = date.getDay(); // Get the day days (day = 0)
-                    if (day === 0 || day === 6 ) {
+                    var day = date.getDay(); // Get the day of the week (0-6, where 0 is Sunday)
+                    var formattedDate = $.datepicker.formatDate("yy-mm-dd", date); // Updated format
+
+                    // Disable Saturdays (day = 6), Sundays (day = 0)
+                    if (day === 0 || day === 6) {
                         return [false];
                     }
-                    // Disable specific dates
-                    for (var i = 0; i < disabledDates.length; i++) {
-                     if (formattedDate === disabledof the week (0-6, where 0 is Sunday)
-                    var formattedDate = $.datepicker.formatDate("dd/mm", date); // Get the formatted date (dd/mm)
-                     var disabledDates = ["22/11", "01/06", "10/12", "25/12"];
-                    // Disable Saturdays (day = 6), SunDates[i]) {
-                       return [false];
-                 
-                     }
-                     if (holidays.indexOf(date.toISOString().slice(0, 10)) !== -1) {
-                    return [false];
-                }
+
+                    // Check if the formatted date is in the holidays array
+                    if (holidays.includes(formattedDate)) {
+                        return [false];
                     }
+
                     return [date <= currentDate];
                 },
                 onSelect: function (dateText) {
@@ -147,4 +143,3 @@
         });
     </script>
 }
-
