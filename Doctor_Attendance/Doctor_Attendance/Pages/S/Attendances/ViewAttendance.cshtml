@@ -1,10 +1,11 @@
 ﻿@page
-@model Doctor_Attendance.Pages.New.ViewAttendanceModel
+@model Doctor_Attendance.Pages.S.Attendances.ViewAttendanceModel
 @{
 }
 
 <body>
 <form method="post" enctype="multipart/form-data" >
+    
     @if (!string.IsNullOrEmpty(TempData["Message"] as string))
 {
     <div class="alert alert-success">
@@ -21,24 +22,21 @@
             </h2>
             
         </div>
+
     <div class="nb-3">
     <input   type="text" id="datepicker" name="datepicker" value="Choose a date" class="form-control-lg"  />
-    </div><br>
-
+    <button type="submit" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px" id="resendValuesButton" >Next</button><br>
+    </div>
+    <br>
      <td><input type="text" asp-for="@Model.datev" id="datePicker_2" value="@currentDate"  hidden/></td>
-     <div class="nb-3">
-    <button type="submit" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px"  >Next</button><br>
-    </div><br>
-    <h3 class="text-primary">
-           @Model.datev.ToString("yyyy/MM/dd")
-       </h3>
+    
     
     <br>
 <table id="attendanceTable" class="table table-hover">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Id</th>
+                <th>File Number</th>
                 <th>NbHours</th>
                 <th>Comments</th>
             </tr>
@@ -56,29 +54,33 @@
                     var id = doctor != null ? doctor.DoctorId.ToString() : "N/A";
                     var categoryId = doctor?.Category?.CategoryId ?? 0;
                     var isCategoryIdOne = categoryId == 1;
-                   
+                   var filenb = doctor != null ? doctor.FileNumber : "N/A";
 
                     <tr class="table-light">
-                        <th scope="row"><label>@name</label></th>
-
-                        <td><input class="form-control-plaintext" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly  /></td>
+                        <td scope="row">@name</td>
+                         <td scope="row">@filenb
+                             <input class="form-control-plaintext" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden />
+                             </td>
+                       
                         <td>
                             @if (isCategoryIdOne)
                             {
-                                <input class="form-control-plaintext" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].NbHours"  readonly="@(record.Published == true)" />
+                                @Model.AttendanceRecords[i].NbHours
                             }
                             else
                             {
-                                <input class="form-control-plaintext" style="width: 150px; height: 30px;"  type="number" asp-for="@Model.AttendanceRecords[i].NbHours" disabled />
+                             @Model.AttendanceRecords[i].NbHours
                             }
                         </td>
                         <td>
-                            <input class="form-control-plaintext" type="text" asp-for="@Model.AttendanceRecords[i].Comments"  readonly="@(record.Published == true)" />
-                        <input  type="checkbox" style="positon: relative; width: 90px; height: 20px;" name="AttendanceRecords[@i].Attended" value="true" checked="@(Model.AttendanceRecords[i].Attended == true)" hidden="@(record.Published == true)" hidden/>
-                        <input type="text" asp-for="@Model.AttendanceRecords[i].Date"  hidden />
+                            @Model.AttendanceRecords[i].Comments 
+                        
+                            <input  type="checkbox" style="positon: relative; width: 90px; height: 20px;" name="AttendanceRecords[@i].Attended" value="true" checked="@(Model.AttendanceRecords[i].Attended == true)" hidden="@(record.Published == true)" hidden/>
+                        
+                            <input type="text" asp-for="@Model.AttendanceRecords[i].Date"  hidden />
                         <input type="text" asp-for="@Model.AttendanceRecords[i].Published"  hidden />
                          <input type="number" asp-for="@Model.AttendanceRecords[i].AttId" hidden />
-                         <input type="number" asp-for="@Model.AttendanceRecords[i].DepId" value="1" hidden />
+                         <input type="number" asp-for="@Model.AttendanceRecords[i].DepId"  hidden />
                         <input asp-for="AttendanceRecords[i].Attended" value="false" hidden /></td></tr>
                     
                 }
@@ -112,25 +114,29 @@
 
     <script>
         $(function () {
+            var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
             $("#datepicker").datepicker({
                 dateFormat: "yy-mm-dd",
                 maxDate: "+0d",
                 beforeShowDay: function (date) {
                     var currentDate = new Date();
                     currentDate.setHours(0, 0, 0, 0);
-                    var day = date.getDay(); // Get the day of the week (0-6, where 0 is Sunday)
-                    var formattedDate = $.datepicker.formatDate("dd/mm", date); // Get the formatted date (dd/mm)
-                     var disabledDates = ["22/11", "01/06", "10/12", "25/12"];
-                    // Disable Saturdays (day = 6), Sundays (day = 0)
+                    var day = date.getDay(); // Get the day days (day = 0)
                     if (day === 0 || day === 6 ) {
                         return [false];
                     }
                     // Disable specific dates
                     for (var i = 0; i < disabledDates.length; i++) {
-                     if (formattedDate === disabledDates[i]) {
+                     if (formattedDate === disabledof the week (0-6, where 0 is Sunday)
+                    var formattedDate = $.datepicker.formatDate("dd/mm", date); // Get the formatted date (dd/mm)
+                     var disabledDates = ["22/11", "01/06", "10/12", "25/12"];
+                    // Disable Saturdays (day = 6), SunDates[i]) {
                        return [false];
                  
                      }
+                     if (holidays.indexOf(date.toISOString().slice(0, 10)) !== -1) {
+                    return [false];
+                }
                     }
                     return [date <= currentDate];
                 },
@@ -140,6 +146,5 @@
             });
         });
     </script>
-    
 }
 

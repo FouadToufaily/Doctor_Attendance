@@ -88,7 +88,6 @@ namespace Doctor_Attendance.Pages.HOF
 
             if (RoleName.Equals("HOS")) // if from HOS page (choosed section of a faculty)
             {
-                //SectionId = (int)sectionId;
                 if (sectionId != null)// before hitting showAttendances button
                 {
                     SectionId = (int)sectionId;
@@ -129,7 +128,7 @@ namespace Doctor_Attendance.Pages.HOF
 
             //geting departments of this faculty and this section
             var query = _context.Departments
-            .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid));
+                                .Where(d => d.Faculties.Any(f => f.Facultyid == faculty.Facultyid));
 
             //Load list of deps for select
             var departments = await query.ToListAsync();
@@ -139,6 +138,7 @@ namespace Doctor_Attendance.Pages.HOF
                 Text = dep.DepName.ToString(),
             }).ToList();
             }
+
             //Load list of doctors for select
             Doctor = await _context.Doctors.ToListAsync();
             DoctorItems = Doctor.Select(doctor => new SelectListItem
@@ -156,8 +156,8 @@ namespace Doctor_Attendance.Pages.HOF
 
                 // Getting the specified records
                 AttendanceRecords = await _context.Attendances
-                    .Where(a => a.DoctorId == SelectedDoctor && a.Published == true && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)
-                    .ToListAsync();
+                                                  .Where(a => a.DoctorId == SelectedDoctor && a.Published == true && a.Date >= startDate && a.Date <= endDate && a.DepId == SelectedDep)
+                                                  .ToListAsync();
 
                 //setting the flag to display attendance records
                 ShowRecords = true;

@@ -24,9 +24,11 @@
         <h2 class="text-primary pl-3 col">Attendances</h2>
         <div class="col-12 col-md-auto text-right">
           <div class="btn-group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px">
-              Publish
-            </button>
+           
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:100px">
+           Publish
+          </button>
+                        
             <div class="dropdown-menu">
                 <button type="submit" class="dropdown-item " asp-page-handler="ThisDay"  >This Day</button>
                 <button type="submit"  class="dropdown-item " asp-page-handler="ThisMonth"  >This Month</button>
@@ -38,16 +40,24 @@
 
     <div class="nb-3">
       <input type="text"  id="datepicker" name="datepicker" value="@Model.datev.ToString("yyyy/MM/dd")"  class="form-control-lg" readonly  />
-    </div><br>
+      <button type="submit"  id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button>
+  </div><br>
 
-     <td><input type="text" asp-for="@Model.datev" id="datePicker_2"  value="@Model.datev.ToString("yyyy/MM/dd")" hidden  /></td>
-     
+     <td><input type="text" asp-for="@Model.datev" id="datePicker_2"  value="@Model.datev.ToString("yyyy/MM/dd")" hidden  />
+         
+     </td>
+    
+     @*
     <div class="nb-3">
-       <button type="submit"  id="nextButton" asp-page-handler="Next" class="btn btn-outline-primary btn-lg" style="width:70px">Next</button><br><br></div>
        
+    </div>
+       *@
+       @*
        <h3 class="text-primary">
            @Model.datev.ToString("yyyy/MM/dd")
        </h3>
+       *@
+       
     
     <br>
 <table id="attendanceTable" class="table table-hover">
@@ -76,12 +86,10 @@
                    
 
                     <tr class="table-light">
-                        <th scope="row"><label>@name</label></th>
+                        <th scope="row"><label>@name</label>
+                        <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />    
+                        </th>
                         <th scope="row"><label>@filenb</label></th>
-                        <td>
-                            
-                            <input class="form-control-sm" style="width: 150px; height: 30px;" type="number" asp-for="@Model.AttendanceRecords[i].DoctorId" value="@id" readonly hidden  />
-                            </td>
                         <td>
                             @if (isCategoryIdOne)
                             {
@@ -96,6 +104,7 @@
                             <input class="form-control-sm" type="text" asp-for="@Model.AttendanceRecords[i].Comments"  readonly="@(record.Published == true)" />
                         </td>
                             <td><input class="form-check form-check-inline" style="position:relative; width:45px; height:15px;"  type="checkbox"  name="AttendanceRecords[@i].Attended" value="true" checked="@(Model.AttendanceRecords[i].Attended == true)" hidden="@(record.Published == true)" />
+                            
                             <input type="text" asp-for="@Model.AttendanceRecords[i].AttId" hidden  />
                          <input type="text" asp-for="@Model.AttendanceRecords[i].Date"  hidden />
                         <input type="text" asp-for="@Model.AttendanceRecords[i].Published" hidden  />
@@ -108,7 +117,9 @@
                 }
         </tbody>
     </table>
-    <button asp-page-handler="Save" type="submit" class="btn btn-outline-success btn-lg" style="width:100px" >Save</button>
+    
+            <button asp-page-handler="Save" type="submit" class="btn btn-outline-success btn-lg" style="width:100px" >Save</button>               
+            
                
 </form>
 </body>

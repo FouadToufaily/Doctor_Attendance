@@ -26,27 +26,56 @@ namespace Doctor_Attendance.Pages.New
         public DateTime datev { get; set; }
         [BindProperty(SupportsGet = true)]
         public string name { get; set; }
-        public List<string> Holidays { get; private set; }
+        public int FacultyId { get; set; }
+        public int SectionId { get; set; }
+        public int DrId { get; set; }
         public int secrataryDepId { get; set; }
-        private List<string> GetHolidaysFromDatabase()
-        {
 
-            var holidayEntities = dbContext.Holidays.ToList();
+        public string? RoleName { get; set; }
 
-            // Assuming the 'Date' property in your 'Holiday' entity stores the date in yyyy-mm-dd format
-            Holidays = holidayEntities.Select(h => h.Date.ToString("yyyy-MM-dd")).ToList();
-            return Holidays;
-        }
+        public int? RoleId { get; set; }
+        public List<string> Holidays { get; private set; }
         public async Task<IActionResult> OnGetAsync(string? date, string? name)
         {
             //get username of the current secratary
             var username = HttpContext.Session.GetString("UserStatus");
 
-            //get current employee
-            Employee employee = dbContext.Employees.FirstOrDefault(e => e.Email.Equals(username));
+            RoleId = await dbContext.Users // getting the Role Id
+                   .Where(u => u.Username == username)
+                   .Select(u => u.RoleId)
+                   .FirstOrDefaultAsync();
 
-            //get secrataryDepId
-            secrataryDepId = (int)employee.DepId;
+            RoleName = await dbContext.Roles //Extracting the Role name(might need it later because i dont know the Ids of the roles now
+                .Where(r => r.RoleId == RoleId)
+                .Select(r => r.RoleName)
+                .FirstOrDefaultAsync();
+
+            
+                
+            if(RoleName.Equals("Secretary"))
+            {
+                //get current employee
+                Employee employee = dbContext.Employees.FirstOrDefault(e => e.Email.Equals(username));
+                //get secrataryDepId
+                secrataryDepId = (int)employee.DepId;
+
+                if (dbContext.Doctors != null)
+                {
+                    Doctor = await dbContext.Doctors
+                        .Include(d => d.Category)
+                        .Where(d => d.DepId == secrataryDepId)
+                        .ToListAsync();
+                }
+            }
+            else if(RoleName.Equals("Admin"))//it is an admin 
+            {
+                if (dbContext.Doctors != null)
+                {
+                    Doctor = await dbContext.Doctors
+                        .Include(d => d.Category)
+                        .ToListAsync();
+                }
+            }
 
             DateTime selectedDate;
             if (DateTime.TryParse(date, out selectedDate))
@@ -69,42 +98,14 @@ namespace Doctor_Attendance.Pages.New
                 datev = DateTime.Now;
                 return Page();
             }
-            if (dbContext.Doctors != null)
-            {
-                Doctor = await dbContext.Doctors
-                    .Include(d => d.Category)
-                    .Where(d => d.DepId == secrataryDepId)
-                    .ToListAsync();
-            }
 
             // Fetch all Attendance records for the specified targetDate
             var attendancesForDate = await dbContext.Attendances
-                .Where(a => a.Date == datev)
-                .ToListAsync();
+                                                    .Where(a => a.Date == datev)
+                                                    .ToListAsync();
 
             AttendanceRecords = new List<Attendance>();
-            bool isAnyRecordPublished = await dbContext.Attendances.AnyAsync(a => a.Date == datev && a.Published == true);
-
-            if (isAnyRecordPublished)
-            {
-                if (dbContext.Attendances == null)
-                {
-                    return NotFound();
-                }
-                foreach (var doctor in Doctor)
-                {
-                    // Find the attendance record for the doctor on the specified date
-                    Attendance attendance = attendancesForDate.FirstOrDefault(a => a.DoctorId == doctor.DoctorId);
-
-                    if (attendance != null)
-                    {
-                        // Add the attendance record to the list if it exists and is published for the doctor on the specified date
-                        AttendanceRecords.Add(attendance);
-                    }
-                }
-            }
-            else
-            {
+            
                 foreach (var doctor in Doctor)
                 {
                     Attendance attendance = attendancesForDate.FirstOrDefault(a => a.DoctorId == doctor.DoctorId);
@@ -130,21 +131,19 @@ namespace Doctor_Attendance.Pages.New
                             attendanceRecord.NbHours = attendance.NbHours;
                             attendanceRecord.Comments = attendance.Comments;
                             attendanceRecord.Attended = attendance.Attended;
-
-                            //   attendanceRecord.AttId = attendance.AttId;  //this
                         }
                     }
                     // Add the attendance record to the list (whether it's new or existing)
                     AttendanceRecords.Add(attendance);
                 }
-            }
+            
             if (name == "Day")
             {
-                TempData["Message"] = datev;
+                //  TempData["Message"] = datev;
                 // Update the "Published" attribute to true for all records with the selected date
                 var attendancesToUpdate = dbContext.Attendances
-                .Where(a => a.Date == datev)
-                .ToList();
+                                                   .Where(a => a.Date == datev)
+                                                   .ToList();
 
                 foreach (var attendance in attendancesToUpdate)
                 {
@@ -169,8 +168,8 @@ namespace Doctor_Attendance.Pages.New
 
                 // Update the "Published" attribute to true for all records within the selected date range
                 var attendancesToUpdate = dbContext.Attendances
-                    .Where(a => a.Date >= firstDayOfMonth && a.Date <= datev)
-                    .ToList();
+                                                   .Where(a => a.Date >= firstDayOfMonth && a.Date <= datev)
+                                                   .ToList();
 
                 foreach (var attendance in attendancesToUpdate)
                 {
@@ -189,14 +188,36 @@ namespace Doctor_Attendance.Pages.New
                 }
 
             }
+            else if (name == "FullMonth")
+            {
+                // Get the first day of the selected month
+                 DateTime firstDayOfMonth = new DateTime(datev.Year, datev.Month, 1);
+                // Get the last day of the selected month
+                DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                // Update the "Published" attribute to true for all records within the selected date range
+                var attendancesToUpdate = dbContext.Attendances
+                                                   .Where(a => a.Date >= firstDayOfMonth && a.Date <= lastDayOfMonth).ToList();
+                foreach (var attendance in attendancesToUpdate)
+                {
+                    attendance.Published = true;
+                }
+                try
+                {
+                    dbContext.SaveChanges();
+                }
+                catch (DbUpdateException ex)
+                {
+                    TempData["Message"] = ex;
+                }
+                return RedirectToPage("EditAttendance", new { date = datev, name = "View" });
 
-            return Page();
+                return Page();
 
         }
         private bool IsDateDisabled(DateTime date)
         {
             // Define the disabled dates in the format "MM/dd"
-            var disabledDates = new List<string> { "11/22", "06/01", "12/10", "12/25" };
+            var disabledDates = new List<string> {  };
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
                 return true;
@@ -325,6 +346,14 @@ namespace Doctor_Attendance.Pages.New
         public IActionResult OnPostThisMonth()
         {
             return RedirectToPage("EditAttendance", new { date = datev, name = "Month" });
+        }
+        private List<string> GetHolidaysFromDatabase()
+        {
+            var holidayEntities = dbContext.Holidays.ToList();
+
+            // Assuming the 'Date' property in your 'Holiday' entity stores the date in yyyy-mm-dd format 
+            Holidays = holidayEntities.Select(h => h.Date.ToString("yyyy-MM-dd")).ToList();
+            return Holidays;
         }
 
     }

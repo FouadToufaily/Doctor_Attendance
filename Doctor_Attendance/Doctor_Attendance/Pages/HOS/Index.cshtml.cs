@@ -34,14 +34,7 @@ namespace Doctor_Attendance.Pages.HOS
                                   .Include(f => f.Doctor)
                                   .Include(f => f.Sections)
                                   .Where(f => f.Sections.Any(s => s.DoctorId == id)).FirstOrDefault();
-                                      
         
-        /*
-        var faculty = await _context.Faculties
-                .Include(f => f.Doctor)
-                .Include(f => f.Sections)
-                .FirstOrDefaultAsync(m => m.DoctorId == id);
-        */
             if (faculty == null)
             {
                 return NotFound();
