@@ -4,51 +4,131 @@
     ViewData["Title"] = "Register";
 }
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-<div class="container mt-5" >
+<div class="container mt-5">
     <div class="row justify-content-center align-items-center">
         <div class="col-sm-12 col-md-12 col-lg-4">
-        <h1 class="mb-3">Register</h1>  
+            <h1 class="mb-3">Register</h1>
 
-<form method="post">
-    <div class="mb-3">
-                <label class="form-label" asp-for="@Model.Input.Username">Email Address</label>
-                <input type="text" asp-for="@Model.Input.Username" class="form-control">
-                <span asp-validation-for="@Model.Input.Username" class="text-danger"></span>
-            </div>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label" asp-for="@Model.Input.Username">Email Address</label>
+                    <input type="text" asp-for="@Model.Input.Username" class="form-control">
+                    <span asp-validation-for="@Model.Input.Username" class="text-danger"></span>
+                </div>
 
-    <div class="mb-3">
-                <label class="form-label" asp-for="@Model.Input.Password">Password</label>
-                <input type="password" asp-for="@Model.Input.Password" class="form-control">
-                <span asp-validation-for="@Model.Input.Password" class="text-danger"></span>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for="@Model.Input.Password">Password</label>
+                    <input type="password" asp-for="@Model.Input.Password" class="form-control">
+                    <span asp-validation-for="@Model.Input.Password" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label>Role</label>
-        <div class="mb-3 form-check">
-            <input type="radio" id="doctorRole" asp-for="Input.Role" value="Head Of Department" class="form-check-input" required />
-            <label class="form-check-label" for="doctorRole">Head Of Department</label>
+                <div class="form-group">
+                    <label>Role</label>
+                    <div class="mb-3 form-check">
+                        <input type="radio" id="doctorRole" asp-for="Input.Role" value="Head Of Department" class="form-check-input" required />
+                        <label class="form-check-label" for="doctorRole">Head Of Department</label>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="radio" id="facultyHeadRole" asp-for="Input.Role" value="Head Of Faculty" class="form-check-input" required>
+                        <label class="form-check-label" for="facultyHeadRole">Head Of Faculty</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="radio" id="sectionHeadRole" asp-for="Input.Role" value="Head Of Section" class="form-check-input" required>
+                        <label class="form-check-label" for="sectionHeadRole">Head Of Section</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="radio" id="secretaryRole" asp-for="Input.Role" value="Secretary" class="form-check-input" required>
+                        <label class="form-check-label" for="secretaryRole">Secretary</label>
+                    </div>
+                </div>
+                <!-- Hidden input for Input.Role -->
+                <input type="hidden" asp-for="Input.Role" id="Input_Role" />
+                <!-- Dropdown list for selecting a doctor or employee -->
+                <div class="mb-3" id="doctorEmployeeList" style="display: none;">
+                    <label class="form-label" id="doctorEmployeeLabel" asp-for="@Model.Input.DoctorEmployeeId">
+                        @if (Model.Input.Role == "Secretary")
+                        {
+                            <span>Employee</span>
+                        }
+                        else
+                        {
+                            <span>Doctor</span>
+                        }
+                    </label>
+                    <select asp-for="@Model.Input.DoctorEmployeeId" class="form-control" id="employeeDoctorSelect">
+                        <!-- Options will be dynamically added here -->
+                    </select>
+                    <span asp-validation-for="@Model.Input.DoctorEmployeeId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
         </div>
-        <div class="mb-3 form-check">
-                <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Head Of Faculty" class="form-check-input" required>
-                <label class="form-check-label" for="secretaryRole">Head Of Faculty</label>
-        </div>
-        
-        <div class="mb-3 form-check">
-                <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Head Of Section" class="form-check-input" required>
-                <label class="form-check-label" for="secretaryRole">Head Of Section</label>
-            </div>
-
-            <div class="mb-3 form-check">
-                <input type="radio"id="secretaryRole" asp-for="Input.Role" value="Secratary" class="form-check-input" required>
-                <label class="form-check-label" for="secretaryRole">Secretary</label>
-            </div>
     </div>
-    <div class="mb-3"> 
-                <button type="submit" class="btn btn-primary">Register</button>
-            </div>
-</form>
-
-</div></div>
 </div>
+<script>
+    // Get all the radio buttons
+    var radios = document.querySelectorAll('input[type="radio"]');
+    var inputRole = document.getElementById("Input_Role"); // Hidden input for Input.Role
+    var select = document.getElementById("employeeDoctorSelect"); // Dropdown list
+
+    // Function to update the dropdown list options based on the selected role
+    function updateDropdownList(role) {
+        // Clear existing options
+        select.innerHTML = '';
+        // Create a default option
+        var defaultOption = document.createElement("option");
+        defaultOption.value = '';
+        defaultOption.text = 'Select a ' + (role === 'Secretary' ? 'Employee' : 'Doctor');
+        select.appendChild(defaultOption);
+
+        if (role === "Head Of Department" || role === "Head Of Faculty" || role === "Head Of Section") {
+            // Add doctor options based on the data received
+            @foreach (var doctor in Model.Doctors)
+            {
+                <text>
+                    var option = document.createElement("option");
+                    option.value = "@doctor.DoctorId";
+                    option.text = "@doctor.Fullname";
+                    select.appendChild(option);
+                </text>
+            }
+        } else if (role === "Secretary") {
+            // Add employee options based on the preloaded data
+            @foreach (var employee in Model.Employees)
+            {
+                <text>
+                    var option = document.createElement("option");
+                    option.value = "@employee.EmpId";
+                    option.text = "@employee.Firstname @employee.Lastname";
+                    select.appendChild(option);
+                </text>
+            }
+        }
+    }
+
+    // Add a change event listener to each radio button
+    radios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            // Get the selected role
+            var role = radio.value;
+
+            // Set the Input.Role value in the hidden input field
+            inputRole.value = role;
+
+            // Hide the doctor/employee list
+            document.getElementById("doctorEmployeeList").style.display = "none";
+
+            // Update the doctor/employee list
+            updateDropdownList(role);
+
+            // Show the doctor/employee list
+            document.getElementById("doctorEmployeeList").style.display = "block";
+        });
+    });
+</script>

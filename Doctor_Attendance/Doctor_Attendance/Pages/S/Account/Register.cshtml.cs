@@ -23,9 +23,19 @@ namespace Doctor_Attendance.Pages.S.Account
         [BindProperty]
         public RegisterInputModel Input { get; set; }
 
+        public List<Doctor> Doctors { get; set; } // Add this property to fetch doctors
+        public List<Employee> Employees { get; set; } // Add this property to fetch employees
+
         public void OnGet()
         {
+            // Initialize Input with default values
+            Input = new RegisterInputModel();
+
+            // Fetch the list of doctors and employees
+            Doctors = _context.Doctors.ToList();
+            Employees = _context.Employees.ToList();
         }
+
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -45,16 +55,32 @@ namespace Doctor_Attendance.Pages.S.Account
                     Password = Input.Password,
                     DateCreated = DateTime.Now,
                     LastModified = DateTime.Now
-                };        
-                     if (Input.Role.Equals("Secratary"))
-                     user.RoleId = 1;
-                     else if (Input.Role.Equals("Head Of Department"))
-                      user.RoleId = 2;
-                     else if (Input.Role.Equals("Head Of Faculty"))
-                      user.RoleId = 3;
-                     else if (Input.Role.Equals("Head Of Section"))
-                      user.RoleId = 4; 
+                };
 
+                if (Input.Role.Equals("Secretary"))
+                {
+                    user.RoleId = 1;
+                    // Set the EmpId for Secretary role
+                    user.EmpId = Input.DoctorEmployeeId;
+                }
+                else if (Input.Role.Equals("Head Of Department"))
+                {
+                    user.RoleId = 2;
+                    // Set the DoctorId for Head Of Department role
+                    user.DoctorId = Input.DoctorEmployeeId;
+                }
+                else if (Input.Role.Equals("Head Of Faculty"))
+                {
+                    user.RoleId = 3;
+                    // Set the DoctorId for Head Of Faculty role
+                    user.DoctorId = Input.DoctorEmployeeId;
+                }
+                else if (Input.Role.Equals("Head Of Section"))
+                {
+                    user.RoleId = 4;
+                    // Set the DoctorId for Head Of Section role
+                    user.DoctorId = Input.DoctorEmployeeId;
+                }
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -62,8 +88,13 @@ namespace Doctor_Attendance.Pages.S.Account
                 return RedirectToPage("../../Index"); // Redirect to the Index page
             }
 
+            // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+            Doctors = _context.Doctors.ToList();
+            Employees = _context.Employees.ToList();
+
             return Page();
         }
+
 
         public class RegisterInputModel
         {
@@ -79,6 +110,9 @@ namespace Doctor_Attendance.Pages.S.Account
             [Required]
             [Display(Name = "Role")]
             public string Role { get; set; }
+
+            // Add this property to store the selected doctor or employee ID
+            public int DoctorEmployeeId { get; set; }
         }
     }
 }
