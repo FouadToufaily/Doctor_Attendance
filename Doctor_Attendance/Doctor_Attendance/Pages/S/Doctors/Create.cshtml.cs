@@ -13,7 +13,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
     public class CreateModel : PageModel
     {
         private readonly Doctor_Attendance.Services.AppDBContext _context;
-
+        public string? newFileNb { get; set; }
         public CreateModel(Doctor_Attendance.Services.AppDBContext context)
         {
             _context = context;
@@ -21,9 +21,17 @@ namespace Doctor_Attendance.Pages.S.Doctors
 
         public IActionResult OnGet()
         {
+            
+            // Get the last lastFileNb from the table
+            string lastFileNb = _context.Doctors.OrderByDescending(d => d.DoctorId).Select(d => d.FileNumber).First();
+            string[] fileNbArray = lastFileNb.Split('D');
+            int fileNb = Int32.Parse( fileNbArray[fileNbArray.Length - 1]);
+            fileNb++;
+            newFileNb = "D" + fileNb;
+            Console.WriteLine(fileNb);
 
             ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Type");
-        ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepId", "DepName");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepId", "DepName");
             return Page();
         }
 
