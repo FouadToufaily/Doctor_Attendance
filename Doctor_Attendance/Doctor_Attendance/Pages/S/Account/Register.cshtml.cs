@@ -23,8 +23,8 @@ namespace Doctor_Attendance.Pages.S.Account
         [BindProperty]
         public RegisterInputModel Input { get; set; }
 
-        public List<Doctor> Doctors { get; set; } // Add this property to fetch doctors
-        public List<Employee> Employees { get; set; } // Add this property to fetch employees
+        public List<Doctor> Doctors { get; set; }
+        public List<Employee> Employees { get; set; }
 
         public void OnGet()
         {
@@ -39,6 +39,8 @@ namespace Doctor_Attendance.Pages.S.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            int roleId = 0; // Initialize roleId
+
             if (ModelState.IsValid)
             {
                 // Check if the username already exists
@@ -50,21 +52,41 @@ namespace Doctor_Attendance.Pages.S.Account
                     Employees = _context.Employees.ToList();
                     return Page();
                 }
-                else if (_context.Doctors.Any(d => d.DoctorId == Input.DoctorEmployeeId))
+
+                // Check if a user already exists for the selected doctor or employee
+                if (Input.Role == "Head Of Department" || Input.Role == "Head Of Faculty" || Input.Role == "Head Of Section")
                 {
-                    ModelState.AddModelError("Input.Username", "This Doctor already has a username.");
-                    // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
-                    Doctors = _context.Doctors.ToList();
-                    Employees = _context.Employees.ToList();
-                    return Page();
+                    var existingUser = _context.Users.FirstOrDefault(u => u.DoctorId == Input.DoctorEmployeeId);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError("Input.Username", "This Doctor already has a username.");
+                        // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+                        Doctors = _context.Doctors.ToList();
+                        Employees = _context.Employees.ToList();
+                        return Page();
+                    }
+                    // Set the role ID based on the selected role
+                    roleId = Input.Role switch
+                    {
+                        "Head Of Department" => 2,
+                        "Head Of Faculty" => 3,
+                        "Head Of Section" => 4, // Corrected role ID for Head Of Section
+                        _ => throw new ArgumentException("Invalid role"),
+                    };
                 }
-                else if (_context.Employees.Any(e => e.EmpId == Input.DoctorEmployeeId))
+                else if (Input.Role == "Secretary")
                 {
-                    ModelState.AddModelError("Input.Username", "This Employee already has a username.");
-                    // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
-                    Doctors = _context.Doctors.ToList();
-                    Employees = _context.Employees.ToList();
-                    return Page();
+                    var existingUser = _context.Users.FirstOrDefault(u => u.EmpId == Input.DoctorEmployeeId);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError("Input.Username", "This Employee already has a username.");
+                        // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+                        Doctors = _context.Doctors.ToList();
+                        Employees = _context.Employees.ToList();
+                        return Page();
+                    }
+                    // Set the role ID for the Secretary
+                    roleId = 1; // Assuming Secretary has role ID 1
                 }
 
                 // Create a new user based on the input
@@ -72,33 +94,19 @@ namespace Doctor_Attendance.Pages.S.Account
                 {
                     Username = Input.Username,
                     Password = Input.Password,
+                    RoleId = roleId, // Set the role ID
                     DateCreated = DateTime.Now,
                     LastModified = DateTime.Now
                 };
 
-                if (Input.Role.Equals("Secretary"))
+                // Set the DoctorId or EmployeeId based on the selected role
+                if (Input.Role == "Head Of Department" || Input.Role == "Head Of Faculty" || Input.Role == "Head Of Section")
                 {
-                    user.RoleId = 1;
-                    // Set the EmpId for Secretary role
+                    user.DoctorId = Input.DoctorEmployeeId;
+                }
+                else if (Input.Role == "Secretary")
+                {
                     user.EmpId = Input.DoctorEmployeeId;
-                }
-                else if (Input.Role.Equals("Head Of Department"))
-                {
-                    user.RoleId = 2;
-                    // Set the DoctorId for Head Of Department role
-                    user.DoctorId = Input.DoctorEmployeeId;
-                }
-                else if (Input.Role.Equals("Head Of Faculty"))
-                {
-                    user.RoleId = 3;
-                    // Set the DoctorId for Head Of Faculty role
-                    user.DoctorId = Input.DoctorEmployeeId;
-                }
-                else if (Input.Role.Equals("Head Of Section"))
-                {
-                    user.RoleId = 4;
-                    // Set the DoctorId for Head Of Section role
-                    user.DoctorId = Input.DoctorEmployeeId;
                 }
 
                 _context.Users.Add(user);
@@ -113,6 +121,9 @@ namespace Doctor_Attendance.Pages.S.Account
 
             return Page();
         }
+
+
+
 
 
         public class RegisterInputModel

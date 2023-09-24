@@ -174,4 +174,4 @@ insert into Users values (null,3, 1,'ksara@gmail.com','pass123',null,null);
 insert into Users values (null,4, 1,'irim@gmail.com','pass123',null,null);
 
 /* Admin */
-insert into Users values (null,3, 5,'admin','admin',null,null);
+insert into Users values (null,null, 5,'admin','admin',null,null);
