@@ -445,12 +445,18 @@ namespace Doctor_Attendance.Services
                 if (DateTime.TryParse(searchTerm, out DateTime searchDate))
                 {
                     // Search by date on the database server.
-                    return Attendances.Where(e => e.Date.Date == searchDate.Date).ToList();
+                    return Attendances
+                        .Include(e => e.Doctor)
+                        .Include(e => e.Dep)
+                        .Where(e => e.Date.Date == searchDate.Date).ToList();
                 }
                 else
                 {
                     // Fetch the data from the database and perform the doctor's first name search in-memory using AsEnumerable().
-                    return Attendances.AsEnumerable()
+                    return Attendances
+                        .Include(e => e.Doctor)
+                        .Include(e => e.Dep)
+                        .AsEnumerable()
                         .Where(e => e.Doctor != null && e.Doctor.Firstname != null && // Add null checks here
                                     e.Doctor.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                         .ToList();
@@ -459,7 +465,10 @@ namespace Doctor_Attendance.Services
             else
             {
                 // If searchTerm is null or empty, return the original collection without filtering.
-                return Attendances.ToList();
+                return Attendances
+                    .Include(e => e.Doctor)
+                    .Include(e => e.Dep)
+                    .ToList();
             }
         }
     }

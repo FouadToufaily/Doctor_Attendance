@@ -28,9 +28,11 @@ namespace Doctor_Attendance.Pages.S.Attendances
         public int? EmpId { get; set; }
         public int? DoctorId { get; set; }
         public string? RoleName { get; set; }
-        public string? EmpDep { get; set; }
-
+        public int? EmpDep { get; set; }
+        public Doctor? doctor { get; set; }
         public string? DoctorDep { get; set; }
+        public int FacultyId { get; set; }
+        public int SectionId { get; set; }
         public async Task OnGetAsync()
         {
             var userStatus = HttpContext.Session.GetString("UserStatus");
@@ -71,89 +73,84 @@ namespace Doctor_Attendance.Pages.S.Attendances
                 //getting emDep
                 EmpDep = await _context.Employees
                     .Where(u => u.EmpId == EmpId)
-                    .Select(u => u.Dep.DepName)
+                    .Select(u => u.DepId)
                     .FirstOrDefaultAsync();
 
                 // getting attendance with dep of the emp
                 if (EmpDep != null)
                 {
-                    Attendances = await _context.Attendances
-                                                .Include(a => a.Dep)
-                                                .Include(a => a.Doctor)
-                                                .Where(a => a.Dep.DepName.Equals(EmpDep))
-                                                .ToListAsync();
+                    var Attendances1 = _context.SearchAttendance(SearchString);
+                    Attendances = Attendances1.Where(a => a.DepId == EmpDep)
+                                              .ToList<Attendance>();
                 }
                 if (!EmpId.HasValue)//no docId and no empId the it is an admin
                 {
                     if (RoleName.Equals("Admin"))
                     {
-                        Attendances = await _context.Attendances
-                                            .Include(a => a.Dep)
-                                            .Include(a => a.Doctor).ToListAsync();
+                        //Retrieve all attendances
+                        Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
+                        
                     }
 
                 }
             }
 
-            else if (DoctorDep != null)
+            else if (DoctorDep != null)//it is a doctor 
             {
-                if (RoleName.Equals("HOD"))
-                {
-                    Attendances = await _context.Attendances.Include(a => a.Dep)
-                        .Include(a => a.Doctor)
-                        .Include(a => a.Dep)
-                        .Where(a => a.Dep.DepName.Equals(DoctorDep) && a.Published == true)
-                        .ToListAsync();
-                }
-                /*
-                else
-                {
-                    Attendances = await _context.Attendances.Include(a => a.Dep)
-                        .Include(a => a.Doctor).ToListAsync();
-                }
-                */
+                doctor = _context.Doctors.FirstOrDefault(d => d.Email.Equals(userStatus));
 
-            }
-            else
-            {
-                Attendances = await _context.Attendances
-                                            .Include(a => a.Dep)
-                                            .Include(a => a.Doctor).ToListAsync();
-            }
+                if (RoleName.Equals("HOS"))
+                {
+                    Section section = _context.Sections.FirstOrDefault(s => s.DoctorId == DoctorId);
 
-            if (RoleName.Equals("Admin") || RoleName.Equals("HOS") || RoleName.Equals("HOF"))
-            {                //Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
-                if (RoleName.Equals("HOS") || RoleName.Equals("HOF"))
-                {
-                    // calling Search function by search criteria which is binded to the form control textbox
-                    //  var Attendances1 = _context.SearchAttendance(SearchString);
-                    Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
-                    // Retrieve only published attendances
-                    //  Attendances = Attendances1.Where(a => a.Published == true).ToList<Attendance>();
+                    if (section != null)
+                    {
+                        SectionId = section.Sectionid;
+                        var query = _context.Departments
+                                             .Where(d => d.Faculties
+                                             .Any(f => f.Sections
+                                             .Any(s => s.Sectionid == SectionId)));
+
+                        var departments = await query.ToListAsync();
+
+                        List<int> depIds = departments.Select(d => d.DepId).ToList();
+
+                        var Attendances1 = _context.SearchAttendance(SearchString);
+                        Attendances = Attendances1.Where(a => a.Published == true && depIds.Contains((int)a.DepId))
+                                                  .ToList<Attendance>();
+
+                        
+
+                    }
                 }
-                else //if it's an admin
+                else if (RoleName.Equals("HOF"))
                 {
-                    //Retrieve all attendances
-                    Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();  
+                    Faculty faculty1 = _context.Faculties.FirstOrDefault(f => f.DoctorId == DoctorId);
+
+                    if (faculty1 != null)
+                    {
+                        FacultyId = faculty1.Facultyid;
+                        var query = _context.Departments
+                                            .Where(d => d.Faculties
+                                            .Any(f => f.Facultyid == FacultyId));
+
+                        var departments = await query.ToListAsync();
+
+                        List<int> depIds = departments.Select(d => d.DepId).ToList();
+
+                        var Attendances1 = _context.SearchAttendance(SearchString);
+                        Attendances = Attendances1.Where(a => a.Published == true && depIds.Contains((int)a.DepId))
+                                                  .ToList<Attendance>();
+                    }
                 }
-                
-            }
-            else // searchdoctor should return only doctors of same dep and HODs and hos and hof 
-            {
-                if (EmpDep != null)//if it's a sec
+                else if (RoleName.Equals("HOD"))
                 {
                     var Attendances1 = _context.SearchAttendance(SearchString);
-                    Attendances = Attendances1.Where(e => e.Dep != null && e.Dep.DepName == EmpDep).ToList<Attendance>();
+                    Attendances = Attendances1.Where(a => a.Published == true && a.DepId == doctor.DepId)
+                                              .ToList<Attendance>();
                 }
-                else// if HOD 
-                {
-                    var Attendances1 = _context.SearchAttendance(SearchString);
-                    Attendances = Attendances1.Where(e => e.Dep != null && e.Dep.DepName == DoctorDep && e.Published == true).ToList<Attendance>();
-                }
-                //Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
             }
         }
-
         public IActionResult OnPostPublish(int attendanceToPublishId)
         {
             var att = _context.Attendances.FirstOrDefault(a => a.AttId == attendanceToPublishId);

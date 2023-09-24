@@ -45,6 +45,25 @@ namespace Doctor_Attendance.Pages.S.Account
                 if (_context.Users.Any(u => u.Username == Input.Username))
                 {
                     ModelState.AddModelError("Input.Username", "Username already exists.");
+                    // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+                    Doctors = _context.Doctors.ToList();
+                    Employees = _context.Employees.ToList();
+                    return Page();
+                }
+                else if (_context.Doctors.Any(d => d.DoctorId == Input.DoctorEmployeeId))
+                {
+                    ModelState.AddModelError("Input.Username", "This Doctor already has a username.");
+                    // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+                    Doctors = _context.Doctors.ToList();
+                    Employees = _context.Employees.ToList();
+                    return Page();
+                }
+                else if (_context.Employees.Any(e => e.EmpId == Input.DoctorEmployeeId))
+                {
+                    ModelState.AddModelError("Input.Username", "This Employee already has a username.");
+                    // Fetch the list of doctors and employees again and assign them to Doctors and Employees properties.
+                    Doctors = _context.Doctors.ToList();
+                    Employees = _context.Employees.ToList();
                     return Page();
                 }
 
