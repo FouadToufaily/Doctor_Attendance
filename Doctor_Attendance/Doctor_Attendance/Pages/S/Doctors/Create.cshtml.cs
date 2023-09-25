@@ -38,11 +38,9 @@ namespace Doctor_Attendance.Pages.S.Doctors
         [BindProperty]
         public Doctor Doctor { get; set; } = default!;
         
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Doctors == null || Doctor == null)
+            if (!ModelState.IsValid || _context.Doctors == null || Doctor == null)
             {
                 return Page();
             }

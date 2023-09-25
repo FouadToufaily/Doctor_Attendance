@@ -30,13 +30,13 @@ namespace Doctor_Attendance.Pages.S.Employees
                 return NotFound();
             }
 
-            var employee =  await _context.Employees.FirstOrDefaultAsync(m => m.EmpId == id);
+            var employee = await _context.Employees.FirstOrDefaultAsync(m => m.EmpId == id);
             if (employee == null)
             {
                 return NotFound();
             }
             Employee = employee;
-           ViewData["DepId"] = new SelectList(_context.Departments, "DepId", "DepName");
+            ViewData["DepId"] = new SelectList(_context.Departments, "DepId", "DepName");
             return Page();
         }
 
@@ -70,7 +70,7 @@ namespace Doctor_Attendance.Pages.S.Employees
 
         private bool EmployeeExists(int id)
         {
-          return (_context.Employees?.Any(e => e.EmpId == id)).GetValueOrDefault();
+            return (_context.Employees?.Any(e => e.EmpId == id)).GetValueOrDefault();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Doctor_Attendance.Pages.S.Holidays
                 return NotFound();
             }
 
-            var holiday =  await _context.Holidays.FirstOrDefaultAsync(m => m.ID == id);
+            var holiday = await _context.Holidays.FirstOrDefaultAsync(m => m.ID == id);
             if (holiday == null)
             {
                 return NotFound();
@@ -39,8 +39,6 @@ namespace Doctor_Attendance.Pages.S.Holidays
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -71,7 +69,7 @@ namespace Doctor_Attendance.Pages.S.Holidays
 
         private bool HolidayExists(int id)
         {
-          return (_context.Holidays?.Any(e => e.ID == id)).GetValueOrDefault();
+            return (_context.Holidays?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

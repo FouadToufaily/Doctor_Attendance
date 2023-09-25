@@ -36,7 +36,6 @@ namespace Doctor_Attendance.Pages.S.Account
             Employees = _context.Employees.ToList();
         }
 
-
         public async Task<IActionResult> OnPostAsync()
         {
             int roleId = 0; // Initialize roleId
@@ -70,7 +69,7 @@ namespace Doctor_Attendance.Pages.S.Account
                     {
                         "Head Of Department" => 2,
                         "Head Of Faculty" => 3,
-                        "Head Of Section" => 4, // Corrected role ID for Head Of Section
+                        "Head Of Section" => 4,
                         _ => throw new ArgumentException("Invalid role"),
                     };
                 }
@@ -86,7 +85,7 @@ namespace Doctor_Attendance.Pages.S.Account
                         return Page();
                     }
                     // Set the role ID for the Secretary
-                    roleId = 1; // Assuming Secretary has role ID 1
+                    roleId = 1; // Secretary has role ID 1
                 }
 
                 // Create a new user based on the input
@@ -122,10 +121,6 @@ namespace Doctor_Attendance.Pages.S.Account
             return Page();
         }
 
-
-
-
-
         public class RegisterInputModel
         {
             [Required]
@@ -141,7 +136,6 @@ namespace Doctor_Attendance.Pages.S.Account
             [Display(Name = "Role")]
             public string Role { get; set; }
 
-            // Add this property to store the selected doctor or employee ID
             public int DoctorEmployeeId { get; set; }
         }
     }

@@ -37,15 +37,14 @@ namespace Doctor_Attendance.Pages.S.Attendances
         public List<string> Holidays { get; private set; }
         public async Task<IActionResult> OnGetAsync(string? date, string? name)
         {
-            //get username of the current secratary
             var username = HttpContext.Session.GetString("UserStatus");
 
-            RoleId = await dbContext.Users // getting the Role Id
+            RoleId = await dbContext.Users
                    .Where(u => u.Username == username)
                    .Select(u => u.RoleId)
                    .FirstOrDefaultAsync();
 
-            RoleName = await dbContext.Roles //Extracting the Role name(might need it later because i dont know the Ids of the roles now
+            RoleName = await dbContext.Roles 
                 .Where(r => r.RoleId == RoleId)
                 .Select(r => r.RoleName)
                 .FirstOrDefaultAsync();

@@ -45,7 +45,7 @@
                         <label class="form-check-label" for="secretaryRole">Secretary</label>
                     </div>
                 </div>
-                <!-- Hidden input for Input.Role -->
+                <!-- Hidden input for Input.Role that i binded to the role inorder for the javascript to work-->
                 <input type="hidden" asp-for="Input.Role" id="Input_Role" />
                 <!-- Dropdown list for selecting a doctor or employee -->
                 <div class="mb-3" id="doctorEmployeeList" style="display: none;">
@@ -60,7 +60,7 @@
                         }
                     </label>
                     <select asp-for="@Model.Input.DoctorEmployeeId" class="form-control" id="employeeDoctorSelect">
-                        <!-- Options will be dynamically added here -->
+                        <!-- Options will be dynamically added here according to the type (doctor or Employee, ya3ne 7asb sho na22a)-->
                     </select>
                     <span asp-validation-for="@Model.Input.DoctorEmployeeId" class="text-danger"></span>
                 </div>
@@ -71,8 +71,8 @@
         </div>
     </div>
 </div>
+
 <script>
-    // Get all the radio buttons
     var radios = document.querySelectorAll('input[type="radio"]');
     var inputRole = document.getElementById("Input_Role"); // Hidden input for Input.Role
     var select = document.getElementById("employeeDoctorSelect"); // Dropdown list

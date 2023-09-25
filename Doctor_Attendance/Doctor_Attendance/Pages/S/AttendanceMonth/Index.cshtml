@@ -13,6 +13,7 @@
     <h1>Attendance</h1>
 
     <!-- Doctor and Month Selection Form -->
+    <!-- Here i am only showing a table of records when the selected doctor is chosing and month -->
     <form method="get" id="selectionForm" style="display: @(Model.ShowRecords || (Model.SelectedDoctor > 0 && Model.SelectedMonth > 0))">
         <p>
             Doctor:
@@ -41,9 +42,9 @@
         @if (Model.ShowRecords)
         {
             var startDate = new DateTime(Model.SelectedYear, Model.SelectedMonth, 1);
-            var endDate = startDate.AddMonths(1).AddDays(-1);
+            var endDate = startDate.AddMonths(1).AddDays(-1); //setting the enddate for just one month
 
-            var daysInMonth = DateTime.DaysInMonth(Model.SelectedYear, Model.SelectedMonth);
+            var daysInMonth = DateTime.DaysInMonth(Model.SelectedYear, Model.SelectedMonth); // got my month days with sat and sun and uncluding holidays, i will filter them later
 
             <form method="post">
                 <table class="table">
@@ -74,6 +75,7 @@
                                     <tr>
                                         <td>@currentDate.ToString("dddd, yyyy-MM-dd")</td>
                                         <td>
+                                            <!-- checking publish status -->
                                             <input type="hidden" name="@($"{inputFieldName}.Date")" value="@currentDate.ToString("yyyy-MM-dd")" />
                                             <input type="hidden" name="@($"{inputFieldName}.Published")" value="@attendanceInputForDay?.Published" />
                                             @if (attendanceInputForDay?.Published ?? false)
@@ -88,7 +90,7 @@
                                                 <input type="checkbox"
                                                        name="@($"{inputFieldName}.Attended")"
                                                        value="true"
-                                                       @(attendanceInputForDay?.Attended == true ? "checked" : "") />
+                                                       @(attendanceInputForDay?.Attended == true ? "checked" : "") /> // setting att to checked if attended and null otherwise
                                             }
                                             else
                                             {

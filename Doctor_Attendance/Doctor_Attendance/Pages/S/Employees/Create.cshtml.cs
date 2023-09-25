@@ -28,8 +28,6 @@ namespace Doctor_Attendance.Pages.S.Employees
         [BindProperty]
         public Employee Employee { get; set; } = default!;
         
-
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
           if (!ModelState.IsValid || _context.Employees == null || Employee == null)

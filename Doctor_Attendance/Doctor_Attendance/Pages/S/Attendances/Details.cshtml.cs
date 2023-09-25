@@ -34,10 +34,8 @@ namespace Doctor_Attendance.Pages.S.Attendances
             if (!string.IsNullOrEmpty(roleIdStr))
             {
                 int roleId = Convert.ToInt32(roleIdStr);
-                RoleName = _context.Roles
-                                   .Where(r => r.RoleId == roleId)
-                                   .Select(r => r.RoleName)
-                                   .FirstOrDefault();
+                RoleName = _context.Roles.Where(r => r.RoleId == roleId) .Select(r => r.RoleName)
+                            .FirstOrDefault();
             }
             if (id == null || _context.Attendances == null)
             {

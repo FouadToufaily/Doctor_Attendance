@@ -86,11 +86,6 @@ namespace Doctor_Attendance.Pages.S.Employees
                         Employee = await _context.Employees
                             .Include(e => e.Dep).ToListAsync();
                     }
-
-                    //Employee = await _context.Employees // use it here by Secretary Department
-                    //            .Include(e => e.Dep)
-                    //            .Where(d => d.Dep.DepName == EmpDep || d.Dep == null) // Filter doctors by department
-                    //            .ToListAsync();
                 }
                 else
                 {

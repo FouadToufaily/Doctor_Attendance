@@ -89,7 +89,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                     {
                         //Retrieve all attendances
                         Attendances = _context.SearchAttendance(SearchString).ToList<Attendance>();
-                        
+
                     }
 
                 }
@@ -119,7 +119,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                         Attendances = Attendances1.Where(a => a.Published == true && depIds.Contains((int)a.DepId))
                                                   .ToList<Attendance>();
 
-                        
+
 
                     }
                 }
@@ -162,4 +162,3 @@ namespace Doctor_Attendance.Pages.S.Attendances
 
     }
 }
-

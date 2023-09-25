@@ -19,7 +19,7 @@ namespace Doctor_Attendance.Pages.S.Faculties
             _context = context;
         }
 
-      public Faculty Faculty { get; set; } = default!;
+        public Faculty Faculty { get; set; } = default!;
         public int? RoleId { get; set; }
         public string? RoleName { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)

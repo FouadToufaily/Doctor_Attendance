@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-//builder.Services.AddSingleton<IDoctorRepository, SQLDoctorRepository>();
 
 string serverName = Environment.MachineName;
 
@@ -24,32 +23,6 @@ builder.Services.AddSession(options =>
 });
 
 
-//bool isExpressEdition;
-//using (var connection = new SqlConnection($"Data Source={Environment.MachineName};Initial Catalog=Doctor_Attendance;Integrated Security=True"))
-//{
-//    connection.Open();
-//    var command = new SqlCommand("SELECT SERVERPROPERTY('EngineEdition') AS Edition", connection);
-//    isExpressEdition = ((int)command.ExecuteScalar()) == 5;
-//}
-
-//string serverName = Environment.MachineName;
-//string instanceName = isExpressEdition ? "SQLEXPRESS" : ""; // Replace with your instance name
-
-//string connectionString = $"Data Source={serverName}\\{instanceName};Database=master;Initial Catalog=Doctor_Attendance;Integrated Security=True";
-
-//builder.Services.AddDbContextPool<AppDBContext>(options =>
-//{
-//    options.UseSqlServer(connectionString);
-//});
-
-
-
-//adding identity framework here
-/*
-builder.Services.AddIdentity<User, IdentityRole>()
-        .AddEntityFrameworkStores<AppDBContext>()
-        .AddDefaultTokenProviders();
-*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

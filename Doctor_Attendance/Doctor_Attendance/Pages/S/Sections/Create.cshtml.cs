@@ -21,18 +21,16 @@ namespace Doctor_Attendance.Pages.S.Sections
 
         public IActionResult OnGet()
         {
-        ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
+            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
             return Page();
         }
 
         [BindProperty]
         public Section Section { get; set; } = default!;
-        
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Sections == null || Section == null)
+            if (!ModelState.IsValid || _context.Sections == null || Section == null)
             {
                 return Page();
             }

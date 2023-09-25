@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Doctor_Attendance.Services
 {
-    public class SQLDoctorRepository : IDoctorRepository
+    public class SQLDoctorRepository
     {
 
         private readonly AppDBContext _context;

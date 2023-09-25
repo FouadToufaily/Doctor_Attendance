@@ -23,7 +23,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
         [BindProperty]
       public Attendance Attendance { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id, DateTime? Date)//error happening because primary key of attendance is id and date, i need to change it in database for it to become just id, or fix it here, Fix : Date is now sent from index razor page as asp route attribute Date, and find async in post can now find the Attendance record according to the double key id and Date
+        public async Task<IActionResult> OnGetAsync(int? id, DateTime? Date)//error was happening because primary key of attendance is id and date, we changed it in database for it to become just id, or fix it here, Fix : Date is now sent from index razor page as asp route attribute Date, and find async in post can now find the Attendance record according to the double key id and Date
         {
             if (id == null || _context.Attendances == null)
             {

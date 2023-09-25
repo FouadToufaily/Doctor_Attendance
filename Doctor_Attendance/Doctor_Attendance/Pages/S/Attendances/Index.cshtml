@@ -84,7 +84,7 @@ else
                     @Html.DisplayFor(modelItem => item.Doctor.Fullname)
                 </td>
                 <td style="padding-left: 10px">
-                    @*checking if published and corssing it out <fouad></fouad>*@
+                    @*checking if published and crossing it out <fouad></fouad>*@
                     <input type="checkbox" disabled="disabled" @(item.Published.HasValue && item.Published.Value ? "checked" : "") />
                 </td>
                 <td>

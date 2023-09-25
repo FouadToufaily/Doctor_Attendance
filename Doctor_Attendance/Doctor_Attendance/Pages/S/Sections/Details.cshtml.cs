@@ -54,7 +54,6 @@ namespace Doctor_Attendance.Pages.S.Sections
             {
                 Section = section;
             }
-
             return Page();
         }
 

@@ -20,7 +20,7 @@ namespace Doctor_Attendance.Pages.S.Sections
         }
 
         [BindProperty]
-      public Section Section { get; set; } = default!;
+        public Section Section { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -35,7 +35,7 @@ namespace Doctor_Attendance.Pages.S.Sections
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Section = section;
             }

@@ -27,7 +27,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
         public IEnumerable<Doctor> Doctor { get; set; } = default!;
         public List<SelectListItem> DoctorItems { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> MonthItems { get; } = new List<SelectListItem>
-        {
+        { //populating the months of the year
             new SelectListItem { Value = "1", Text = "January" },
             new SelectListItem { Value = "2", Text = "February" },
             new SelectListItem { Value = "3", Text = "March" },
@@ -78,7 +78,6 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
         public async Task OnGetAsync()
         {
-
             var userStatus = HttpContext.Session.GetString("UserStatus");
 
             RoleId = await _context.Users // getting the Role Id
@@ -152,7 +151,6 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
 
                 ShowRecords = true;
 
-                // Populate the AttendanceInput list with data from the database, if available
                 // Populate the AttendanceInput list with data from the database, if available
                 AttendanceInput = Enumerable.Range(1, DateTime.DaysInMonth(SelectedYear, SelectedMonth))
                     .Where(day =>
@@ -239,7 +237,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                     Attended = Request.Form[$"AttendanceInput[{currentDay - 1}].Attended"] == "true",
                     Comments = Request.Form[$"AttendanceInput[{currentDay - 1}].Comments"]
                 };
-                int EmpDepId = 1; //added
+                int EmpDepId = 1; 
                 var existingAttendance = _context.Attendances.FirstOrDefault(a =>
                     a.DoctorId == SelectedDoctor && a.Date.Date == attendanceInputForDay.Date.Date);
 
@@ -264,8 +262,6 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                         }
 
                         existingAttendance.DepId = EmpDepId;
-
-                        //existingAttendance.DepId = 1; // new added since depid was causing a conflict on foreign key
                     }
                 }
                 else if (attendanceInputForDay.Attended == true)
@@ -286,7 +282,7 @@ namespace Doctor_Attendance.Pages.S.AttendanceMonth
                         Attended = true,
                         Comments = attendanceInputForDay.Comments,
                         NbHours = attendanceInputForDay.NbHours,
-                        DepId = tempEmpDepId // new added since depid was causing a conflict on foreign key
+                        DepId = tempEmpDepId
                     };
                     _context.Attendances.Add(newAttendance);
                 }

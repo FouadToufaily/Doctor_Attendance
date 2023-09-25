@@ -78,7 +78,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
                     Doctor = await _context.Doctors // use it here by Secretary Department
                         .Include(d => d.Category)
                         .Include(d => d.Dep)
-                        .Where(d => d.Dep.DepName == EmpDep || d.Dep==null) // Filter doctors by department
+                        .Where(d => d.Dep.DepName == EmpDep || d.Dep == null) // Filter doctors by department
                         .ToListAsync();
                 }
                 else if (DoctorId.HasValue)

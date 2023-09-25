@@ -115,8 +115,7 @@ namespace Doctor_Attendance.Pages.S.Attendances
                     if (section != null)
                     {
                         SectionId = section.Sectionid;
-                        var query = dbContext.Departments
-    .Where(d => d.Faculties.Any(f => f.Sections.Any(s => s.Sectionid == SectionId)));
+                        var query = dbContext.Departments.Where(d => d.Faculties.Any(f => f.Sections.Any(s => s.Sectionid == SectionId)));
 
                         var departments = await query.ToListAsync();
 
@@ -188,12 +187,9 @@ namespace Doctor_Attendance.Pages.S.Attendances
             return Page();
         }
 
-
         public IActionResult OnPostNext()
         {
-
             return RedirectToPage("ViewAttendance", new { date = datev });
-
         }
 
         public IActionResult OnPostSave()
@@ -204,14 +200,8 @@ namespace Doctor_Attendance.Pages.S.Attendances
         private List<string> GetHolidaysFromDatabase()
         {
             var holidayEntities = dbContext.Holidays.ToList();
-
-            // Assuming the 'Date' property in your 'Holiday' entity stores the date in yyyy-mm-dd format 
             Holidays = holidayEntities.Select(h => h.Date.ToString("yyyy-MM-dd")).ToList();
             return Holidays;
         }
     }
 }
-
-
-
-

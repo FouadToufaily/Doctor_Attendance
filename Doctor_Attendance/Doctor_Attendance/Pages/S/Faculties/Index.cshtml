@@ -64,33 +64,5 @@
                 </td>
             </tr>
         }
-
-        @*@foreach (var item in Model.Faculty)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Doctor.Fullname)
-                </td>
-                <td>
-                    @if (item.Sections.Any())
-                    {
-                        @foreach (var section in item.Sections)
-                        {
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Location)
-                        </td>
-                    }
-                    }
-                    </td>
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.Facultyid">Edit</a> |
-                        <a asp-page="./Details" asp-route-id="@item.Facultyid">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.Facultyid">Delete</a>
-                    </td>
-                </tr>
-        }*@
     </tbody>
 </table>

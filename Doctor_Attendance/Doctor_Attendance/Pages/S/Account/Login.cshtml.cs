@@ -21,11 +21,10 @@ namespace Doctor_Attendance.Pages.S.Account
         
 
         public string LogInValid { get; set; } // for error messages
+
         public IActionResult OnGet()
         {
-           
             return Page();
-
         }
 
         public async Task<IActionResult> OnPostAsync()

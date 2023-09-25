@@ -30,14 +30,14 @@ namespace Doctor_Attendance.Pages.S.Doctors
                 return NotFound();
             }
 
-            var doctor =  await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == id);
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(m => m.DoctorId == id);
             if (doctor == null)
             {
                 return NotFound();
             }
             Doctor = doctor;
-           ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Type");
-           ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepId", "DepName");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Type");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepId", "DepName");
 
             return Page();
         }
@@ -72,7 +72,7 @@ namespace Doctor_Attendance.Pages.S.Doctors
 
         private bool DoctorExists(int id)
         {
-          return (_context.Doctors?.Any(e => e.DoctorId == id)).GetValueOrDefault();
+            return (_context.Doctors?.Any(e => e.DoctorId == id)).GetValueOrDefault();
         }
     }
 }

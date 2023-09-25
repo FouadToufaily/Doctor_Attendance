@@ -13,7 +13,7 @@ namespace Doctor_Attendance.Pages.S.Holidays
     public class CreateModel : PageModel
     {
         private readonly Doctor_Attendance.Services.AppDBContext _context;
-        public string ValidStr  { get; set; }
+        public string ValidStr { get; set; }
         public CreateModel(Doctor_Attendance.Services.AppDBContext context)
         {
             _context = context;
@@ -26,18 +26,16 @@ namespace Doctor_Attendance.Pages.S.Holidays
 
         [BindProperty]
         public Holiday Holiday { get; set; } = default!;
-        
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Holidays == null || Holiday == null)
+            if (!ModelState.IsValid || _context.Holidays == null || Holiday == null)
             {
                 return Page();
             }
 
             var dateExists = _context.Holidays.Any(h => h.Date.Date == Holiday.Date.Date);
-            if(!dateExists)
+            if (!dateExists)
             {
                 _context.Holidays.Add(Holiday);
                 await _context.SaveChangesAsync();
@@ -47,11 +45,8 @@ namespace Doctor_Attendance.Pages.S.Holidays
             {
                 ValidStr = "A holiday already exists at this date.";
                 return Page();
-
             }
-            
 
-            
         }
     }
 }

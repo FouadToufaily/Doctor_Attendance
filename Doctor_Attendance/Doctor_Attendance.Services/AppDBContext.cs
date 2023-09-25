@@ -441,7 +441,7 @@ namespace Doctor_Attendance.Services
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.Trim();
-                // Try to parse the searchTerm as a date.
+                // parsing the searchTerm as a date.
                 if (DateTime.TryParse(searchTerm, out DateTime searchDate))
                 {
                     // Search by date on the database server.
@@ -452,12 +452,11 @@ namespace Doctor_Attendance.Services
                 }
                 else
                 {
-                    // Fetch the data from the database and perform the doctor's first name search in-memory using AsEnumerable().
                     return Attendances
                         .Include(e => e.Doctor)
                         .Include(e => e.Dep)
                         .AsEnumerable()
-                        .Where(e => e.Doctor != null && e.Doctor.Firstname != null && // Add null checks here
+                        .Where(e => e.Doctor != null && e.Doctor.Firstname != null && // Added null checks here for better compatibility
                                     e.Doctor.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                         .ToList();
                 }

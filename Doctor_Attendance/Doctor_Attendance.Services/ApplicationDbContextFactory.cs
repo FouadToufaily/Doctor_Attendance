@@ -11,9 +11,10 @@ namespace Doctor_Attendance.Services
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<AppDBContext>
 {
         public AppDBContext CreateDbContext(string[] args)
-        {   
+        {
+            string serverName = Environment.MachineName;
             var optionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=EcommerceDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer($"Data Source={serverName}\\SQLEXPRESS;Initial Catalog=Doctor_Attendance;Integrated Security=True; MultipleActiveResultSets=true");
 
             return new AppDBContext(optionsBuilder.Options);
         }
