@@ -113,8 +113,8 @@ update DEPARTMENT set DOCTOR_ID = 56 where DEP_NAME = 'Political Sciences'
 
 insert into FACULTY values (8, 'Sciences'), (36, 'Public Health'), (52,'Law');
 
-insert into SECTION values (32, 35,'05460584','Hadath'), (23, 3,'01680248', 'Fanar'), (29, 26,'06386364', 'Tripoli')
-                         , (35, 17,'08812553', 'Bikaa'), (11, 11,'07761980', 'Nabatieh');
+insert into SECTION values (32, 1,'05460584','Hadath'), (23, 2,'01680248', 'Fanar'), (29, 3,'06386364', 'Tripoli')
+                         , (35, 4,'08812553', 'Bikaa'), (11, 5,'07761980', 'Nabatieh');
 
 /* Employees as Employees */
 insert into Employee values (1,'Tala','Ali',30,'atala@gmail.com','Beirut');
